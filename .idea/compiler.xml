@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Gradle Imported" enabled="true">
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.32/17d46b3e205515e1e8efd3ee4d57ce8018914163/lombok-1.18.32.jar" />
+        </processorPath>
+        <module name="quotation-domain.shared-library.main" />
+        <module name="quotation-domain.main" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="customer-domain.main" target="17" />
+      <module name="customer-query.customer-domain.main" target="17" />
+      <module name="org.example.customer-query.main" target="17" />
+      <module name="org.example.customer-query.test" target="17" />
+      <module name="quotation-flow.quotation-domain.main" target="17" />
+      <module name="quotation-flow.shared-library.main" target="17" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

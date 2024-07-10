@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: auth-server
+  datasource:
+    url: jdbc:postgresql://localhost:5432/db_baolong
+    username: postgres
+    password: Phieu2106
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+server:
+  port: 9999

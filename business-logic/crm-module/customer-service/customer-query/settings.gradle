@@ -1,0 +1,8 @@
+rootProject.name = 'customer-query'
+
+
+include(":customer-domain")
+project(":customer-domain").projectDir = file("../customer-domain")
+
+include(":shared-library")
+project(":shared-library").projectDir = file("../../../../shared-library")

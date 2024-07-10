@@ -1,0 +1,8 @@
+rootProject.name = 'user-flow'
+
+
+include(":user-domain")
+project(":user-domain").projectDir = file("../user-domain")
+
+include(":shared-library")
+project(":shared-library").projectDir = file("../../../../shared-library")

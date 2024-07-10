@@ -1,0 +1,5 @@
+rootProject.name = 'quotation-domain'
+
+
+include(":shared-library")
+project(":shared-library").projectDir = file("../../../../shared-library")

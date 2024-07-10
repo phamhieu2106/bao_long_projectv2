@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="web" url="file://$PROJECT_DIR$/api-gateway" />
+    <file type="web" url="file://$PROJECT_DIR$/business-logic/ac-module/user-service/user-command" />
+    <file type="web" url="file://$PROJECT_DIR$/business-logic/ac-module/user-service/user-domain" />
+    <file type="web" url="file://$PROJECT_DIR$/business-logic/ac-module/user-service/user-flow" />
+    <file type="web" url="file://$PROJECT_DIR$/business-logic/ac-module/user-service/user-query" />
+    <file type="web" url="file://$PROJECT_DIR$/business-logic/core-module/quotation-service/quotation-command" />
+    <file type="web" url="file://$PROJECT_DIR$/business-logic/core-module/quotation-service/quotation-domain" />
+    <file type="web" url="file://$PROJECT_DIR$/business-logic/core-module/quotation-service/quotation-flow" />
+    <file type="web" url="file://$PROJECT_DIR$/business-logic/core-module/quotation-service/quotation-query" />
+    <file type="web" url="file://$PROJECT_DIR$/business-logic/crm-module/customer-service/customer-command" />
+    <file type="web" url="file://$PROJECT_DIR$/business-logic/crm-module/customer-service/customer-domain" />
+    <file type="web" url="file://$PROJECT_DIR$/business-logic/crm-module/customer-service/customer-flow" />
+    <file type="web" url="file://$PROJECT_DIR$/business-logic/crm-module/customer-service/customer-query" />
+    <file type="web" url="file://$PROJECT_DIR$/eureka-server" />
+    <file type="web" url="file://$PROJECT_DIR$/infrastructure/auth-server" />
+    <file type="web" url="file://$PROJECT_DIR$/shared-library" />
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="17" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/out" />
+  </component>
+</project>

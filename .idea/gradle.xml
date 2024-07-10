@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/api-gateway" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/api-gateway" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/business-logic/ac-module/user-service/user-command" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/business-logic/ac-module/user-service/user-command" />
+            <option value="$PROJECT_DIR$/business-logic/ac-module/user-service/user-domain" />
+            <option value="$PROJECT_DIR$/shared-library" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/business-logic/ac-module/user-service/user-domain" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/business-logic/ac-module/user-service/user-domain" />
+            <option value="$PROJECT_DIR$/shared-library" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/business-logic/ac-module/user-service/user-flow" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/business-logic/ac-module/user-service/user-domain" />
+            <option value="$PROJECT_DIR$/business-logic/ac-module/user-service/user-flow" />
+            <option value="$PROJECT_DIR$/shared-library" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/business-logic/ac-module/user-service/user-query" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/business-logic/ac-module/user-service/user-domain" />
+            <option value="$PROJECT_DIR$/business-logic/ac-module/user-service/user-query" />
+            <option value="$PROJECT_DIR$/shared-library" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/business-logic/core-module/quotation-service/quotation-command" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/business-logic/core-module/quotation-service/quotation-command" />
+            <option value="$PROJECT_DIR$/business-logic/core-module/quotation-service/quotation-domain" />
+            <option value="$PROJECT_DIR$/shared-library" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/business-logic/core-module/quotation-service/quotation-domain" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/business-logic/core-module/quotation-service/quotation-domain" />
+            <option value="$PROJECT_DIR$/shared-library" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/business-logic/core-module/quotation-service/quotation-flow" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/business-logic/core-module/quotation-service/quotation-domain" />
+            <option value="$PROJECT_DIR$/business-logic/core-module/quotation-service/quotation-flow" />
+            <option value="$PROJECT_DIR$/shared-library" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/business-logic/core-module/quotation-service/quotation-query" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/business-logic/core-module/quotation-service/quotation-domain" />
+            <option value="$PROJECT_DIR$/business-logic/core-module/quotation-service/quotation-query" />
+            <option value="$PROJECT_DIR$/shared-library" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/business-logic/crm-module/customer-service/customer-command" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/business-logic/crm-module/customer-service/customer-command" />
+            <option value="$PROJECT_DIR$/business-logic/crm-module/customer-service/customer-domain" />
+            <option value="$PROJECT_DIR$/shared-library" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/business-logic/crm-module/customer-service/customer-domain" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/business-logic/crm-module/customer-service/customer-domain" />
+            <option value="$PROJECT_DIR$/shared-library" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/business-logic/crm-module/customer-service/customer-flow" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/business-logic/crm-module/customer-service/customer-domain" />
+            <option value="$PROJECT_DIR$/business-logic/crm-module/customer-service/customer-flow" />
+            <option value="$PROJECT_DIR$/shared-library" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/business-logic/crm-module/customer-service/customer-query" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/business-logic/crm-module/customer-service/customer-domain" />
+            <option value="$PROJECT_DIR$/business-logic/crm-module/customer-service/customer-query" />
+            <option value="$PROJECT_DIR$/shared-library" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/eureka-server" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/eureka-server" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/infrastructure/auth-server" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/infrastructure/auth-server" />
+            <option value="$PROJECT_DIR$/shared-library" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/shared-library" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/shared-library" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>

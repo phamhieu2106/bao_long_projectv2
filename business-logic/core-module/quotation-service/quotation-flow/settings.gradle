@@ -1,0 +1,7 @@
+rootProject.name = 'quotation-flow'
+
+include(":quotation-domain")
+project(":quotation-domain").projectDir = file("../quotation-domain")
+
+include(":shared-library")
+project(":shared-library").projectDir = file("../../../../shared-library")
