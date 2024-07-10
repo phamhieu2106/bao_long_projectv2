@@ -1,9 +1,13 @@
 package org.example.customerquery.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.example.customerdomain.entity.CustomerEntity;
 import org.example.customerdomain.repository.CustomerEntityRepository;
 import org.example.customerquery.service.CustomerQueryService;
+import org.example.sharedlibrary.base_quo_poli.CustomerModel;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +27,16 @@ public class CustomerQueryServiceImpl implements CustomerQueryService {
             }
         } while (customerEntityRepository.existsByCustomerCode(code));
         return code;
+    }
+
+    @Override
+    public CustomerModel getCustomerModelById(String customerId) {
+        Optional<CustomerEntity> optional = customerEntityRepository.findById(customerId);
+        if (optional.isEmpty()) {
+            return null;
+        }
+        CustomerEntity customerEntity = optional.get();
+        return new CustomerModel(customerEntity.getId(), customerEntity.getCustomerName());
     }
 
     @Override

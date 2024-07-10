@@ -1,5 +1,6 @@
 package org.example.userquery.service;
 
+import org.example.sharedlibrary.base_quo_poli.UserCreatedModel;
 import org.example.sharedlibrary.base_request.BaseRequest;
 import org.example.userdomain.domain.UserEntity;
 
@@ -18,4 +19,6 @@ public interface UserService {
     UserEntity findById(String userId);
 
     UserEntity getByUsername(String username);
+
+    UserCreatedModel getUserModelById(String username);
 }

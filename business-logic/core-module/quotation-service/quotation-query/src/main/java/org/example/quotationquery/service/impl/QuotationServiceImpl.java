@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.quotationdomain.repository.QuotationEntityRepository;
 import org.example.quotationquery.service.QuotationService;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDate;
 
@@ -29,6 +30,11 @@ public class QuotationServiceImpl implements QuotationService {
             }
         } while (quotationEntityRepository.existsByQuotationCode(String.valueOf(code)));
         return String.valueOf(code);
+    }
+
+    @Override
+    public boolean exitsById(@PathVariable String quotationId) {
+        return quotationEntityRepository.existsById(quotationId);
     }
 
     private String getYearSuffix() {

@@ -22,4 +22,5 @@ public class BaseQuoPoli {
 
     CustomerModel customer;
     CustomerModel beneficiary;
+    UserCreatedModel userCreatedModel;
 }

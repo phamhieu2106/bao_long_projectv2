@@ -2,6 +2,7 @@ package org.example.customerquery.controller.internal;
 
 import lombok.RequiredArgsConstructor;
 import org.example.customerquery.service.CustomerQueryService;
+import org.example.sharedlibrary.base_quo_poli.CustomerModel;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,5 +43,10 @@ public class CustomerInternalQueryController {
     @GetMapping("/existsByEmailAndIdIsNot")
     public boolean existsByEmailAndIdIsNot(@RequestParam String email, @RequestParam String id) {
         return queryService.existsByEmailAndIdIsNot(email, id);
+    }
+
+    @GetMapping("/getCustomerModelById")
+    public CustomerModel getCustomerModelById(@RequestParam("customerId") String customerId) {
+        return queryService.getCustomerModelById(customerId);
     }
 }

@@ -23,11 +23,11 @@ public class QuotationEventStoreServiceImpl implements QuotationEventStoreServic
     public void save(QuotationAggregate aggregate, BaseEvent event) {
         repository.save(new QuotationEventEntity(
                 new Date(),
-                aggregate.getQuotationId(),
+                aggregate.getId(),
                 event.getClass().getSimpleName(),
-                getEventVersion(aggregate.getQuotationId()),
+                getEventVersion(aggregate.getId()),
                 aggregate,
-                aggregate.getCreatedBy()
+                aggregate.getUserCreatedModel().getUsername()
         ));
     }
 

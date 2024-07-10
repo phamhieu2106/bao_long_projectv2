@@ -1,7 +1,9 @@
 package org.example.quotationcommand.handler.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.example.quotationcommand.client.CustomerQueryClient;
 import org.example.quotationcommand.client.QuotationQueryClient;
+import org.example.quotationcommand.client.UserQueryClient;
 import org.example.quotationcommand.handler.QuotationHandler;
 import org.example.quotationcommand.service.QuotationEventStoreService;
 import org.example.quotationcommand.service.QuotationProducerService;
@@ -10,7 +12,6 @@ import org.example.quotationdomain.command.QuotationCreateCommand;
 import org.example.quotationdomain.command.QuotationUpdateCommand;
 import org.example.quotationdomain.domain.model.InsuranceDate;
 import org.example.quotationdomain.event.QuotationCreateEvent;
-import org.example.quotationdomain.event.QuotationUpdateEvent;
 import org.example.sharedlibrary.enumeration.QuotationStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +28,8 @@ public class QuotationHandlerImpl implements QuotationHandler {
     private final QuotationEventStoreService storeService;
     private final QuotationProducerService producerService;
     private final QuotationQueryClient quotationQueryClient;
+    private final CustomerQueryClient customerQueryClient;
+    private final UserQueryClient userQueryClient;
 
     @Override
     public void handle(QuotationCreateCommand command) {
@@ -37,7 +40,11 @@ public class QuotationHandlerImpl implements QuotationHandler {
         aggregate.setEffectiveDate(date.getValidInsuranceDate());
         aggregate.setMaturityDate(date.getVoidInsuranceDate());
         aggregate.setQuotationStatus(QuotationStatus.DRAFTING);
-
+        aggregate.setCustomerModel(customerQueryClient
+                .getCustomerModelById(command.getCustomerId()));
+        aggregate.setBeneficiaryModel(customerQueryClient
+                .getCustomerModelById(command.getBeneficiaryId()));
+        aggregate.setUserCreatedModel(userQueryClient.getUserModelById(command.getCreatedBy()));
         QuotationCreateEvent event = aggregate.apply(command);
         storeService.save(aggregate, event);
         producerService.publish("quotation_create", event);
@@ -53,9 +60,9 @@ public class QuotationHandlerImpl implements QuotationHandler {
         aggregate.setQuotationStatus(QuotationStatus.DRAFTING);
 
 
-        QuotationUpdateEvent event = aggregate.apply(command);
-        storeService.save(aggregate, event);
-        producerService.publish("quotation_update", event);
+//        QuotationUpdateEvent event = aggregate.apply(command);
+//        storeService.save(aggregate, event);
+//        producerService.publish("quotation_update", event);
     }
 
     private InsuranceDate getQuotationValidAndVoidDate(Object productListObj) {

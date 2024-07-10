@@ -9,4 +9,7 @@ public interface QuotationQueryClient {
 
     @GetMapping("/get-quotation-code/{productCode}")
     String getQuotationCode(@PathVariable String productCode);
+
+    @GetMapping("/exitsById/{quotationId}")
+    boolean exitsById(@PathVariable String quotationId);
 }

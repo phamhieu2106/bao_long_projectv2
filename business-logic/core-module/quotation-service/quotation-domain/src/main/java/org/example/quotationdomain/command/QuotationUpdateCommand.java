@@ -21,13 +21,13 @@ public class QuotationUpdateCommand extends BaseCommand {
     List<Map<String, Object>> product;
     List<Map<String, Object>> insuranceTypeModel;
     Double totalFeeAfterTax;
-    String customerId;
-    String beneficiaryId;
     Boolean isCoinsurance;
     String quotationDistributionName;
+    String quotationManagerName;
     String insuranceCompanyName;
     String currency;
     Double rate;
+    String customerId;
+    String beneficiaryId;
     String createdBy;
-    String approveBy;
 }

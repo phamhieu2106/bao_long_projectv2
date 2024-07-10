@@ -6,9 +6,10 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@AllArgsConstructor
 @NoArgsConstructor
-public class CustomerModel {
-    String customerId;
-    String customerName;
+@AllArgsConstructor
+public class UserCreatedModel {
+    String username;
+    String office;
+    String apartment;
 }
