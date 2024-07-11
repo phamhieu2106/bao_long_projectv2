@@ -7,7 +7,7 @@ public interface QuotationEsService {
 
     WrapperResponse getQuotationPage(QuotationPageRequest request);
 
-    WrapperResponse getSearchQuotationPage(String keyword);
+    WrapperResponse getSearchQuotationPage(QuotationPageRequest request);
 
     WrapperResponse getQuotationDetail(String quotationId);
 }

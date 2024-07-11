@@ -96,17 +96,13 @@ public class QuotationAggregate extends BaseAggregate {
 
 //    public QuotationUpdateEvent apply(QuotationUpdateCommand command) {
 //
-//        this.productType = command.getProductType();
-//        this.productCode = command.getProductCode();
 //        this.product = command.getProduct();
+//        this.insuranceTypeModel = command.getInsuranceTypeModel();
+//        this.totalFeeAfterTax = command.getTotalFeeAfterTax();
 //        this.isCoinsurance = command.getIsCoinsurance();
 //        this.quotationDistributionName = command.getQuotationDistributionName();
 //        this.insuranceCompanyName = command.getInsuranceCompanyName();
-//        this.currency = command.getCurrency();
-//        this.rate = command.getRate();
-//        this.createdBy = command.getCreatedBy();
-//        this.insuranceTypeModel = command.getInsuranceTypeModel();
-//        this.totalFeeAfterTax = command.getTotalFeeAfterTax();
+//
 //
 //        return new QuotationUpdateEvent(
 //                new Date(),

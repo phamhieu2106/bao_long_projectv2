@@ -46,6 +46,7 @@ public class QuotationHandlerImpl implements QuotationHandler {
                 .getCustomerModelById(command.getBeneficiaryId()));
         aggregate.setUserCreatedModel(userQueryClient.getUserModelById(command.getCreatedBy()));
         QuotationCreateEvent event = aggregate.apply(command);
+
         storeService.save(aggregate, event);
         producerService.publish("quotation_create", event);
     }
@@ -58,9 +59,12 @@ public class QuotationHandlerImpl implements QuotationHandler {
         aggregate.setEffectiveDate(date.getValidInsuranceDate());
         aggregate.setMaturityDate(date.getVoidInsuranceDate());
         aggregate.setQuotationStatus(QuotationStatus.DRAFTING);
-
-
+        aggregate.setCustomerModel(customerQueryClient
+                .getCustomerModelById(command.getCustomerId()));
+        aggregate.setBeneficiaryModel(customerQueryClient
+                .getCustomerModelById(command.getBeneficiaryId()));
 //        QuotationUpdateEvent event = aggregate.apply(command);
+//
 //        storeService.save(aggregate, event);
 //        producerService.publish("quotation_update", event);
     }

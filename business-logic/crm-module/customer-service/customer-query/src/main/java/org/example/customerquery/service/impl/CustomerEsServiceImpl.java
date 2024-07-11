@@ -46,26 +46,29 @@ public class CustomerEsServiceImpl implements CustomerEsService {
     }
 
     @Override
-    public WrapperResponse searchCustomers(String keyword) {
+    public WrapperResponse searchCustomers(CustomerPageRequest request) {
 
-        CustomerPageRequest pageRequest = new CustomerPageRequest();
+        if (request.getKeyword().isBlank()) {
+            return getPageCustomer(request);
+        }
+
         Pageable pageable = PageRequest.of(
-                pageRequest.getPageNumber(), pageRequest.getPageSize(), PageConstant.getSortBys(
-                        pageRequest.getSortBys(), pageRequest.getSortOrder()
+                request.getPageNumber(), request.getPageSize(), PageConstant.getSortBys(
+                        request.getSortBys(), request.getSortOrder()
                 )
         );
 
         co.elastic.clients.elasticsearch._types.query_dsl.Query nativeQuery =
                 co.elastic.clients.elasticsearch._types.query_dsl.Query.of(nq -> nq
                         .bool(b -> b
-                                .should(t1 -> t1.term(t -> t.field("id").value(keyword)))
-                                .should(t1 -> t1.term(t -> t.field("customerCode").value(keyword)))
-                                .should(t1 -> t1.term(t -> t.field("statusCustomer").value(keyword)))
-                                .should(t1 -> t1.term(t -> t.field("customerNameKeyword").value(keyword)))
-                                .should(t1 -> t1.term(t -> t.field("email").value(keyword)))
-                                .should(t1 -> t1.term(t -> t.field("phoneNumber").value(keyword)))
-                                .should(t1 -> t1.term(t -> t.field("inChargeBy").value(keyword)))
-                                .should(s2 -> s2.match(m -> m.field("customerName").query(keyword))
+                                .should(t1 -> t1.term(t -> t.field("id").value(request.getKeyword())))
+                                .should(t1 -> t1.term(t -> t.field("customerCode").value(request.getKeyword())))
+                                .should(t1 -> t1.term(t -> t.field("statusCustomer").value(request.getKeyword())))
+                                .should(t1 -> t1.term(t -> t.field("customerNameKeyword").value(request.getKeyword())))
+                                .should(t1 -> t1.term(t -> t.field("email").value(request.getKeyword())))
+                                .should(t1 -> t1.term(t -> t.field("phoneNumber").value(request.getKeyword())))
+                                .should(t1 -> t1.term(t -> t.field("inChargeBy").value(request.getKeyword())))
+                                .should(s2 -> s2.match(m -> m.field("customerName").query(request.getKeyword()))
                                 )
                         )
                 );

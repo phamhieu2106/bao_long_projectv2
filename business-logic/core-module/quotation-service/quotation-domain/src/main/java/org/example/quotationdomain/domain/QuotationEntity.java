@@ -1,11 +1,15 @@
 package org.example.quotationdomain.domain;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import org.example.sharedlibrary.base_quo_poli.BaseQuoPoli;
+import org.example.quotationdomain.converter.UserCreatedModelConverter;
 import org.example.sharedlibrary.base_quo_poli.CustomerModel;
 import org.example.sharedlibrary.base_quo_poli.UserCreatedModel;
+import org.example.sharedlibrary.converter.CustomerModelConverter;
 import org.example.sharedlibrary.converter.ProductMapConverter;
 import org.example.sharedlibrary.enumeration.ProductType;
 import org.example.sharedlibrary.enumeration.QuotationStatus;
@@ -21,9 +25,7 @@ import java.util.Map;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class QuotationEntity extends BaseQuoPoli {
+public class QuotationEntity {
 
     @Id
     String id;
@@ -53,13 +55,32 @@ public class QuotationEntity extends BaseQuoPoli {
     String approveBy;
     Date approvedAt;
 
+    String quotationDistributionName;
+    String quotationManagerName;
+    String insuranceCompanyName;
+    Date effectiveDate;
+    Date maturityDate;
+    @Convert(converter = CustomerModelConverter.class)
+    CustomerModel customer;
+    @Convert(converter = CustomerModelConverter.class)
+    CustomerModel beneficiary;
+    @Convert(converter = UserCreatedModelConverter.class)
+    UserCreatedModel userCreatedModel;
+
     public QuotationEntity(String id, String productName, ProductType productType, String productCode, String quotationDistributionName, String quotationManagerName, String insuranceCompanyName,
                            Date effectiveDate, Date maturityDate, CustomerModel customer, CustomerModel beneficiary, String quotationCode,
                            String policyCode, List<Map<String, Object>> product, Boolean isCoinsurance
             , QuotationStatus quotationStatus, QuotationTypeStatus quotationTypeStatus, String currency, Double rate, Date createdAt, UserCreatedModel userCreatedModel,
-                           String approveBy, Date approvedAt) {
-        super(quotationDistributionName, quotationManagerName, insuranceCompanyName, effectiveDate, maturityDate, customer, beneficiary, userCreatedModel);
+                           String approveBy, Date approvedAt, Double totalFeeAfterTax, List<Map<String, Object>> insuranceTypeModel) {
         this.id = id;
+        this.quotationDistributionName = quotationDistributionName;
+        this.quotationManagerName = quotationManagerName;
+        this.insuranceCompanyName = insuranceCompanyName;
+        this.effectiveDate = effectiveDate;
+        this.maturityDate = maturityDate;
+        this.customer = customer;
+        this.beneficiary = beneficiary;
+        this.userCreatedModel = userCreatedModel;
         this.quotationCode = quotationCode;
         this.policyCode = policyCode;
         this.product = product;
@@ -72,8 +93,9 @@ public class QuotationEntity extends BaseQuoPoli {
         this.currency = currency;
         this.rate = rate;
         this.createdAt = createdAt;
-        this.userCreatedModel = userCreatedModel;
         this.approveBy = approveBy;
         this.approvedAt = approvedAt;
+        this.totalFeeAfterTax = totalFeeAfterTax;
+        this.insuranceTypeModel = insuranceTypeModel;
     }
 }

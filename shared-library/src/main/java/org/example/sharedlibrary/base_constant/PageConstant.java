@@ -13,6 +13,7 @@ public class PageConstant {
     public static final String PAGE_SORT_TYPE = "ASC";
     public static final String PAGE_DEFAULT_VALUE = "";
     public static final String PAGE_DEFAULT_SORT_BYS = "id";
+    public static final String PAGE_DEFAULT_FILTERS = null;
 
     private PageConstant() {
         super();

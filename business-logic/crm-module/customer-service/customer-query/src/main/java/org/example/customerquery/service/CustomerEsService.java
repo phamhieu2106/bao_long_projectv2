@@ -8,5 +8,5 @@ public interface CustomerEsService {
 
     WrapperResponse getCustomer(String customerId);
 
-    WrapperResponse searchCustomers(String keyword);
+    WrapperResponse searchCustomers(CustomerPageRequest keyword);
 }

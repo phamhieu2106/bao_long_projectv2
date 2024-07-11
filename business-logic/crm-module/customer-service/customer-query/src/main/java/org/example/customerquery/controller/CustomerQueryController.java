@@ -19,8 +19,8 @@ public class CustomerQueryController {
     }
 
     @GetMapping("/search")
-    public WrapperResponse searchCustomers(@RequestParam String keyword) {
-        return customerEsService.searchCustomers(keyword);
+    public WrapperResponse searchCustomers(@RequestBody CustomerPageRequest request) {
+        return customerEsService.searchCustomers(request);
     }
 
     @GetMapping("/detail")

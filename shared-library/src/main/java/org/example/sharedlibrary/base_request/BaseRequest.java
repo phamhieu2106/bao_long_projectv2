@@ -6,6 +6,8 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.example.sharedlibrary.base_constant.PageConstant;
 
+import java.util.List;
+
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -15,4 +17,6 @@ public abstract class BaseRequest {
     String sortOrder = PageConstant.PAGE_SORT_TYPE;
     String keyword = PageConstant.PAGE_DEFAULT_VALUE;
     String[] sortBys = {PageConstant.PAGE_DEFAULT_SORT_BYS};
+    List<FilterKeywordRequest> filterKeywords = null;
+    List<FilterDateRequest> filterDateRequests = null;
 }
