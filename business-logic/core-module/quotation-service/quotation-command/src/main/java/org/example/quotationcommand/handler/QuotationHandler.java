@@ -1,5 +1,6 @@
 package org.example.quotationcommand.handler;
 
+import org.example.quotationdomain.command.QuotationChangeStatusCommand;
 import org.example.quotationdomain.command.QuotationCreateCommand;
 import org.example.quotationdomain.command.QuotationUpdateCommand;
 
@@ -8,4 +9,5 @@ public interface QuotationHandler {
 
     void handle(QuotationUpdateCommand command);
 
+    void handle(QuotationChangeStatusCommand command);
 }

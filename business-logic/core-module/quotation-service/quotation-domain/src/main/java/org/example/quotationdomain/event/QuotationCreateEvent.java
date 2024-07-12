@@ -44,6 +44,8 @@ public class QuotationCreateEvent extends BaseEvent {
     List<Map<String, Object>> insuranceTypeModel;
     Double totalFeeAfterTax;
     UserCreatedModel userCreatedModel;
+    String approvedBy;
+    Date approveAt;
 
     public QuotationCreateEvent(Date timestamp, String createdBy, String quotationId, String quotationCode,
                                 String policyCode, ProductType productType, String productName, String productCode, List<Map<String, Object>> product,

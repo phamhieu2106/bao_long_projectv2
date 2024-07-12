@@ -2,6 +2,7 @@ package org.example.userquery.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.sharedlibrary.base_quo_poli.UserCreatedModel;
+import org.example.sharedlibrary.model.UserModel;
 import org.example.userdomain.domain.UserEntity;
 import org.example.userquery.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,11 @@ public class InternalUserController {
     @GetMapping("/getUserModelById")
     public UserCreatedModel getUserModelById(@RequestParam String username) {
         return userService.getUserModelById(username);
+    }
+
+    @GetMapping("/getUserModelByUsername")
+    public UserModel getUserModelByUsername(@RequestParam String username) {
+        return userService.getUserModelByUsername(username);
     }
 
     @GetMapping("/generateCode")

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.example.quotationdomain.converter.UserCreatedModelConverter;
+import org.example.quotationdomain.converter.UserModelConverter;
 import org.example.sharedlibrary.base_quo_poli.CustomerModel;
 import org.example.sharedlibrary.base_quo_poli.UserCreatedModel;
 import org.example.sharedlibrary.converter.CustomerModelConverter;
@@ -14,6 +15,7 @@ import org.example.sharedlibrary.converter.ProductMapConverter;
 import org.example.sharedlibrary.enumeration.ProductType;
 import org.example.sharedlibrary.enumeration.QuotationStatus;
 import org.example.sharedlibrary.enumeration.QuotationTypeStatus;
+import org.example.sharedlibrary.model.UserModel;
 
 import java.util.Date;
 import java.util.List;
@@ -66,6 +68,10 @@ public class QuotationEntity {
     CustomerModel beneficiary;
     @Convert(converter = UserCreatedModelConverter.class)
     UserCreatedModel userCreatedModel;
+
+    @Convert(converter = UserModelConverter.class)
+    @Column(length = 1000)
+    List<UserModel> userModels;
 
     public QuotationEntity(String id, String productName, ProductType productType, String productCode, String quotationDistributionName, String quotationManagerName, String insuranceCompanyName,
                            Date effectiveDate, Date maturityDate, CustomerModel customer, CustomerModel beneficiary, String quotationCode,

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.sharedlibrary.base_constant.PageConstant;
 import org.example.sharedlibrary.base_quo_poli.UserCreatedModel;
 import org.example.sharedlibrary.base_request.BaseRequest;
+import org.example.sharedlibrary.model.UserModel;
 import org.example.userdomain.domain.UserEntity;
 import org.example.userquery.repository.UserEntityRepository;
 import org.example.userquery.service.UserService;
@@ -44,7 +45,21 @@ public class UserServiceImpl implements UserService {
         return new UserCreatedModel(
                 user.getUsername(),
                 user.getOffice(),
-                user.getDepartments().toString()
+                user.getDepartment().name()
+        );
+    }
+
+    @Override
+    public UserModel getUserModelByUsername(String username) {
+        Optional<UserEntity> userEntity = userEntityRepository.findByUsername(username);
+        if (userEntity.isEmpty()) {
+            return null;
+        }
+        UserEntity user = userEntity.get();
+        return new UserModel(
+                user.getUsername(),
+                user.getRole(),
+                user.getPermissions()
         );
     }
 

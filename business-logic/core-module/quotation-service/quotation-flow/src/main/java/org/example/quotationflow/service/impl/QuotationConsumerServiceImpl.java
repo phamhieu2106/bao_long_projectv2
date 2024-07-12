@@ -1,14 +1,17 @@
 package org.example.quotationflow.service.impl;
 
+import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.example.quotationdomain.domain.QuotationEntity;
 import org.example.quotationdomain.domain.model_view.HealthIdentityVIewModel;
 import org.example.quotationdomain.domain.model_view.MotorIdentityViewModel;
 import org.example.quotationdomain.domain.view.QuotationView;
+import org.example.quotationdomain.event.QuotationChangeStatusEvent;
 import org.example.quotationdomain.event.QuotationCreateEvent;
 import org.example.quotationdomain.event.QuotationUpdateEvent;
 import org.example.quotationdomain.repository.QuotationESRepository;
 import org.example.quotationdomain.repository.QuotationEntityRepository;
+import org.example.sharedlibrary.enumeration.QuotationStatus;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -55,25 +59,7 @@ public class QuotationConsumerServiceImpl {
                 event.getInsuranceTypeModel()
         );
 
-        esRepository.save(QuotationView.builder()
-                .id(quotationEntity.getId())
-                .quotationCode(quotationEntity.getQuotationCode())
-                .policyCode(quotationEntity.getPolicyCode())
-                .quotationStatus(quotationEntity.getQuotationStatus())
-                .quotationTypeStatus(quotationEntity.getQuotationTypeStatus())
-                .productCode(quotationEntity.getProductCode())
-                .createdBy(quotationEntity.getUserCreatedModel().getUsername())
-                .userOffice(quotationEntity.getUserCreatedModel().getOffice())
-                .apartment(quotationEntity.getUserCreatedModel().getApartment())
-                .productType(quotationEntity.getProductType())
-                .customerName(quotationEntity.getCustomer().getCustomerName())
-                .customerNameKeyword(quotationEntity.getCustomer().getCustomerName())
-                .feeAfterTax(quotationEntity.getTotalFeeAfterTax())
-                .timeStamp(quotationEntity.getCreatedAt())
-                .approvedAt(quotationEntity.getApprovedAt())
-                .motorIdentityViewModel(getMotorIdentityModels(quotationEntity.getProduct()))
-                .healthIdentityVIewModel(getHealthIdentityModels(quotationEntity.getProduct()))
-                .build());
+        saveQuotationView(quotationEntity);
 
         repository.save(quotationEntity);
 
@@ -119,6 +105,49 @@ public class QuotationConsumerServiceImpl {
 //                quotationEntity.getCreatedAt(),
 //                quotationEntity.getCreatedBy()
 //        ));
+    }
+
+    @KafkaListener(topics = "quotation_change_status", groupId = "quotation_group")
+    public void handleChangeStatusEvent(QuotationChangeStatusEvent event) {
+        Optional<QuotationEntity> optional = repository.findById(event.getId());
+        if (optional.isEmpty()) {
+            throw new NotFoundException();
+        }
+
+        QuotationEntity quotationEntity = optional.get();
+        quotationEntity.setQuotationStatus(event.getQuotationStatus());
+        quotationEntity.setUserModels(event.getUserModels());
+
+        if (QuotationStatus.APPROVED.equals(event.getQuotationStatus())) {
+            quotationEntity.setApproveBy(event.getApprovedBy());
+            quotationEntity.setApprovedAt(event.getApprovedAt());
+        }
+
+
+        repository.save(quotationEntity);
+        saveQuotationView(quotationEntity);
+    }
+
+    private void saveQuotationView(QuotationEntity quotationEntity) {
+        esRepository.save(QuotationView.builder()
+                .id(quotationEntity.getId())
+                .quotationCode(quotationEntity.getQuotationCode())
+                .policyCode(quotationEntity.getPolicyCode())
+                .quotationStatus(quotationEntity.getQuotationStatus())
+                .quotationTypeStatus(quotationEntity.getQuotationTypeStatus())
+                .productCode(quotationEntity.getProductCode())
+                .createdBy(quotationEntity.getUserCreatedModel().getUsername())
+                .userOffice(quotationEntity.getUserCreatedModel().getOffice())
+                .apartment(quotationEntity.getUserCreatedModel().getApartment())
+                .productType(quotationEntity.getProductType())
+                .customerName(quotationEntity.getCustomer().getCustomerName())
+                .customerNameKeyword(quotationEntity.getCustomer().getCustomerName())
+                .feeAfterTax(quotationEntity.getTotalFeeAfterTax())
+                .timeStamp(quotationEntity.getCreatedAt())
+                .approvedAt(quotationEntity.getApprovedAt())
+                .motorIdentityViewModel(getMotorIdentityModels(quotationEntity.getProduct()))
+                .healthIdentityVIewModel(getHealthIdentityModels(quotationEntity.getProduct()))
+                .build());
     }
 
 

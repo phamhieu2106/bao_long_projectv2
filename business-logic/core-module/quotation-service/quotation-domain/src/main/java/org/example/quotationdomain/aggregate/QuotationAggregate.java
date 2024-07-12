@@ -5,8 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.example.quotationdomain.command.QuotationChangeStatusCommand;
 import org.example.quotationdomain.command.QuotationCreateCommand;
+import org.example.quotationdomain.command.QuotationUpdateCommand;
+import org.example.quotationdomain.event.QuotationChangeStatusEvent;
 import org.example.quotationdomain.event.QuotationCreateEvent;
+import org.example.quotationdomain.event.QuotationUpdateEvent;
 import org.example.sharedlibrary.base_class.BaseAggregate;
 import org.example.sharedlibrary.base_constant.GenerateConstant;
 import org.example.sharedlibrary.base_quo_poli.CustomerModel;
@@ -14,6 +18,7 @@ import org.example.sharedlibrary.base_quo_poli.UserCreatedModel;
 import org.example.sharedlibrary.enumeration.ProductType;
 import org.example.sharedlibrary.enumeration.QuotationStatus;
 import org.example.sharedlibrary.enumeration.QuotationTypeStatus;
+import org.example.sharedlibrary.model.UserModel;
 
 import java.util.Date;
 import java.util.List;
@@ -47,6 +52,9 @@ public class QuotationAggregate extends BaseAggregate {
     List<Map<String, Object>> insuranceTypeModel;
     Double totalFeeAfterTax;
     UserCreatedModel userCreatedModel;
+    List<UserModel> userModels;
+    String approvedBy;
+    Date approvedAt;
 
     public QuotationCreateEvent apply(QuotationCreateCommand command) {
 
@@ -94,39 +102,58 @@ public class QuotationAggregate extends BaseAggregate {
         );
     }
 
-//    public QuotationUpdateEvent apply(QuotationUpdateCommand command) {
-//
-//        this.product = command.getProduct();
-//        this.insuranceTypeModel = command.getInsuranceTypeModel();
-//        this.totalFeeAfterTax = command.getTotalFeeAfterTax();
-//        this.isCoinsurance = command.getIsCoinsurance();
-//        this.quotationDistributionName = command.getQuotationDistributionName();
-//        this.insuranceCompanyName = command.getInsuranceCompanyName();
-//
-//
-//        return new QuotationUpdateEvent(
-//                new Date(),
-//                this.createdBy,
-//                this.quotationId,
-//                this.quotationCode,
-//                this.policyCode,
-//                this.productType,
-//                this.productCode,
-//                this.product,
-//                this.isCoinsurance,
-//                this.quotationStatus,
-//                this.quotationDistributionName,
-//                this.quotationManagerName,
-//                this.insuranceCompanyName,
-//                this.effectiveDate,
-//                this.maturityDate,
-//                this.customerId,
-//                this.beneficiaryId,
-//                this.currency,
-//                this.rate,
-//                this.insuranceTypeModel,
-//                this.totalFeeAfterTax
-//        );
-//    }
+    public QuotationUpdateEvent apply(QuotationUpdateCommand command) {
 
+        this.product = command.getProduct();
+        this.insuranceTypeModel = command.getInsuranceTypeModel();
+        this.totalFeeAfterTax = command.getTotalFeeAfterTax();
+        this.isCoinsurance = command.getIsCoinsurance();
+        this.quotationDistributionName = command.getQuotationDistributionName();
+        this.insuranceCompanyName = command.getInsuranceCompanyName();
+
+        return new QuotationUpdateEvent(
+                new Date(),
+                this.userCreatedModel.getUsername(),
+                this.id,
+                this.quotationCode,
+                this.policyCode,
+                this.productType,
+                this.productName,
+                this.productCode,
+                this.product,
+                this.isCoinsurance,
+                this.quotationStatus,
+                this.quotationDistributionName,
+                this.quotationManagerName,
+                this.insuranceCompanyName,
+                this.effectiveDate,
+                this.maturityDate,
+                this.customerModel,
+                this.beneficiaryModel,
+                this.currency,
+                this.rate,
+                this.insuranceTypeModel,
+                this.totalFeeAfterTax,
+                this.userCreatedModel,
+                this.quotationTypeStatus
+        );
+    }
+
+    public QuotationChangeStatusEvent apply(QuotationChangeStatusCommand command) {
+        if (QuotationStatus.APPROVED.equals(command.getQuotationStatus())) {
+            this.approvedBy = command.getCreatedBy();
+            this.approvedAt = new Date();
+        }
+        this.quotationStatus = command.getQuotationStatus();
+
+        return new QuotationChangeStatusEvent(
+                new Date(),
+                this.userCreatedModel.getUsername(),
+                this.id,
+                this.quotationStatus,
+                this.userModels,
+                this.approvedBy,
+                this.approvedAt
+        );
+    }
 }

@@ -1,8 +1,10 @@
 package org.example.quotationquery.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.example.quotationdomain.domain.QuotationEntity;
 import org.example.quotationdomain.repository.QuotationEntityRepository;
 import org.example.quotationquery.service.QuotationService;
+import org.example.sharedlibrary.model.UserModel;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -35,6 +37,20 @@ public class QuotationServiceImpl implements QuotationService {
     @Override
     public boolean exitsById(@PathVariable String quotationId) {
         return quotationEntityRepository.existsById(quotationId);
+    }
+
+    @Override
+    public boolean exitsByUserModel(UserModel userModel, String quotationId) {
+        QuotationEntity quotationEntity = quotationEntityRepository.findById(quotationId).orElse(null);
+        if (quotationEntity == null) {
+            return true;
+        }
+        for (UserModel user : quotationEntity.getUserModels()) {
+            if (user.getUsername().equals(userModel.getUsername())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private String getYearSuffix() {

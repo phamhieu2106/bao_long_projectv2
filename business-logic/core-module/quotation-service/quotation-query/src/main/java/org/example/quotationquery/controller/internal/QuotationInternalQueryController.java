@@ -2,10 +2,8 @@ package org.example.quotationquery.controller.internal;
 
 import lombok.RequiredArgsConstructor;
 import org.example.quotationquery.service.QuotationService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.example.sharedlibrary.model.UserModel;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/internal/api/quotations")
@@ -18,5 +16,14 @@ public class QuotationInternalQueryController {
     public String getQuotationCode(@PathVariable String productCode) {
         return quotationService.getQuotationCode(productCode);
     }
-    
+
+    @GetMapping("/exitsById/{quotationId}")
+    public boolean exitsById(@PathVariable String quotationId) {
+        return quotationService.exitsById(quotationId);
+    }
+
+    @PostMapping("/exitsByUserModel/{quotationId}")
+    public boolean exitsByUserModel(@RequestBody UserModel userModel, @PathVariable String quotationId) {
+        return quotationService.exitsByUserModel(userModel, quotationId);
+    }
 }

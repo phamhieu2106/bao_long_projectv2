@@ -17,6 +17,7 @@
     <file type="web" url="file://$PROJECT_DIR$/business-logic/crm-module/customer-service/customer-query" />
     <file type="web" url="file://$PROJECT_DIR$/eureka-server" />
     <file type="web" url="file://$PROJECT_DIR$/infrastructure/auth-server" />
+    <file type="web" url="file://$PROJECT_DIR$/infrastructure/schedule-server" />
     <file type="web" url="file://$PROJECT_DIR$/shared-library" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="17" project-jdk-type="JavaSDK">

@@ -1,7 +1,7 @@
 package org.example.sharedlibrary.enumeration;
 
 public enum QuotationStatus {
-    EXTRA,
+    REQUIRE_INFORMATION,
     DRAFTING,
     AWAIT_APPROVE,
     APPROVED,

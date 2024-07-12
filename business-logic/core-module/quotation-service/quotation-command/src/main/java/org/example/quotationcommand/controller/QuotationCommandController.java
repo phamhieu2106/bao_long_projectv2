@@ -2,6 +2,7 @@ package org.example.quotationcommand.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.quotationcommand.service.QuotationService;
+import org.example.quotationdomain.command.QuotationChangeStatusCommand;
 import org.example.quotationdomain.command.QuotationCreateCommand;
 import org.example.quotationdomain.command.QuotationUpdateCommand;
 import org.example.sharedlibrary.base_constant.HeaderRequestConstant;
@@ -31,6 +32,16 @@ public class QuotationCommandController {
         command.setCreatedBy(username);
         command.setQuotationId(quotationId);
         return quotationService.update(command);
+    }
+
+    @PostMapping("/change-status")
+    public WrapperResponse changeStatus(@RequestBody QuotationChangeStatusCommand command,
+                                        @RequestParam String quotationId,
+                                        @RequestHeader(value = HeaderRequestConstant.REQUEST_HEADER
+                                                , defaultValue = HeaderRequestConstant.ANONYMOUS) String username) {
+        command.setCreatedBy(username);
+        command.setId(quotationId);
+        return quotationService.changeStatus(command);
     }
 
 

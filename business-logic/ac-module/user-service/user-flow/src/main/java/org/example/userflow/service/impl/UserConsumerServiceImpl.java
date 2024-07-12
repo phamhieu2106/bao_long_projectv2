@@ -41,8 +41,11 @@ public class UserConsumerServiceImpl implements UserConsumerService {
         entity.setPassword(event.getPassword());
         entity.setRole(event.getRole());
         entity.setCreatedAt(event.getTimestamp());
-        entity.setDepartments(event.getDepartments());
+        entity.setDepartment(event.getDepartment());
         entity.setOffice(event.getOffice());
+        entity.setPermissions(event.getPermissions());
+        entity.setIsDeleted(false);
+        entity.setCreatedBy(event.getCreatedBy());
         userConsumerRepository.save(entity);
     }
 
@@ -55,8 +58,9 @@ public class UserConsumerServiceImpl implements UserConsumerService {
         UserEntity entity = optionalUserEntity.get();
         entity.setPassword(event.getPassword());
         entity.setRole(event.getRole());
-        entity.setDepartments(event.getDepartments());
+        entity.setDepartment(event.getDepartment());
         entity.setOffice(event.getOffice());
+        entity.setPermissions(entity.getPermissions());
         userConsumerRepository.save(entity);
     }
 

@@ -18,14 +18,16 @@ public class UserCommandController {
 
     @PostMapping("/create")
     public WrapperResponse create(@RequestBody UserCreateCommand command,
-                                  @RequestHeader(value = HeaderRequestConstant.REQUEST_HEADER, defaultValue = "anonymous") String username) {
+                                  @RequestHeader(value = HeaderRequestConstant.REQUEST_HEADER,
+                                          defaultValue = HeaderRequestConstant.ANONYMOUS) String username) {
         command.setCreatedBy(username);
         return userCommandService.create(command);
     }
 
     @PostMapping("/update/{id}")
     public WrapperResponse update(@RequestBody UserUpdateCommand command,
-                                  @RequestHeader(value = HeaderRequestConstant.REQUEST_HEADER, defaultValue = "anonymous") String username,
+                                  @RequestHeader(value = HeaderRequestConstant.REQUEST_HEADER,
+                                          defaultValue = HeaderRequestConstant.ANONYMOUS) String username,
                                   @PathVariable String id) {
         command.setCreatedBy(username);
         command.setUserId(id);
@@ -34,7 +36,8 @@ public class UserCommandController {
 
     @PostMapping("/delete/{id}")
     public WrapperResponse delete(@RequestBody UserDeleteCommand command,
-                                  @RequestHeader(value = HeaderRequestConstant.REQUEST_HEADER, defaultValue = "anonymous") String username,
+                                  @RequestHeader(value = HeaderRequestConstant.REQUEST_HEADER,
+                                          defaultValue = HeaderRequestConstant.ANONYMOUS) String username,
                                   @PathVariable String id) {
         command.setCreatedBy(username);
         command.setUserId(id);

@@ -5,8 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.example.sharedlibrary.base_class.BaseCommand;
-import org.example.sharedlibrary.enumeration.Department;
-import org.example.sharedlibrary.enumeration.Role;
+import org.example.sharedlibrary.enumeration.ac.Department;
+import org.example.sharedlibrary.enumeration.ac.Permission;
+import org.example.sharedlibrary.enumeration.ac.Role;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class UserUpdateCommand extends BaseCommand {
     String password;
     Role role;
     String office;
-    List<Department> departments;
+    Department department;
     String createdBy;
+    List<Permission> permissions;
 }

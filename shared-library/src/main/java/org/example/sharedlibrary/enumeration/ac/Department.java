@@ -1,4 +1,4 @@
-package org.example.sharedlibrary.enumeration;
+package org.example.sharedlibrary.enumeration.ac;
 
 public enum Department {
     FBE,

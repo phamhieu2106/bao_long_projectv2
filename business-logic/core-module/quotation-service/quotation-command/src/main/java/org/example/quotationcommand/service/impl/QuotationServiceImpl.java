@@ -6,6 +6,7 @@ import org.example.quotationcommand.client.QuotationQueryClient;
 import org.example.quotationcommand.client.UserQueryClient;
 import org.example.quotationcommand.handler.QuotationHandler;
 import org.example.quotationcommand.service.QuotationService;
+import org.example.quotationdomain.command.QuotationChangeStatusCommand;
 import org.example.quotationdomain.command.QuotationCreateCommand;
 import org.example.quotationdomain.command.QuotationDeleteCommand;
 import org.example.quotationdomain.command.QuotationUpdateCommand;
@@ -27,6 +28,11 @@ public class QuotationServiceImpl implements QuotationService {
     @Override
     public WrapperResponse create(QuotationCreateCommand command) {
         try {
+            if (command.getProduct() == null) {
+                return WrapperResponse.fail(
+                        "At least 1 product!", HttpStatus.BAD_REQUEST
+                );
+            }
             if (!customerQueryClient.exitsById(command.getCustomerId())) {
                 return WrapperResponse.fail(
                         "Not Found Customer!", HttpStatus.NOT_FOUND
@@ -51,6 +57,11 @@ public class QuotationServiceImpl implements QuotationService {
     @Override
     public WrapperResponse update(QuotationUpdateCommand command) {
         try {
+            if (command.getProduct() == null) {
+                return WrapperResponse.fail(
+                        "At least 1 product!", HttpStatus.BAD_REQUEST
+                );
+            }
             if (customerQueryClient.exitsById(command.getCustomerId())) {
                 return WrapperResponse.fail(
                         "Not Found Customer!", HttpStatus.NOT_FOUND
@@ -61,7 +72,31 @@ public class QuotationServiceImpl implements QuotationService {
                         "Not Found Quotation!", HttpStatus.NOT_FOUND
                 );
             }
-            if (userQueryClient.isExitSByUsername(command.getCreatedBy())) {
+            if (!userQueryClient.isExitSByUsername(command.getCreatedBy())) {
+                return WrapperResponse.fail(
+                        "Not Found User!", HttpStatus.NOT_FOUND
+                );
+            }
+            handler.handle(command);
+            return WrapperResponse.success(
+                    HttpStatus.OK, HttpStatus.OK
+            );
+        } catch (Exception e) {
+            return WrapperResponse.fail(
+                    HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
+    }
+
+    @Override
+    public WrapperResponse changeStatus(QuotationChangeStatusCommand command) {
+        try {
+            if (!quotationQueryClient.exitsById(command.getId())) {
+                return WrapperResponse.fail(
+                        "Not Found Quotation!", HttpStatus.NOT_FOUND
+                );
+            }
+            if (!userQueryClient.isExitSByUsername(command.getCreatedBy())) {
                 return WrapperResponse.fail(
                         "Not Found User!", HttpStatus.NOT_FOUND
                 );

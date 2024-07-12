@@ -6,8 +6,9 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.example.sharedlibrary.base_class.BaseAggregate;
 import org.example.sharedlibrary.base_constant.GenerateConstant;
-import org.example.sharedlibrary.enumeration.Department;
-import org.example.sharedlibrary.enumeration.Role;
+import org.example.sharedlibrary.enumeration.ac.Department;
+import org.example.sharedlibrary.enumeration.ac.Permission;
+import org.example.sharedlibrary.enumeration.ac.Role;
 import org.example.userdomain.command.UserCreateCommand;
 import org.example.userdomain.command.UserDeleteCommand;
 import org.example.userdomain.command.UserUpdateCommand;
@@ -29,7 +30,8 @@ public class UserAggregate extends BaseAggregate {
     String password;
     Role role;
     String office;
-    List<Department> departments;
+    Department department;
+    List<Permission> permissions;
     String createdBy;
 
     public UserCreateEvent applyCreate(UserCreateCommand command) {
@@ -38,8 +40,9 @@ public class UserAggregate extends BaseAggregate {
         this.password = command.getPassword();
         this.role = command.getRole();
         this.office = command.getOffice();
-        this.departments = command.getDepartments();
+        this.department = command.getDepartment();
         this.createdBy = command.getCreatedBy();
+        this.permissions = command.getPermissions();
 
         return new UserCreateEvent(
                 new Date(),
@@ -50,7 +53,8 @@ public class UserAggregate extends BaseAggregate {
                 this.password,
                 this.role,
                 this.office,
-                this.departments
+                this.department,
+                this.permissions
         );
     }
 
@@ -59,8 +63,9 @@ public class UserAggregate extends BaseAggregate {
         this.password = command.getPassword();
         this.role = command.getRole();
         this.office = command.getOffice();
-        this.departments = command.getDepartments();
+        this.department = command.getDepartment();
         this.createdBy = command.getCreatedBy();
+        this.permissions = command.getPermissions();
 
         return new UserUpdateEvent(
                 new Date(),
@@ -71,7 +76,8 @@ public class UserAggregate extends BaseAggregate {
                 this.password,
                 this.role,
                 this.office,
-                this.departments
+                this.department,
+                this.permissions
         );
     }
 
