@@ -59,7 +59,7 @@ public class QuotationConsumerServiceImpl {
                 event.getInsuranceTypeModel()
         );
 
-        saveQuotationView(quotationEntity);
+//        saveQuotationView(quotationEntity);
 
         repository.save(quotationEntity);
 
@@ -117,7 +117,7 @@ public class QuotationConsumerServiceImpl {
         QuotationEntity quotationEntity = optional.get();
         quotationEntity.setQuotationStatus(event.getQuotationStatus());
         quotationEntity.setUserModels(event.getUserModels());
-
+        quotationEntity.setLastUserRoleUpdate(event.getLastUserRoleUpdate());
         if (QuotationStatus.APPROVED.equals(event.getQuotationStatus())) {
             quotationEntity.setApproveBy(event.getApprovedBy());
             quotationEntity.setApprovedAt(event.getApprovedAt());
@@ -125,7 +125,7 @@ public class QuotationConsumerServiceImpl {
 
 
         repository.save(quotationEntity);
-        saveQuotationView(quotationEntity);
+//        saveQuotationView(quotationEntity);
     }
 
     private void saveQuotationView(QuotationEntity quotationEntity) {
@@ -143,7 +143,7 @@ public class QuotationConsumerServiceImpl {
                 .customerName(quotationEntity.getCustomer().getCustomerName())
                 .customerNameKeyword(quotationEntity.getCustomer().getCustomerName())
                 .feeAfterTax(quotationEntity.getTotalFeeAfterTax())
-                .timeStamp(quotationEntity.getCreatedAt())
+                .createdAt(quotationEntity.getCreatedAt())
                 .approvedAt(quotationEntity.getApprovedAt())
                 .motorIdentityViewModel(getMotorIdentityModels(quotationEntity.getProduct()))
                 .healthIdentityVIewModel(getHealthIdentityModels(quotationEntity.getProduct()))

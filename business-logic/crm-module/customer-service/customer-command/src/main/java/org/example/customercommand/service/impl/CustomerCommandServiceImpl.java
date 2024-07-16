@@ -65,26 +65,21 @@ public class CustomerCommandServiceImpl implements CustomerCommandService {
             }
 
             if (request.getPhoneNumber() == null
-                    || request.getPhoneNumber().isBlank() || request.getPhoneNumber().isEmpty()
-                    || CustomerValidate.isValidPhoneNumber(request.getPhoneNumber())
-                    || this.queryClient.existsByPhoneNumber(request.getPhoneNumber())) {
+                || request.getPhoneNumber().isBlank() || request.getPhoneNumber().isEmpty()
+                || CustomerValidate.isValidPhoneNumber(request.getPhoneNumber())
+                || this.queryClient.existsByPhoneNumber(request.getPhoneNumber())) {
                 return false;
             }
 
             if (request.getEmail() == null
-                    || request.getEmail().isBlank() || request.getEmail().isEmpty()
-                    || CustomerValidate.isValidEmail(request.getEmail())
-                    || this.queryClient.existsByEmail(request.getEmail())) {
+                || request.getEmail().isBlank() || request.getEmail().isEmpty()
+                || CustomerValidate.isValidEmail(request.getEmail())
+                || this.queryClient.existsByEmail(request.getEmail())) {
                 return false;
             }
 
-//            if (request.getIdentityModel() == null
-//                    || CustomerValidate.isValidProof(request.getIdentityModel())) {
-//                return false;
-//            }
-
             if (request.getJobName() == null || request.getJobName().isBlank()
-                    || request.getJobName().isEmpty()) {
+                || request.getJobName().isEmpty()) {
                 return false;
             }
 
@@ -110,29 +105,29 @@ public class CustomerCommandServiceImpl implements CustomerCommandService {
             }
 
             if (request.getPhoneNumber() == null
-                    || request.getPhoneNumber().isBlank() || request.getPhoneNumber().isEmpty()
-                    || CustomerValidate.isValidPhoneNumber(request.getPhoneNumber())
-                    || this.queryClient.existsByPhoneNumberAndIdIsNot(
+                || request.getPhoneNumber().isBlank() || request.getPhoneNumber().isEmpty()
+                || CustomerValidate.isValidPhoneNumber(request.getPhoneNumber())
+                || this.queryClient.existsByPhoneNumberAndIdIsNot(
                     request.getPhoneNumber(), customerId)) {
                 return false;
             }
 
             if (request.getEmail() == null
-                    || request.getEmail().isBlank() || request.getEmail().isEmpty()
-                    || CustomerValidate.isValidEmail(request.getEmail())
-                    || this.queryClient.existsByEmailAndIdIsNot(
+                || request.getEmail().isBlank() || request.getEmail().isEmpty()
+                || CustomerValidate.isValidEmail(request.getEmail())
+                || this.queryClient.existsByEmailAndIdIsNot(
                     request.getEmail(), customerId)) {
                 return false;
             }
 
 
             if (request.getIdentityModel() == null
-                    || CustomerValidate.isValidProof(request.getIdentityModel())) {
+                || CustomerValidate.isValidProof(request.getIdentityModel())) {
                 return false;
             }
 
             if (request.getJobName() == null || request.getJobName().isBlank()
-                    || request.getJobName().isEmpty()) {
+                || request.getJobName().isEmpty()) {
                 return false;
             }
 

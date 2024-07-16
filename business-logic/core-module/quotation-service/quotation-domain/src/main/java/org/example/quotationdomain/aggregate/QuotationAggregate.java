@@ -18,6 +18,7 @@ import org.example.sharedlibrary.base_quo_poli.UserCreatedModel;
 import org.example.sharedlibrary.enumeration.ProductType;
 import org.example.sharedlibrary.enumeration.QuotationStatus;
 import org.example.sharedlibrary.enumeration.QuotationTypeStatus;
+import org.example.sharedlibrary.enumeration.ac.Role;
 import org.example.sharedlibrary.model.UserModel;
 
 import java.util.Date;
@@ -55,6 +56,7 @@ public class QuotationAggregate extends BaseAggregate {
     List<UserModel> userModels;
     String approvedBy;
     Date approvedAt;
+    Role lastUserRoleUpdate;
 
     public QuotationCreateEvent apply(QuotationCreateCommand command) {
 

@@ -38,6 +38,7 @@ public class UserCommandHandlerService implements UserCommandHandler {
     public void handleUpdate(UserUpdateCommand command) {
         UserAggregate aggregate = userEventStoreService.getAggregate(command.getUserId());
         UserUpdateEvent event = aggregate.applyUpdate(command);
+
         userEventStoreService.storeEvent(UserCreateEvent.class.getSimpleName(), aggregate);
         producer.publish(TOPIC, event);
     }

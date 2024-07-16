@@ -40,6 +40,7 @@ public class QuotationEventStoreServiceImpl implements QuotationEventStoreServic
         return eventStoreEntity.getAggregateData();
     }
 
+
     private long getEventVersion(String aggregateId) {
         if (repository.countByAggregateId(aggregateId) == 0) {
             return 1;

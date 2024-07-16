@@ -10,6 +10,7 @@ import org.example.customerdomain.enumeration.StatusCustomer;
 import org.example.sharedlibrary.base_class.BaseEvent;
 import org.example.sharedlibrary.enumeration.Gender;
 import org.example.sharedlibrary.model.AddressModel;
+import org.example.sharedlibrary.model.UserInChargeModel;
 import org.example.sharedlibrary.model.health.HealthIdentityModel;
 
 import java.util.Date;
@@ -34,12 +35,12 @@ public class CustomerUpdateEvent extends BaseEvent {
     CustomerType customerType;
     Boolean isDeleted;
     Date createdAt;
-    String inChargeBy;
+    List<UserInChargeModel> inChargeBy;
 
     public CustomerUpdateEvent(Date timestamp, String createdBy, String id, String customerCode, String customerName, Gender gender,
                                String phoneNumber, String email, Date dateOfBirth, List<AddressModel> addressModels,
                                String jobName, HealthIdentityModel identityModel, StatusCustomer statusCustomer,
-                               CustomerType customerType, Boolean isDeleted, String inChargeBy) {
+                               CustomerType customerType, Boolean isDeleted, List<UserInChargeModel> inChargeBy) {
         super(timestamp, createdBy);
         this.id = id;
         this.customerCode = customerCode;

@@ -3,12 +3,14 @@ package org.example.customerdomain.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.example.customerdomain.converter.UserInChargeModelConverter;
 import org.example.customerdomain.enumeration.CustomerType;
 import org.example.customerdomain.enumeration.StatusCustomer;
 import org.example.sharedlibrary.converter.AddressModelConverter;
 import org.example.sharedlibrary.converter.HealthIdentityModelConverter;
 import org.example.sharedlibrary.enumeration.Gender;
 import org.example.sharedlibrary.model.AddressModel;
+import org.example.sharedlibrary.model.UserInChargeModel;
 import org.example.sharedlibrary.model.health.HealthIdentityModel;
 
 import java.util.Date;
@@ -42,7 +44,8 @@ public class CustomerEntity {
     StatusCustomer statusCustomer;
     @Enumerated(EnumType.STRING)
     CustomerType customerType;
-    String inChargeBy;
+    @Convert(converter = UserInChargeModelConverter.class)
+    List<UserInChargeModel> inChargeBy;
     Boolean isDeleted = false;
     Date createdAt;
     String createdBy;

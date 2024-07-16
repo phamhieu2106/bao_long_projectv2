@@ -57,7 +57,7 @@ public class QuotationView {
     Double feeAfterTax;
 
     @Field(type = FieldType.Date)
-    Date timeStamp;
+    Date createdAt;
     @Field(type = FieldType.Date)
     Date approvedAt;
 }

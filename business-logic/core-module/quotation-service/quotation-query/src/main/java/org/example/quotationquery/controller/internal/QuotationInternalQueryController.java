@@ -1,9 +1,12 @@
 package org.example.quotationquery.controller.internal;
 
 import lombok.RequiredArgsConstructor;
+import org.example.quotationdomain.command.QuotationScheduleStatusCommand;
 import org.example.quotationquery.service.QuotationService;
 import org.example.sharedlibrary.model.UserModel;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/internal/api/quotations")
@@ -25,5 +28,15 @@ public class QuotationInternalQueryController {
     @PostMapping("/exitsByUserModel/{quotationId}")
     public boolean exitsByUserModel(@RequestBody UserModel userModel, @PathVariable String quotationId) {
         return quotationService.exitsByUserModel(userModel, quotationId);
+    }
+
+    @PostMapping("/findAllIdsByQuotationStatus")
+    public List<String> findAllIdsByQuotationStatus(@RequestBody QuotationScheduleStatusCommand command) {
+        return quotationService.findAllIdsByQuotationStatus(command);
+    }
+
+    @GetMapping("/findAllIdsByCustomerId")
+    public List<String> findAllIdsByCustomerId(@RequestParam String customerId) {
+        return quotationService.findIdsByCustomerId(customerId);
     }
 }

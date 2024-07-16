@@ -10,6 +10,7 @@ import org.example.quotationcommand.service.QuotationProducerService;
 import org.example.quotationdomain.aggregate.QuotationAggregate;
 import org.example.quotationdomain.command.QuotationChangeStatusCommand;
 import org.example.quotationdomain.command.QuotationCreateCommand;
+import org.example.quotationdomain.command.QuotationScheduleStatusCommand;
 import org.example.quotationdomain.command.QuotationUpdateCommand;
 import org.example.quotationdomain.domain.model.InsuranceDate;
 import org.example.quotationdomain.event.QuotationChangeStatusEvent;
@@ -79,6 +80,11 @@ public class QuotationHandlerImpl implements QuotationHandler {
         QuotationAggregate aggregate = storeService.load(command.getId());
 
         UserModel userModel = userQueryClient.getUserModelByUsername(command.getCreatedBy());
+        if (aggregate.getLastUserRoleUpdate() != null) {
+            if (userModel.getRole().getValue() < aggregate.getLastUserRoleUpdate().getValue()) {
+                throw new RuntimeException("Not have permission to change Quotation status!");
+            }
+        }
 
         switch (command.getQuotationStatus()) {
             case AWAIT_APPROVE -> {
@@ -122,17 +128,39 @@ public class QuotationHandlerImpl implements QuotationHandler {
 
 
         QuotationChangeStatusEvent event = aggregate.apply(command);
+        aggregate.setLastUserRoleUpdate(userModel.getRole());
+        event.setLastUserRoleUpdate(userModel.getRole());
         storeService.save(aggregate, event);
         producerService.publish("quotation_change_status", event);
     }
 
+    @Override
+    public void handle(QuotationScheduleStatusCommand command) {
+        List<String> aggregates = quotationQueryClient.findAllIdsByQuotationStatus(command);
+        aggregates.forEach(qa -> {
+            QuotationChangeStatusCommand cmd = new QuotationChangeStatusCommand();
+            cmd.setId(qa);
+            cmd.setCreatedBy("system");
+            cmd.setQuotationStatus(QuotationStatus.DISABLED);
+            handle(cmd);
+        });
+    }
+
+    @Override
+    public void handle(String customerId) {
+        List<String> aggregates = quotationQueryClient.findAllIdsByCustomerId(customerId);
+        aggregates.forEach(qa -> {
+            QuotationChangeStatusCommand cmd = new QuotationChangeStatusCommand();
+            cmd.setId(qa);
+            cmd.setCreatedBy("system");
+            cmd.setQuotationStatus(QuotationStatus.DISABLED);
+            handle(cmd);
+        });
+    }
 
     private void isApproveAble(QuotationAggregate aggregate, QuotationChangeStatusCommand command) {
-        if (QuotationStatus.DRAFTING.equals(aggregate.getQuotationStatus())
-                || QuotationStatus.REQUIRE_INFORMATION.equals(aggregate.getQuotationStatus())
-                && QuotationStatus.APPROVED.equals(command.getQuotationStatus())) {
+        if (!QuotationStatus.AWAIT_APPROVE.equals(aggregate.getQuotationStatus())) {
             throw new RuntimeException("Invalid quotation status: " + aggregate.getQuotationStatus());
-
         }
     }
 
@@ -150,8 +178,8 @@ public class QuotationHandlerImpl implements QuotationHandler {
 
     private void isChangeStatusAble(QuotationAggregate aggregate) {
         if (QuotationStatus.REJECTED.equals(aggregate.getQuotationStatus())
-                || QuotationStatus.DISABLED.equals(aggregate.getQuotationStatus())
-                || QuotationStatus.APPROVED.equals(aggregate.getQuotationStatus())) {
+            || QuotationStatus.DISABLED.equals(aggregate.getQuotationStatus())
+            || QuotationStatus.APPROVED.equals(aggregate.getQuotationStatus())) {
             throw new RuntimeException("Invalid quotation status: " + aggregate.getQuotationStatus());
         }
     }
@@ -166,9 +194,6 @@ public class QuotationHandlerImpl implements QuotationHandler {
         }
     }
 
-//    private void validateUserRole(UserModel userModelCreated, UserModel userModelUpdated) {
-//
-//    }
 
     private InsuranceDate getQuotationValidAndVoidDate(Object productListObj) {
         List<InsuranceDate> dateList = new ArrayList<>();

@@ -6,9 +6,12 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.example.customerdomain.enumeration.StatusCustomer;
 import org.example.sharedlibrary.base_constant.ViewConstant;
+import org.example.sharedlibrary.model.UserInChargeModel;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -34,6 +37,6 @@ public class CustomerView {
     String email;
     @Field(type = FieldType.Keyword)
     String phoneNumber;
-    @Field(type = FieldType.Keyword)
-    String inChargeBy;
+    @Field(type = FieldType.Nested)
+    List<UserInChargeModel> inChargeBy;
 }

@@ -1,10 +1,11 @@
 package org.example.quotationcommand.client;
 
+import org.example.quotationdomain.command.QuotationScheduleStatusCommand;
 import org.example.sharedlibrary.model.UserModel;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @FeignClient(name = "quotation-query", path = "/internal/api/quotations")
 public interface QuotationQueryClient {
@@ -17,4 +18,10 @@ public interface QuotationQueryClient {
 
     @GetMapping("/exitsByUserModel/{quotationId}")
     boolean exitsByUserModel(@RequestBody UserModel userModel, @PathVariable String quotationId);
+
+    @PostMapping("/findAllIdsByQuotationStatus")
+    List<String> findAllIdsByQuotationStatus(@RequestBody QuotationScheduleStatusCommand command);
+
+    @GetMapping("/findAllIdsByCustomerId")
+    List<String> findAllIdsByCustomerId(@RequestParam String customerId);
 }

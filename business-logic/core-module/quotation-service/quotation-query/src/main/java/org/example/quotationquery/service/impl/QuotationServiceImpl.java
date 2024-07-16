@@ -1,6 +1,7 @@
 package org.example.quotationquery.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.example.quotationdomain.command.QuotationScheduleStatusCommand;
 import org.example.quotationdomain.domain.QuotationEntity;
 import org.example.quotationdomain.repository.QuotationEntityRepository;
 import org.example.quotationquery.service.QuotationService;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +39,16 @@ public class QuotationServiceImpl implements QuotationService {
     @Override
     public boolean exitsById(@PathVariable String quotationId) {
         return quotationEntityRepository.existsById(quotationId);
+    }
+
+    @Override
+    public List<String> findAllIdsByQuotationStatus(QuotationScheduleStatusCommand command) {
+        return quotationEntityRepository.findIdsByQuotationStatus(command.getQuotationStatus(), command.getNumberOfDaysExpired());
+    }
+
+    @Override
+    public List<String> findIdsByCustomerId(String customerId) {
+        return quotationEntityRepository.findIdsByCustomerId(customerId);
     }
 
     @Override

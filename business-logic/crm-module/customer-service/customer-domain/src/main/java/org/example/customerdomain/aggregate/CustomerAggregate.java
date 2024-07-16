@@ -17,6 +17,7 @@ import org.example.sharedlibrary.base_class.BaseAggregate;
 import org.example.sharedlibrary.base_constant.GenerateConstant;
 import org.example.sharedlibrary.enumeration.Gender;
 import org.example.sharedlibrary.model.AddressModel;
+import org.example.sharedlibrary.model.UserInChargeModel;
 import org.example.sharedlibrary.model.health.HealthIdentityModel;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +45,7 @@ public class CustomerAggregate extends BaseAggregate {
     HealthIdentityModel identityModel;
     StatusCustomer statusCustomer;
     CustomerType customerType;
-    String inChargeBy;
+    List<UserInChargeModel> inChargeBy;
     Boolean isDeleted = false;
     Date createdAt;
     String createdBy;
@@ -63,7 +64,6 @@ public class CustomerAggregate extends BaseAggregate {
         this.customerType = command.getCustomerType();
         this.createdAt = new Date();
         this.createdBy = command.getCreatedBy();
-        this.inChargeBy = command.getInChargeBy();
         return new CustomerCreateEvent(
                 this.createdAt,
                 this.createdBy,

@@ -18,6 +18,7 @@ import org.example.customerflow.service.CustomerConsumerService;
 import org.example.sharedlibrary.base_constant.ViewConstant;
 import org.example.sharedlibrary.enumeration.Gender;
 import org.example.sharedlibrary.model.AddressModel;
+import org.example.sharedlibrary.model.UserInChargeModel;
 import org.example.sharedlibrary.model.health.HealthIdentityModel;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
@@ -47,7 +48,7 @@ public class CustomerConsumerServiceImpl implements CustomerConsumerService {
                 event.getIdentityModel(), event.getStatusCustomer(), event.getCustomerType(),
                 event.getInChargeBy(), event.getIsDeleted(), event.getTimestamp(), event.getCreatedBy());
 
-        indexCustomerDoc(customerEntity);
+//        indexCustomerDoc(customerEntity);
     }
 
     @Override
@@ -98,7 +99,7 @@ public class CustomerConsumerServiceImpl implements CustomerConsumerService {
                                         Date dateOfBirth, List<AddressModel> addressModels,
                                         String jobName, HealthIdentityModel identityModel,
                                         StatusCustomer statusCustomer, CustomerType customerType,
-                                        String inChargeBy, Boolean isDeleted, Date timestamp,
+                                        List<UserInChargeModel> inChargeBy, Boolean isDeleted, Date timestamp,
                                         String createdBy) {
         return entityRepository.save(CustomerEntity.builder()
                 .id(id)
@@ -133,11 +134,6 @@ public class CustomerConsumerServiceImpl implements CustomerConsumerService {
                 .build();
 
         viewMap.save(customerView);
-
-//            client.index(i -> i
-//                    .index(ViewConstant.CUSTOMER_INDEX)
-//                    .id(customerView.getId())
-//                    .document(customerView));
 
     }
 }

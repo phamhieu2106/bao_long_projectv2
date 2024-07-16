@@ -15,6 +15,7 @@ import org.example.sharedlibrary.converter.ProductMapConverter;
 import org.example.sharedlibrary.enumeration.ProductType;
 import org.example.sharedlibrary.enumeration.QuotationStatus;
 import org.example.sharedlibrary.enumeration.QuotationTypeStatus;
+import org.example.sharedlibrary.enumeration.ac.Role;
 import org.example.sharedlibrary.model.UserModel;
 
 import java.util.Date;
@@ -72,6 +73,8 @@ public class QuotationEntity {
     @Convert(converter = UserModelConverter.class)
     @Column(length = 1000)
     List<UserModel> userModels;
+
+    Role lastUserRoleUpdate;
 
     public QuotationEntity(String id, String productName, ProductType productType, String productCode, String quotationDistributionName, String quotationManagerName, String insuranceCompanyName,
                            Date effectiveDate, Date maturityDate, CustomerModel customer, CustomerModel beneficiary, String quotationCode,

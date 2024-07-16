@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.example.sharedlibrary.base_class.BaseEvent;
 import org.example.sharedlibrary.enumeration.QuotationStatus;
+import org.example.sharedlibrary.enumeration.ac.Role;
 import org.example.sharedlibrary.model.UserModel;
 
 import java.util.Date;
@@ -22,6 +23,7 @@ public class QuotationChangeStatusEvent extends BaseEvent {
     List<UserModel> userModels;
     String approvedBy;
     Date approvedAt;
+    Role lastUserRoleUpdate;
 
     public QuotationChangeStatusEvent(Date timestamp, String createdBy, String id, QuotationStatus quotationStatus
             , List<UserModel> userModels, String approvedBy, Date approvedAt) {

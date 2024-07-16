@@ -1,0 +1,38 @@
+{
+  "index_patterns": [
+    "users*"
+  ],
+  "template": {
+    "settings": {
+      "number_of_shards": 1
+    },
+    "mappings": {
+      "properties": {
+        "createdAt": {
+          "type": "date"
+        },
+        "department": {
+          "type": "keyword"
+        },
+        "id": {
+          "type": "keyword"
+        },
+        "office": {
+          "type": "text"
+        },
+        "officeKeyword": {
+          "type": "keyword"
+        },
+        "role": {
+          "type": "keyword"
+        },
+        "userCode": {
+          "type": "keyword"
+        },
+        "username": {
+          "type": "keyword"
+        }
+      }
+    }
+  }
+}
