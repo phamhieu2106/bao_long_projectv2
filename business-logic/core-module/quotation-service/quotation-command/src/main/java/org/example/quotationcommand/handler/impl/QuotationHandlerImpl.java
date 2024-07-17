@@ -2,6 +2,7 @@ package org.example.quotationcommand.handler.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.example.quotationcommand.client.CustomerQueryClient;
+import org.example.quotationcommand.client.PolicyCommandClient;
 import org.example.quotationcommand.client.QuotationQueryClient;
 import org.example.quotationcommand.client.UserQueryClient;
 import org.example.quotationcommand.handler.QuotationHandler;
@@ -33,6 +34,7 @@ public class QuotationHandlerImpl implements QuotationHandler {
     private final QuotationQueryClient quotationQueryClient;
     private final CustomerQueryClient customerQueryClient;
     private final UserQueryClient userQueryClient;
+    private final PolicyCommandClient policyCommandClient;
 
     @Override
     public void handle(QuotationCreateCommand command) {
@@ -58,6 +60,7 @@ public class QuotationHandlerImpl implements QuotationHandler {
     public void handle(QuotationCopyCommand copyCommand) {
         QuotationAggregate aggregate = storeService.load(copyCommand.getId());
         QuotationCreateEvent event = aggregate.apply(copyCommand);
+
         storeService.save(aggregate, event);
         producerService.publish("quotation_create", event);
     }
@@ -177,6 +180,17 @@ public class QuotationHandlerImpl implements QuotationHandler {
         });
     }
 
+    @Override
+    public void releasePolicy(String quotationId) {
+        QuotationAggregate aggregate = storeService.load(quotationId);
+        String policyCode = policyCommandClient.releasePolicy(quotationId);
+        aggregate.setPolicyCode(policyCode);
+
+        QuotationUpdateEvent event = aggregate.apply();
+        storeService.save(aggregate, event);
+        producerService.publish("quotation_update", event);
+    }
+
     private void isApproveAble(QuotationAggregate aggregate, QuotationChangeStatusCommand command) {
         if (!QuotationStatus.AWAIT_APPROVE.equals(aggregate.getQuotationStatus())) {
             throw new RuntimeException("Invalid quotation status: " + aggregate.getQuotationStatus());
@@ -197,8 +211,8 @@ public class QuotationHandlerImpl implements QuotationHandler {
 
     private void isChangeStatusAble(QuotationAggregate aggregate) {
         if (QuotationStatus.REJECTED.equals(aggregate.getQuotationStatus())
-            || QuotationStatus.DISABLED.equals(aggregate.getQuotationStatus())
-            || QuotationStatus.APPROVED.equals(aggregate.getQuotationStatus())) {
+                || QuotationStatus.DISABLED.equals(aggregate.getQuotationStatus())
+                || QuotationStatus.APPROVED.equals(aggregate.getQuotationStatus())) {
             throw new RuntimeException("Invalid quotation status: " + aggregate.getQuotationStatus());
         }
     }
@@ -212,7 +226,6 @@ public class QuotationHandlerImpl implements QuotationHandler {
             throw new RuntimeException("Invalid permission: " + userModel.getPermissions());
         }
     }
-
 
     private InsuranceDate getQuotationValidAndVoidDate(Object productListObj) {
         List<InsuranceDate> dateList = new ArrayList<>();

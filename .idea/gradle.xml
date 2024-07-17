@@ -51,6 +51,43 @@
         </option>
       </GradleProjectSettings>
       <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/business-logic/core-module/policy-service/policy-command" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/business-logic/core-module/policy-service/policy-command" />
+            <option value="$PROJECT_DIR$/business-logic/core-module/policy-service/policy-domain" />
+            <option value="$PROJECT_DIR$/shared-library" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/business-logic/core-module/policy-service/policy-domain" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/business-logic/core-module/policy-service/policy-domain" />
+            <option value="$PROJECT_DIR$/shared-library" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/business-logic/core-module/policy-service/policy-flow" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/business-logic/core-module/policy-service/policy-flow" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/business-logic/core-module/policy-service/policy-query" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/business-logic/core-module/policy-service/policy-domain" />
+            <option value="$PROJECT_DIR$/business-logic/core-module/policy-service/policy-query" />
+            <option value="$PROJECT_DIR$/shared-library" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
         <option name="externalProjectPath" value="$PROJECT_DIR$/business-logic/core-module/quotation-service/quotation-command" />
         <option name="modules">
           <set>

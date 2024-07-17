@@ -52,15 +52,10 @@ public class QuotationCommandController {
         return quotationService.changeStatus(command);
     }
 
+    @PostMapping("/policyRelease")
+    public WrapperResponse policyRelease(@RequestParam String quotationId) {
+        return quotationService.policyRelease(quotationId);
+    }
 
-//    @PostMapping("/delete/{quotationId}")
-//    public WrapperResponse delete(@RequestBody QuotationDeleteCommand command,
-//                                  @PathVariable String quotationId,
-//                                  @RequestHeader(value = HeaderRequestConstant.REQUEST_HEADER
-//                                          , defaultValue = HeaderRequestConstant.ANONYMOUS) String username) {
-//        command.setCreatedBy(username);
-//        command.setQuotationId(quotationId);
-//        return quotationService.delete(command);
-//    }
 
 }

@@ -1,0 +1,5 @@
+rootProject.name = 'policy-domain'
+
+
+include(":shared-library")
+project(":shared-library").projectDir = file("../../../../shared-library")

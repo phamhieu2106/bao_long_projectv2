@@ -7,6 +7,10 @@
     <file type="web" url="file://$PROJECT_DIR$/business-logic/ac-module/user-service/user-domain" />
     <file type="web" url="file://$PROJECT_DIR$/business-logic/ac-module/user-service/user-flow" />
     <file type="web" url="file://$PROJECT_DIR$/business-logic/ac-module/user-service/user-query" />
+    <file type="web" url="file://$PROJECT_DIR$/business-logic/core-module/policy-service/policy-command" />
+    <file type="web" url="file://$PROJECT_DIR$/business-logic/core-module/policy-service/policy-domain" />
+    <file type="web" url="file://$PROJECT_DIR$/business-logic/core-module/policy-service/policy-flow" />
+    <file type="web" url="file://$PROJECT_DIR$/business-logic/core-module/policy-service/policy-query" />
     <file type="web" url="file://$PROJECT_DIR$/business-logic/core-module/quotation-service/quotation-command" />
     <file type="web" url="file://$PROJECT_DIR$/business-logic/core-module/quotation-service/quotation-domain" />
     <file type="web" url="file://$PROJECT_DIR$/business-logic/core-module/quotation-service/quotation-flow" />

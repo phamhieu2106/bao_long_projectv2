@@ -53,6 +53,7 @@ public class UserCommandHandlerService implements UserCommandHandler {
     public void handleDelete(UserDeleteCommand command) {
         UserAggregate aggregate = userEventStoreService.getAggregate(command.getUserId());
         UserDeleteEvent event = aggregate.applyDelete(command);
+        handleInChargeCustomer(aggregate.getUsername());
         userEventStoreService.storeEvent(UserCreateEvent.class.getSimpleName(), aggregate);
         producer.publish(TOPIC, event);
     }

@@ -2,6 +2,7 @@ package org.example.quotationquery.controller.internal;
 
 import lombok.RequiredArgsConstructor;
 import org.example.quotationdomain.command.QuotationScheduleStatusCommand;
+import org.example.quotationdomain.domain.QuotationEntity;
 import org.example.quotationquery.service.QuotationService;
 import org.example.sharedlibrary.model.UserModel;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,11 @@ import java.util.List;
 public class QuotationInternalQueryController {
 
     private final QuotationService quotationService;
+
+    @GetMapping("/getQuotationByQuotationId")
+    public QuotationEntity getQuotationByQuotationId(@RequestParam String quotationId) {
+        return quotationService.getQuotationByQuotationId(quotationId);
+    }
 
     @GetMapping("/get-quotation-code/{productCode}")
     public String getQuotationCode(@PathVariable String productCode) {
@@ -40,8 +46,13 @@ public class QuotationInternalQueryController {
         return quotationService.findIdsByCustomerId(customerId);
     }
 
-    @GetMapping("/findAllIdsByCustomerId")
+    @GetMapping("/findAllQuotationsNotApproveByCustomerId")
     public List<String> findAllQuotationsNotApproveByCustomerId(@RequestParam String customerId) {
         return quotationService.findAllQuotationsNotApproveByCustomerId(customerId);
+    }
+
+    @GetMapping("/isApproved")
+    public boolean isApproved(@RequestParam String quotationId) {
+        return quotationService.isApproved(quotationId);
     }
 }

@@ -5,6 +5,7 @@ import org.example.quotationdomain.command.QuotationScheduleStatusCommand;
 import org.example.quotationdomain.domain.QuotationEntity;
 import org.example.quotationdomain.repository.QuotationEntityRepository;
 import org.example.quotationquery.service.QuotationService;
+import org.example.sharedlibrary.enumeration.QuotationStatus;
 import org.example.sharedlibrary.model.UserModel;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,6 +35,11 @@ public class QuotationServiceImpl implements QuotationService {
             }
         } while (quotationEntityRepository.existsByQuotationCode(String.valueOf(code)));
         return String.valueOf(code);
+    }
+
+    @Override
+    public QuotationEntity getQuotationByQuotationId(String quotationId) {
+        return quotationEntityRepository.findById(quotationId).orElse(null);
     }
 
     @Override
@@ -68,6 +74,15 @@ public class QuotationServiceImpl implements QuotationService {
     @Override
     public List<String> findAllQuotationsNotApproveByCustomerId(String customerId) {
         return quotationEntityRepository.findAllQuotationIdsNotApproveByCustomerId(customerId);
+    }
+
+    @Override
+    public boolean isApproved(String quotationId) {
+        QuotationEntity quotationEntity = quotationEntityRepository.findById(quotationId).orElse(null);
+        if (quotationEntity == null) {
+            return false;
+        }
+        return QuotationStatus.APPROVED.equals(quotationEntity.getQuotationStatus());
     }
 
     private String getYearSuffix() {

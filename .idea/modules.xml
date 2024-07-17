@@ -16,6 +16,13 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1685804639/customer-query.customer-domain.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-1685804639/customer-query.customer-domain.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/customer-query.main.iml" filepath="$PROJECT_DIR$/.idea/modules/customer-query.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1653879596/customer-query.shared-library.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-1653879596/customer-query.shared-library.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/policy-command.main.iml" filepath="$PROJECT_DIR$/.idea/modules/policy-command.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-172973060/policy-command.policy-domain.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-172973060/policy-command.policy-domain.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1653879596/policy-command.shared-library.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-1653879596/policy-command.shared-library.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1653879596/policy-domain.shared-library.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-1653879596/policy-domain.shared-library.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/policy-flow.main.iml" filepath="$PROJECT_DIR$/.idea/modules/policy-flow.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-172973060/policy-query.policy-domain.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-172973060/policy-query.policy-domain.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1653879596/policy-query.shared-library.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-1653879596/policy-query.shared-library.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/quotation-command.main.iml" filepath="$PROJECT_DIR$/.idea/modules/quotation-command.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/1271854674/quotation-command.quotation-domain.main.iml" filepath="$PROJECT_DIR$/.idea/modules/1271854674/quotation-command.quotation-domain.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1653879596/quotation-command.shared-library.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-1653879596/quotation-command.shared-library.main.iml" />

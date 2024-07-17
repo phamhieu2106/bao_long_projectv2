@@ -1,6 +1,7 @@
 package org.example.quotationquery.service;
 
 import org.example.quotationdomain.command.QuotationScheduleStatusCommand;
+import org.example.quotationdomain.domain.QuotationEntity;
 import org.example.sharedlibrary.model.UserModel;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -19,4 +20,8 @@ public interface QuotationService {
     List<String> findIdsByCustomerId(String customerId);
 
     List<String> findAllQuotationsNotApproveByCustomerId(String customerId);
+
+    QuotationEntity getQuotationByQuotationId(String quotationId);
+
+    boolean isApproved(String quotationId);
 }

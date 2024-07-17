@@ -129,6 +129,25 @@ public class QuotationServiceImpl implements QuotationService {
     }
 
     @Override
+    public WrapperResponse policyRelease(String quotationId) {
+        if (!quotationQueryClient.exitsById(quotationId)) {
+            return WrapperResponse.fail(
+                    "Not Found Quotation!", HttpStatus.NOT_FOUND
+            );
+        }
+        if (!quotationQueryClient.isApproved(quotationId)) {
+            return WrapperResponse.fail(
+                    "QuotationStatus Not Approved!", HttpStatus.BAD_REQUEST
+            );
+        }
+
+        handler.releasePolicy(quotationId);
+        return WrapperResponse.success(
+                HttpStatus.OK, HttpStatus.OK
+        );
+    }
+
+    @Override
     public WrapperResponse delete(QuotationDeleteCommand command) {
         return null;
     }

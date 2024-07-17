@@ -1,0 +1,8 @@
+rootProject.name = 'policy-query'
+
+
+include(":policy-domain")
+project(":policy-domain").projectDir = file("../policy-domain")
+
+include(":shared-library")
+project(":shared-library").projectDir = file("../../../../shared-library")

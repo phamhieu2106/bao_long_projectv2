@@ -10,4 +10,6 @@ public interface QuotationService extends BaseCommandService<QuotationCreateComm
     WrapperResponse changeStatus(QuotationChangeStatusCommand command);
 
     WrapperResponse copy(QuotationCopyCommand quotationCopyCommand);
+
+    WrapperResponse policyRelease(String quotationId);
 }

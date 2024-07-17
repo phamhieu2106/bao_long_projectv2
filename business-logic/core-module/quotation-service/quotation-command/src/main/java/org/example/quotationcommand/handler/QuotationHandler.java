@@ -19,4 +19,6 @@ public interface QuotationHandler {
 
     void handle(List<String> customerIds);
 
+    void releasePolicy(String quotationId);
+
 }
