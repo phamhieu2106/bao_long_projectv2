@@ -23,6 +23,7 @@ public class PolicyCommandServiceImpl implements PolicyCommandService {
     public String releasePolicy(String quotationId) {
         QuotationEntityResponse quotationResponse = quotationQueryClient.getQuotationByQuotationId(quotationId);
         PolicyCreateCommand command = modelMapper.map(quotationResponse, PolicyCreateCommand.class);
+        command.setApprovedBy(quotationResponse.getApproveBy());
         command.setPolicyCode(policyQueryClient.generatePolicyCode(command.getProductCode()));
         return handlerService.handle(command);
     }

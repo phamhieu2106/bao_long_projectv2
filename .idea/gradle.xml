@@ -73,7 +73,9 @@
         <option name="externalProjectPath" value="$PROJECT_DIR$/business-logic/core-module/policy-service/policy-flow" />
         <option name="modules">
           <set>
+            <option value="$PROJECT_DIR$/business-logic/core-module/policy-service/policy-domain" />
             <option value="$PROJECT_DIR$/business-logic/core-module/policy-service/policy-flow" />
+            <option value="$PROJECT_DIR$/shared-library" />
           </set>
         </option>
       </GradleProjectSettings>

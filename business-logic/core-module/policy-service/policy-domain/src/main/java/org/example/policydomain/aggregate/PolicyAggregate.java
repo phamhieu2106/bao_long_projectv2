@@ -8,7 +8,6 @@ import lombok.experimental.FieldDefaults;
 import org.example.policydomain.command.PolicyCreateCommand;
 import org.example.policydomain.event.PolicyCreateEvent;
 import org.example.sharedlibrary.base_class.BaseAggregate;
-import org.example.sharedlibrary.base_constant.GenerateConstant;
 import org.example.sharedlibrary.base_quo_poli.CustomerModel;
 import org.example.sharedlibrary.base_quo_poli.UserCreatedModel;
 import org.example.sharedlibrary.enumeration.ProductType;
@@ -54,7 +53,13 @@ public class PolicyAggregate extends BaseAggregate {
     Role lastUserRoleUpdate;
 
     public PolicyCreateEvent apply(PolicyCreateCommand command) {
-        this.id = GenerateConstant.generateId();
+        this.id = command.getId();
+        this.quotationCode = command.getQuotationCode();
+        this.policyCode = command.getPolicyCode();
+        this.quotationStatus = command.getQuotationStatus();
+        this.userModels = command.getUserModels();
+        this.approvedBy = command.getApprovedBy();
+        this.approvedAt = command.getApprovedAt();
         this.effectiveDate = command.getEffectiveDate();
         this.maturityDate = command.getMaturityDate();
         this.customerModel = command.getCustomerModel();
@@ -100,7 +105,10 @@ public class PolicyAggregate extends BaseAggregate {
                 this.totalFeeAfterTax,
                 this.userCreatedModel,
                 this.quotationTypeStatus,
-                this.lastUserRoleUpdate
+                this.lastUserRoleUpdate,
+                this.userModels,
+                this.approvedBy,
+                this.approvedAt
         );
     }
 }

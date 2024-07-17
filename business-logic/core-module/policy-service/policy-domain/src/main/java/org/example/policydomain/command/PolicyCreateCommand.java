@@ -23,6 +23,7 @@ import java.util.Map;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
 public class PolicyCreateCommand extends BaseCommand {
+    String id;
     String quotationCode;
     String policyCode;
     ProductType productType;

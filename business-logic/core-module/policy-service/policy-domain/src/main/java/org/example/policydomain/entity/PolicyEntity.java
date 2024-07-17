@@ -1,10 +1,7 @@
 package org.example.policydomain.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.example.policydomain.converter.CustomerModelConverter;
 import org.example.policydomain.converter.UserCreatedModelConverter;
@@ -28,6 +25,8 @@ import java.util.Map;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class PolicyEntity {
     @Id
     String id;

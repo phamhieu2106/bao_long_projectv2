@@ -14,6 +14,6 @@ public class PolicyEventServiceImpl implements PolicyEventService {
 
     @Override
     public void publish(BaseEvent event) {
-        kafkaTemplate.send("policy-create", event);
+        kafkaTemplate.send("policy_create", event);
     }
 }

@@ -1,9 +1,6 @@
 package org.example.policydomain.event;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.example.sharedlibrary.base_class.BaseEvent;
 import org.example.sharedlibrary.base_quo_poli.CustomerModel;
@@ -12,6 +9,7 @@ import org.example.sharedlibrary.enumeration.ProductType;
 import org.example.sharedlibrary.enumeration.QuotationStatus;
 import org.example.sharedlibrary.enumeration.QuotationTypeStatus;
 import org.example.sharedlibrary.enumeration.ac.Role;
+import org.example.sharedlibrary.model.UserModel;
 
 import java.util.Date;
 import java.util.List;
@@ -21,6 +19,7 @@ import java.util.Map;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
+@AllArgsConstructor
 public class PolicyCreateEvent extends BaseEvent {
     String id;
     String quotationCode;
@@ -47,6 +46,7 @@ public class PolicyCreateEvent extends BaseEvent {
     String approvedBy;
     Date approveAt;
     Role lastUserRoleUpdate;
+    List<UserModel> userModels;
 
     public PolicyCreateEvent(Date timestamp, String createdBy, String quotationId, String quotationCode,
                              String policyCode, ProductType productType, String productName, String productCode, List<Map<String, Object>> product,
@@ -55,8 +55,10 @@ public class PolicyCreateEvent extends BaseEvent {
                              String insuranceCompanyName, Date effectiveDate, Date maturityDate,
                              CustomerModel customerId, CustomerModel beneficiaryId, String currency, Double rate, List<Map<String, Object>> insuranceTypeModel,
                              Double totalFeeAfterTax, UserCreatedModel userCreatedModel, QuotationTypeStatus quotationTypeStatus,
-                             Role lastUserRoleUpdate) {
+                             Role lastUserRoleUpdate, List<UserModel> userModels,
+                             String approvedBy, Date approveAt) {
         super(timestamp, createdBy);
+        this.userModels = userModels;
         this.id = quotationId;
         this.quotationCode = quotationCode;
         this.policyCode = policyCode;
@@ -80,5 +82,8 @@ public class PolicyCreateEvent extends BaseEvent {
         this.userCreatedModel = userCreatedModel;
         this.quotationTypeStatus = quotationTypeStatus;
         this.lastUserRoleUpdate = lastUserRoleUpdate;
+        this.approvedBy = approvedBy;
+        this.approveAt = approveAt;
+
     }
 }

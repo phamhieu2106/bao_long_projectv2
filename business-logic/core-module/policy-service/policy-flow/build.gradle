@@ -38,6 +38,9 @@ dependencies {
     testImplementation 'org.springframework.kafka:spring-kafka-test'
     runtimeOnly 'org.postgresql:postgresql'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    implementation project(":shared-library")
+    implementation project(":policy-domain")
 }
 
 dependencyManagement {
