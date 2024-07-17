@@ -17,4 +17,6 @@ public interface QuotationService {
     List<String> findAllIdsByQuotationStatus(QuotationScheduleStatusCommand command);
 
     List<String> findIdsByCustomerId(String customerId);
+
+    List<String> findAllQuotationsNotApproveByCustomerId(String customerId);
 }

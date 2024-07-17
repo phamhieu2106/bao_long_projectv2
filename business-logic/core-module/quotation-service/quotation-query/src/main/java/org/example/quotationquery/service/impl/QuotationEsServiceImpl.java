@@ -8,13 +8,17 @@ import lombok.RequiredArgsConstructor;
 import org.example.quotationdomain.domain.QuotationEntity;
 import org.example.quotationdomain.domain.view.QuotationView;
 import org.example.quotationdomain.repository.QuotationEntityRepository;
+import org.example.quotationdomain.response.QuotationHistoryResponse;
+import org.example.quotationdomain.response.QuotationResponse;
 import org.example.quotationquery.request.QuotationPageRequest;
 import org.example.quotationquery.service.QuotationEsService;
 import org.example.sharedlibrary.base_constant.PageConstant;
 import org.example.sharedlibrary.base_response.WrapperResponse;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHitSupport;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.SearchPage;
@@ -104,10 +108,22 @@ public class QuotationEsServiceImpl implements QuotationEsService {
             );
         }
         Optional<QuotationEntity> optional = entityRepository.findById(quotationId);
-        return optional.map(customerEntity -> WrapperResponse.success(
-                HttpStatus.OK, customerEntity
-        )).orElseGet(() -> WrapperResponse.fail(
-                "Not Found", HttpStatus.NOT_FOUND
-        ));
+        if (optional.isEmpty()) {
+            return WrapperResponse.fail(
+                    "Not Found", HttpStatus.NOT_FOUND
+            );
+        }
+        QuotationEntity quotationEntity = optional.get();
+
+        co.elastic.clients.elasticsearch._types.query_dsl.Query nativeQuery =
+                co.elastic.clients.elasticsearch._types.query_dsl.Query.of(nq -> nq
+                        .term(t -> t.field("aggregateId").value(quotationEntity.getId())));
+
+        Query query = new StringQuery(nativeQuery.toString().substring(6)).addSort(
+                Sort.by(Sort.Direction.DESC, "version")
+        );
+        SearchHits<QuotationHistoryResponse> hits = template.search(query, QuotationHistoryResponse.class);
+        QuotationResponse response = new QuotationResponse(quotationEntity, hits.stream().map(SearchHit::getContent).toList());
+        return WrapperResponse.success(HttpStatus.OK, response);
     }
 }

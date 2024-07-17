@@ -13,7 +13,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserInChargeModel {
-    String usernameXFullName;
+    String username;
     String office;
     String apartment;
     InChargeRole inChargeRole;

@@ -8,10 +8,7 @@ import org.example.quotationcommand.handler.QuotationHandler;
 import org.example.quotationcommand.service.QuotationEventStoreService;
 import org.example.quotationcommand.service.QuotationProducerService;
 import org.example.quotationdomain.aggregate.QuotationAggregate;
-import org.example.quotationdomain.command.QuotationChangeStatusCommand;
-import org.example.quotationdomain.command.QuotationCreateCommand;
-import org.example.quotationdomain.command.QuotationScheduleStatusCommand;
-import org.example.quotationdomain.command.QuotationUpdateCommand;
+import org.example.quotationdomain.command.*;
 import org.example.quotationdomain.domain.model.InsuranceDate;
 import org.example.quotationdomain.event.QuotationChangeStatusEvent;
 import org.example.quotationdomain.event.QuotationCreateEvent;
@@ -53,6 +50,14 @@ public class QuotationHandlerImpl implements QuotationHandler {
         aggregate.setUserCreatedModel(userQueryClient.getUserModelById(command.getCreatedBy()));
         QuotationCreateEvent event = aggregate.apply(command);
 
+        storeService.save(aggregate, event);
+        producerService.publish("quotation_create", event);
+    }
+
+    @Override
+    public void handle(QuotationCopyCommand copyCommand) {
+        QuotationAggregate aggregate = storeService.load(copyCommand.getId());
+        QuotationCreateEvent event = aggregate.apply(copyCommand);
         storeService.save(aggregate, event);
         producerService.publish("quotation_create", event);
     }
@@ -155,6 +160,20 @@ public class QuotationHandlerImpl implements QuotationHandler {
             cmd.setCreatedBy("system");
             cmd.setQuotationStatus(QuotationStatus.DISABLED);
             handle(cmd);
+        });
+    }
+
+    @Override
+    public void handle(List<String> customerIds) {
+        customerIds.forEach(id -> {
+            List<String> quotationIds = quotationQueryClient.findAllQuotationsNotApproveByCustomerId(id);
+            quotationIds.forEach(qa -> {
+                QuotationChangeStatusCommand cmd = new QuotationChangeStatusCommand();
+                cmd.setId(qa);
+                cmd.setCreatedBy("system");
+                cmd.setQuotationStatus(QuotationStatus.DISABLED);
+                handle(cmd);
+            });
         });
     }
 

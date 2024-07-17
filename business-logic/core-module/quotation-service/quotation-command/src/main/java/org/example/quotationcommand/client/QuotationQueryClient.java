@@ -24,4 +24,7 @@ public interface QuotationQueryClient {
 
     @GetMapping("/findAllIdsByCustomerId")
     List<String> findAllIdsByCustomerId(@RequestParam String customerId);
+
+    @GetMapping("/findAllIdsByCustomerId")
+    List<String> findAllQuotationsNotApproveByCustomerId(@RequestParam String customerId);
 }

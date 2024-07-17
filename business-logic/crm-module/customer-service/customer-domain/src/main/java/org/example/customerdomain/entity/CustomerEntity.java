@@ -19,7 +19,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table
+@Table(name = "customer_entity")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 @NoArgsConstructor
@@ -39,12 +39,14 @@ public class CustomerEntity {
     List<AddressModel> addressModels;
     String jobName;
     @Convert(converter = HealthIdentityModelConverter.class)
+    @Column(length = 10000)
     HealthIdentityModel identityModel;
     @Enumerated(EnumType.STRING)
     StatusCustomer statusCustomer;
     @Enumerated(EnumType.STRING)
     CustomerType customerType;
     @Convert(converter = UserInChargeModelConverter.class)
+    @Column(length = 10000)
     List<UserInChargeModel> inChargeBy;
     Boolean isDeleted = false;
     Date createdAt;

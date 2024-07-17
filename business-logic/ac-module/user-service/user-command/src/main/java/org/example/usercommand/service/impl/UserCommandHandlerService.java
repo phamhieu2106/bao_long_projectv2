@@ -2,6 +2,8 @@ package org.example.usercommand.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.example.sharedlibrary.base_prod_cons.BaseProducer;
+import org.example.usercommand.client.CustomerQueryClient;
+import org.example.usercommand.client.QuotationCommandClient;
 import org.example.usercommand.client.UserQueryClient;
 import org.example.usercommand.service.UserCommandHandler;
 import org.example.usercommand.service.UserEventStoreService;
@@ -15,6 +17,8 @@ import org.example.userdomain.event.UserUpdateEvent;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -22,8 +26,10 @@ public class UserCommandHandlerService implements UserCommandHandler {
 
     private final String TOPIC = "user_service";
     private final UserQueryClient client;
+    private final CustomerQueryClient customerQueryClient;
     private final UserEventStoreService userEventStoreService;
     private final BaseProducer producer;
+    private final QuotationCommandClient quotationCommandClient;
 
     @Override
     public void handleCreate(UserCreateCommand command) {
@@ -38,7 +44,7 @@ public class UserCommandHandlerService implements UserCommandHandler {
     public void handleUpdate(UserUpdateCommand command) {
         UserAggregate aggregate = userEventStoreService.getAggregate(command.getUserId());
         UserUpdateEvent event = aggregate.applyUpdate(command);
-
+        handleInChargeCustomer(aggregate.getUsername());
         userEventStoreService.storeEvent(UserCreateEvent.class.getSimpleName(), aggregate);
         producer.publish(TOPIC, event);
     }
@@ -49,5 +55,10 @@ public class UserCommandHandlerService implements UserCommandHandler {
         UserDeleteEvent event = aggregate.applyDelete(command);
         userEventStoreService.storeEvent(UserCreateEvent.class.getSimpleName(), aggregate);
         producer.publish(TOPIC, event);
+    }
+
+    private void handleInChargeCustomer(String username) {
+        List<String> customerIds = customerQueryClient.findAllCustomerIdWithUserUsername(username);
+        quotationCommandClient.updateQuotationsStatusByCustomerIds(customerIds);
     }
 }

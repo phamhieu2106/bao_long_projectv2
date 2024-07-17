@@ -3,6 +3,8 @@ package org.example.customerquery.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.example.customerdomain.entity.CustomerEntity;
 import org.example.customerdomain.repository.CustomerEntityRepository;
+import org.example.customerdomain.response.CustomerHistoryResponse;
+import org.example.customerdomain.response.CustomerResponse;
 import org.example.customerdomain.view.CustomerView;
 import org.example.customerquery.request.CustomerPageRequest;
 import org.example.customerquery.service.CustomerEsService;
@@ -10,7 +12,9 @@ import org.example.sharedlibrary.base_constant.PageConstant;
 import org.example.sharedlibrary.base_response.WrapperResponse;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHitSupport;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.SearchPage;
@@ -89,11 +93,26 @@ public class CustomerEsServiceImpl implements CustomerEsService {
                     "Invalid Id", HttpStatus.BAD_REQUEST
             );
         }
+
         Optional<CustomerEntity> optional = entityRepository.findById(customerId);
-        return optional.map(customerEntity -> WrapperResponse.success(
-                HttpStatus.OK, customerEntity
-        )).orElseGet(() -> WrapperResponse.fail(
-                "Not Found", HttpStatus.NOT_FOUND
-        ));
+        if (optional.isEmpty()) {
+            return WrapperResponse.fail(
+                    "Not Found", HttpStatus.NOT_FOUND
+            );
+        }
+
+        CustomerEntity customerEntity = optional.get();
+
+        co.elastic.clients.elasticsearch._types.query_dsl.Query nativeQuery =
+                co.elastic.clients.elasticsearch._types.query_dsl.Query.of(nq -> nq
+                        .term(t -> t.field("aggregateId").value(customerEntity.getId())));
+
+        Query query = new StringQuery(nativeQuery.toString().substring(6)).addSort(
+                Sort.by(Sort.Direction.DESC, "version")
+        );
+        SearchHits<CustomerHistoryResponse> hits = elasticsearchTemplate.search(query, CustomerHistoryResponse.class);
+
+        CustomerResponse response = new CustomerResponse(customerEntity, hits.stream().map(SearchHit::getContent).toList());
+        return WrapperResponse.success(HttpStatus.OK, response);
     }
 }

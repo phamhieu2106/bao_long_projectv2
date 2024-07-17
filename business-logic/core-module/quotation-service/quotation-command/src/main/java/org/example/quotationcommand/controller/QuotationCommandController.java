@@ -3,6 +3,7 @@ package org.example.quotationcommand.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.quotationcommand.service.QuotationService;
 import org.example.quotationdomain.command.QuotationChangeStatusCommand;
+import org.example.quotationdomain.command.QuotationCopyCommand;
 import org.example.quotationdomain.command.QuotationCreateCommand;
 import org.example.quotationdomain.command.QuotationUpdateCommand;
 import org.example.sharedlibrary.base_constant.HeaderRequestConstant;
@@ -22,6 +23,13 @@ public class QuotationCommandController {
                                           , defaultValue = HeaderRequestConstant.ANONYMOUS) String username) {
         command.setCreatedBy(username);
         return quotationService.create(command);
+    }
+
+    @PostMapping("/copy")
+    public WrapperResponse copy(@RequestParam String quotationId,
+                                @RequestHeader(value = HeaderRequestConstant.REQUEST_HEADER
+                                        , defaultValue = HeaderRequestConstant.ANONYMOUS) String username) {
+        return quotationService.copy(new QuotationCopyCommand(quotationId, username));
     }
 
     @PostMapping("/update/{quotationId}")

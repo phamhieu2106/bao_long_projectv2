@@ -6,6 +6,8 @@ import org.example.quotationcommand.service.QuotationInternalService;
 import org.example.quotationdomain.command.QuotationScheduleStatusCommand;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class QuotationInternalServiceImpl implements QuotationInternalService {
@@ -19,6 +21,11 @@ public class QuotationInternalServiceImpl implements QuotationInternalService {
 
     @Override
     public void updateQuotationStatusByCustomerId(String customerId) {
+        handler.handle(customerId);
+    }
 
+    @Override
+    public void updateQuotationsStatusByCustomerIds(List<String> customerIds) {
+        handler.handle(customerIds);
     }
 }

@@ -6,10 +6,7 @@ import org.example.quotationcommand.client.QuotationQueryClient;
 import org.example.quotationcommand.client.UserQueryClient;
 import org.example.quotationcommand.handler.QuotationHandler;
 import org.example.quotationcommand.service.QuotationService;
-import org.example.quotationdomain.command.QuotationChangeStatusCommand;
-import org.example.quotationdomain.command.QuotationCreateCommand;
-import org.example.quotationdomain.command.QuotationDeleteCommand;
-import org.example.quotationdomain.command.QuotationUpdateCommand;
+import org.example.quotationdomain.command.*;
 import org.example.sharedlibrary.base_response.WrapperResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -44,6 +41,25 @@ public class QuotationServiceImpl implements QuotationService {
                 );
             }
             handler.handle(command);
+            return WrapperResponse.success(
+                    HttpStatus.OK, HttpStatus.OK
+            );
+        } catch (Exception e) {
+            return WrapperResponse.fail(
+                    HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
+    }
+
+    @Override
+    public WrapperResponse copy(QuotationCopyCommand quotationCopyCommand) {
+        try {
+            if (!quotationQueryClient.exitsById(quotationCopyCommand.getId())) {
+                return WrapperResponse.fail(
+                        "Not Found Quotation!", HttpStatus.NOT_FOUND
+                );
+            }
+            handler.handle(quotationCopyCommand);
             return WrapperResponse.success(
                     HttpStatus.OK, HttpStatus.OK
             );

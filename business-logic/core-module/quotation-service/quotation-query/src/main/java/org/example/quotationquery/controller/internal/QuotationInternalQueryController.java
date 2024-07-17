@@ -39,4 +39,9 @@ public class QuotationInternalQueryController {
     public List<String> findAllIdsByCustomerId(@RequestParam String customerId) {
         return quotationService.findIdsByCustomerId(customerId);
     }
+
+    @GetMapping("/findAllIdsByCustomerId")
+    public List<String> findAllQuotationsNotApproveByCustomerId(@RequestParam String customerId) {
+        return quotationService.findAllQuotationsNotApproveByCustomerId(customerId);
+    }
 }

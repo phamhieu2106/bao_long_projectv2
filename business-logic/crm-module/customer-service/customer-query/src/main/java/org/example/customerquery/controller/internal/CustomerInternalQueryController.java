@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/internal/api/customers")
 @RequiredArgsConstructor
@@ -48,5 +50,10 @@ public class CustomerInternalQueryController {
     @GetMapping("/getCustomerModelById")
     public CustomerModel getCustomerModelById(@RequestParam("customerId") String customerId) {
         return queryService.getCustomerModelById(customerId);
+    }
+
+    @GetMapping("/findAllCustomerIdWithUserUsername")
+    public List<String> findAllCustomerIdWithUserUsername(@RequestParam String username) {
+        return queryService.findAllCustomerIdWithUserUsername(username);
     }
 }

@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.example.quotationdomain.command.QuotationChangeStatusCommand;
+import org.example.quotationdomain.command.QuotationCopyCommand;
 import org.example.quotationdomain.command.QuotationCreateCommand;
 import org.example.quotationdomain.command.QuotationUpdateCommand;
 import org.example.quotationdomain.event.QuotationChangeStatusEvent;
@@ -75,6 +76,38 @@ public class QuotationAggregate extends BaseAggregate {
         this.totalFeeAfterTax = command.getTotalFeeAfterTax();
         this.productName = command.getProductName();
         this.quotationTypeStatus = QuotationTypeStatus.NEW;
+
+        return new QuotationCreateEvent(
+                new Date(),
+                this.userCreatedModel.getUsername(),
+                this.id,
+                this.quotationCode,
+                this.policyCode,
+                this.productType,
+                this.productName,
+                this.productCode,
+                this.product,
+                this.isCoinsurance,
+                this.quotationStatus,
+                this.quotationDistributionName,
+                this.quotationManagerName,
+                this.insuranceCompanyName,
+                this.effectiveDate,
+                this.maturityDate,
+                this.customerModel,
+                this.beneficiaryModel,
+                this.currency,
+                this.rate,
+                this.insuranceTypeModel,
+                this.totalFeeAfterTax,
+                this.userCreatedModel,
+                this.quotationTypeStatus
+        );
+    }
+
+    public QuotationCreateEvent apply(QuotationCopyCommand command) {
+
+        this.id = GenerateConstant.generateId();
 
         return new QuotationCreateEvent(
                 new Date(),

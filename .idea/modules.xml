@@ -2,12 +2,43 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/auth-server.main.iml" filepath="$PROJECT_DIR$/.idea/modules/auth-server.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1653879596/auth-server.shared-library.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-1653879596/auth-server.shared-library.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/bao_long_projectv2.iml" filepath="$PROJECT_DIR$/.idea/bao_long_projectv2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1685804639/customer-command.customer-domain.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-1685804639/customer-command.customer-domain.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/customer-command.main.iml" filepath="$PROJECT_DIR$/.idea/modules/customer-command.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1653879596/customer-command.shared-library.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-1653879596/customer-command.shared-library.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/customer-domain.main.iml" filepath="$PROJECT_DIR$/.idea/modules/customer-domain.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1653879596/customer-domain.shared-library.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-1653879596/customer-domain.shared-library.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1685804639/customer-flow.customer-domain.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-1685804639/customer-flow.customer-domain.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/customer-flow.main.iml" filepath="$PROJECT_DIR$/.idea/modules/customer-flow.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1653879596/customer-flow.shared-library.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-1653879596/customer-flow.shared-library.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1685804639/customer-query.customer-domain.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-1685804639/customer-query.customer-domain.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/customer-query.main.iml" filepath="$PROJECT_DIR$/.idea/modules/customer-query.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1653879596/customer-query.shared-library.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-1653879596/customer-query.shared-library.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/quotation-command.main.iml" filepath="$PROJECT_DIR$/.idea/modules/quotation-command.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1271854674/quotation-command.quotation-domain.main.iml" filepath="$PROJECT_DIR$/.idea/modules/1271854674/quotation-command.quotation-domain.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1653879596/quotation-command.shared-library.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-1653879596/quotation-command.shared-library.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/quotation-domain.main.iml" filepath="$PROJECT_DIR$/.idea/modules/quotation-domain.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1653879596/quotation-domain.shared-library.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-1653879596/quotation-domain.shared-library.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/quotation-flow.main.iml" filepath="$PROJECT_DIR$/.idea/modules/quotation-flow.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1271854674/quotation-flow.quotation-domain.main.iml" filepath="$PROJECT_DIR$/.idea/modules/1271854674/quotation-flow.quotation-domain.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1653879596/quotation-flow.shared-library.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-1653879596/quotation-flow.shared-library.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/quotation-query.main.iml" filepath="$PROJECT_DIR$/.idea/modules/quotation-query.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1271854674/quotation-query.quotation-domain.main.iml" filepath="$PROJECT_DIR$/.idea/modules/1271854674/quotation-query.quotation-domain.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1653879596/quotation-query.shared-library.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-1653879596/quotation-query.shared-library.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/shared-library.main.iml" filepath="$PROJECT_DIR$/.idea/modules/shared-library.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/user-command.main.iml" filepath="$PROJECT_DIR$/.idea/modules/user-command.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1653879596/user-command.shared-library.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-1653879596/user-command.shared-library.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/668054239/user-command.user-domain.main.iml" filepath="$PROJECT_DIR$/.idea/modules/668054239/user-command.user-domain.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/user-domain.main.iml" filepath="$PROJECT_DIR$/.idea/modules/user-domain.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1653879596/user-domain.shared-library.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-1653879596/user-domain.shared-library.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/user-flow.main.iml" filepath="$PROJECT_DIR$/.idea/modules/user-flow.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1653879596/user-flow.shared-library.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-1653879596/user-flow.shared-library.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/668054239/user-flow.user-domain.main.iml" filepath="$PROJECT_DIR$/.idea/modules/668054239/user-flow.user-domain.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/user-query.main.iml" filepath="$PROJECT_DIR$/.idea/modules/user-query.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1653879596/user-query.shared-library.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-1653879596/user-query.shared-library.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/668054239/user-query.user-domain.main.iml" filepath="$PROJECT_DIR$/.idea/modules/668054239/user-query.user-domain.main.iml" />
     </modules>
   </component>
 </project>

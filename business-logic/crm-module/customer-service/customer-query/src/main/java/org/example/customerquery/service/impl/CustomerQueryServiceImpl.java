@@ -7,6 +7,7 @@ import org.example.customerquery.service.CustomerQueryService;
 import org.example.sharedlibrary.base_quo_poli.CustomerModel;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -62,5 +63,10 @@ public class CustomerQueryServiceImpl implements CustomerQueryService {
     @Override
     public boolean existsByEmailAndIdIsNot(String email, String id) {
         return customerEntityRepository.existsByEmailAndIdIsNot(email, id);
+    }
+
+    @Override
+    public List<String> findAllCustomerIdWithUserUsername(String username) {
+        return customerEntityRepository.findAllCustomerIdWithUserUsername(username);
     }
 }

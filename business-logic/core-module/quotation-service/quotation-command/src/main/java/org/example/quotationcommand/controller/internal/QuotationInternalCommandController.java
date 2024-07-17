@@ -4,10 +4,9 @@ package org.example.quotationcommand.controller.internal;
 import lombok.RequiredArgsConstructor;
 import org.example.quotationcommand.service.QuotationInternalService;
 import org.example.quotationdomain.command.QuotationScheduleStatusCommand;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/internal/api/quotations")
@@ -25,4 +24,10 @@ public class QuotationInternalCommandController {
     public void updateQuotationStatusByCustomerId(@RequestParam String customerId) {
         internalService.updateQuotationStatusByCustomerId(customerId);
     }
+
+    @PostMapping("/updateQuotationsStatusByCustomerIds")
+    public void updateQuotationsStatusByCustomerIds(@RequestBody List<String> customerIds) {
+        internalService.updateQuotationsStatusByCustomerIds(customerIds);
+    }
+
 }

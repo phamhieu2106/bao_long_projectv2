@@ -65,6 +65,11 @@ public class QuotationServiceImpl implements QuotationService {
         return false;
     }
 
+    @Override
+    public List<String> findAllQuotationsNotApproveByCustomerId(String customerId) {
+        return quotationEntityRepository.findAllQuotationIdsNotApproveByCustomerId(customerId);
+    }
+
     private String getYearSuffix() {
         return Integer.toString(LocalDate.now().getYear() % 100);
     }

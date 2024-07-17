@@ -59,7 +59,7 @@ public class QuotationConsumerServiceImpl {
                 event.getInsuranceTypeModel()
         );
 
-//        saveQuotationView(quotationEntity);
+        saveQuotationView(quotationEntity);
 
         repository.save(quotationEntity);
 
@@ -125,7 +125,7 @@ public class QuotationConsumerServiceImpl {
 
 
         repository.save(quotationEntity);
-//        saveQuotationView(quotationEntity);
+        saveQuotationView(quotationEntity);
     }
 
     private void saveQuotationView(QuotationEntity quotationEntity) {

@@ -32,4 +32,13 @@ public interface QuotationEntityRepository extends JpaRepository<QuotationEntity
             OR q.quotation_status = 'REQUIRE_INFORMATION'
             """, nativeQuery = true)
     List<String> findIdsByCustomerId(@Param("customerId") String customerId);
+
+    @Query(value = """
+            SELECT q.id FROM quotation_entity q
+            WHERE (q.customer::jsonb ->> 'customerId') = :customerId
+            AND (q.quotation_status = 'AWAIT_APPROVE'
+            OR q.quotation_status = 'DRAFTING'
+            OR q.quotation_status = 'REQUIRE_INFORMATION')
+            """, nativeQuery = true)
+    List<String> findAllQuotationIdsNotApproveByCustomerId(@Param("customerId") String customerId);
 }

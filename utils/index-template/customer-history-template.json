@@ -1,0 +1,32 @@
+{
+  "index_patterns": [
+    "customers_history*"
+  ],
+  "template": {
+    "settings": {
+      "number_of_shards": 1
+    },
+    "mappings": {
+      "properties": {
+        "id": {
+          "type": "keyword"
+        },
+        "aggregateId": {
+          "type": "keyword"
+        },
+        "aggregateType": {
+          "type": "keyword"
+        },
+        "createdBy": {
+          "type": "keyword"
+        },
+        "timeStamp": {
+          "type": "date"
+        },
+        "version": {
+          "type": "integer"
+        }
+      }
+    }
+  }
+}

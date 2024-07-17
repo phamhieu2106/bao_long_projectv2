@@ -1,9 +1,8 @@
 package org.example.quotationcommand.handler;
 
-import org.example.quotationdomain.command.QuotationChangeStatusCommand;
-import org.example.quotationdomain.command.QuotationCreateCommand;
-import org.example.quotationdomain.command.QuotationScheduleStatusCommand;
-import org.example.quotationdomain.command.QuotationUpdateCommand;
+import org.example.quotationdomain.command.*;
+
+import java.util.List;
 
 public interface QuotationHandler {
     void handle(QuotationCreateCommand command);
@@ -14,5 +13,10 @@ public interface QuotationHandler {
 
     void handle(QuotationScheduleStatusCommand command);
 
+    void handle(QuotationCopyCommand copyCommand);
+
     void handle(String customerId);
+
+    void handle(List<String> customerIds);
+
 }
