@@ -8,7 +8,9 @@ import org.example.customerdomain.response.CustomerResponse;
 import org.example.customerdomain.view.CustomerView;
 import org.example.customerquery.request.CustomerPageRequest;
 import org.example.customerquery.service.CustomerEsService;
+import org.example.sharedlibrary.base_constant.ElasticsearchConstant;
 import org.example.sharedlibrary.base_constant.PageConstant;
+import org.example.sharedlibrary.base_constant.view.CustomerViewConstant;
 import org.example.sharedlibrary.base_response.WrapperResponse;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -65,14 +67,16 @@ public class CustomerEsServiceImpl implements CustomerEsService {
         co.elastic.clients.elasticsearch._types.query_dsl.Query nativeQuery =
                 co.elastic.clients.elasticsearch._types.query_dsl.Query.of(nq -> nq
                         .bool(b -> b
-                                .should(t1 -> t1.term(t -> t.field("id").value(request.getKeyword())))
-                                .should(t1 -> t1.term(t -> t.field("customerCode").value(request.getKeyword())))
-                                .should(t1 -> t1.term(t -> t.field("statusCustomer").value(request.getKeyword())))
-                                .should(t1 -> t1.term(t -> t.field("customerNameKeyword").value(request.getKeyword())))
-                                .should(t1 -> t1.term(t -> t.field("email").value(request.getKeyword())))
-                                .should(t1 -> t1.term(t -> t.field("phoneNumber").value(request.getKeyword())))
-                                .should(t1 -> t1.term(t -> t.field("inChargeBy").value(request.getKeyword())))
-                                .should(s2 -> s2.match(m -> m.field("customerName").query(request.getKeyword()))
+                                .should(t1 -> t1.term(t -> t.field(CustomerViewConstant.CUSTOMER_ID).value(request.getKeyword())))
+                                .should(t1 -> t1.term(t -> t.field(CustomerViewConstant.CUSTOMER_CODE).value(request.getKeyword())))
+                                .should(t1 -> t1.term(t -> t.field(CustomerViewConstant.CUSTOMER_STATUS).value(request.getKeyword())))
+                                .should(t1 -> t1.term(t -> t.field(CustomerViewConstant.CUSTOMER_NAME_KEYWORD).value(request.getKeyword())))
+                                .should(t1 -> t1.term(t -> t.field(CustomerViewConstant.CUSTOMER_EMAIL).value(request.getKeyword())))
+                                .should(t1 -> t1.term(t -> t.field(CustomerViewConstant.CUSTOMER_PHONE_NUMBER).value(request.getKeyword())))
+                                .should(t1 -> t1.term(t -> t.field(CustomerViewConstant.CUSTOMER_IN_CHARGE_BY).value(request.getKeyword())))
+                                .should(s2 -> s2.match(m -> m.field(CustomerViewConstant.CUSTOMER_NAME_TEXT_SEARCH).query(
+                                                ElasticsearchConstant.returnNoSpecialCharactersString(request.getKeyword().toLowerCase())
+                                        ))
                                 )
                         )
                 );

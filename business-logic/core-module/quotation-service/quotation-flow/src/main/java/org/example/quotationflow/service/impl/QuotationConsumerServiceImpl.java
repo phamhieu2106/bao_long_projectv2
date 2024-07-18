@@ -129,7 +129,9 @@ public class QuotationConsumerServiceImpl {
         QuotationEntity quotationEntity = isQuotationExits(event.getQuotationId());
         quotationEntity.setQuotationStatus(event.getQuotationStatus());
         quotationEntity.setLastUserRoleUpdate(event.getLastUserRoleUpdate());
-
+        quotationEntity.setApprovedAt(event.getApprovedAt());
+        quotationEntity.setApproveBy(event.getApprovedBy());
+        
         repository.save(quotationEntity);
         saveQuotationView(quotationEntity);
     }

@@ -62,6 +62,7 @@ public class QuotationEntity {
     Date effectiveDate;
     Date maturityDate;
     @Convert(converter = CustomerModelConverter.class)
+//    @JdbcTypeCode(SqlTypes.JSON)
     CustomerModel customer;
     @Convert(converter = CustomerModelConverter.class)
     CustomerModel beneficiary;

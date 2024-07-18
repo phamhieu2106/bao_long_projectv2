@@ -24,8 +24,6 @@ services:
     environment:
       - xpack.security.enabled=false
       - "discovery.type=single-node"
-    command: >
-      sh -c "bin/elasticsearch-plugin install analysis-icu && bin/elasticsearch"
     networks:
       - elastic-kib-log-net
     ports:

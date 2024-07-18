@@ -20,6 +20,9 @@
         "customerName": {
           "type": "text"
         },
+        "customerNameNoSpecialCharacter": {
+          "type": "text"
+        },
         "customerNameKeyword": {
           "type": "keyword"
         },

@@ -15,6 +15,7 @@ import org.example.customerdomain.repository.CustomerEntityRepository;
 import org.example.customerdomain.repository.CustomerViewMap;
 import org.example.customerdomain.view.CustomerView;
 import org.example.customerflow.service.CustomerConsumerService;
+import org.example.sharedlibrary.base_constant.ElasticsearchConstant;
 import org.example.sharedlibrary.base_constant.ViewConstant;
 import org.example.sharedlibrary.enumeration.Gender;
 import org.example.sharedlibrary.model.AddressModel;
@@ -48,7 +49,7 @@ public class CustomerConsumerServiceImpl implements CustomerConsumerService {
                 event.getIdentityModel(), event.getStatusCustomer(), event.getCustomerType(),
                 event.getInChargeBy(), event.getIsDeleted(), event.getTimestamp(), event.getCreatedBy());
 
-//        indexCustomerDoc(customerEntity);
+        indexCustomerDoc(customerEntity);
     }
 
     @Override
@@ -131,9 +132,12 @@ public class CustomerConsumerServiceImpl implements CustomerConsumerService {
                 .email(customerEntity.getEmail())
                 .phoneNumber(customerEntity.getPhoneNumber())
                 .inChargeBy(customerEntity.getInChargeBy())
+                .customerNameNoSpecialCharacter(ElasticsearchConstant
+                        .returnNoSpecialCharactersString(customerEntity.getCustomerName()))
                 .build();
 
         viewMap.save(customerView);
-
     }
+
+
 }
