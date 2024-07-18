@@ -31,6 +31,9 @@
         },
         "inChargeBy": {
           "type": "nested"
+        },
+        "createdAt": {
+          "type": "date"
         }
       }
     }

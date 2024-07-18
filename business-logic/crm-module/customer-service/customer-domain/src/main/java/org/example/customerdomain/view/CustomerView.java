@@ -10,6 +10,7 @@ import org.example.sharedlibrary.model.UserInChargeModel;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
+import org.springframework.data.elasticsearch.annotations.Setting;
 
 import java.util.List;
 
@@ -21,6 +22,7 @@ import java.util.List;
 @Document(indexName = ViewConstant.CUSTOMER_INDEX)
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Setting(settingPath = "org/example/customerdomain/view/CustomerViewSetting.json")
 public class CustomerView {
     @Id
     @Field(type = FieldType.Keyword)
@@ -29,7 +31,7 @@ public class CustomerView {
     String customerCode;
     @Field(type = FieldType.Keyword)
     StatusCustomer statusCustomer;
-    @Field(type = FieldType.Text)
+    @Field(type = FieldType.Text, analyzer = "name_analyzer")
     String customerName;
     @Field(type = FieldType.Keyword)
     String customerNameKeyword;
