@@ -1,4 +1,4 @@
-package org.example.quotationdomain.event;
+package org.example.quotationdomain.event.status;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -17,21 +17,16 @@ import java.util.List;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
-public class QuotationChangeStatusEvent extends BaseEvent {
-    String id;
-    QuotationStatus quotationStatus;
+public class QuotationChangeToAwaitApproveStatusEvent extends BaseEvent {
+    final QuotationStatus quotationStatus = QuotationStatus.AWAIT_APPROVE;
+    String quotationId;
     List<UserModel> userModels;
-    String approvedBy;
-    Date approvedAt;
     Role lastUserRoleUpdate;
 
-    public QuotationChangeStatusEvent(Date timestamp, String createdBy, String id, QuotationStatus quotationStatus
-            , List<UserModel> userModels, String approvedBy, Date approvedAt) {
+    public QuotationChangeToAwaitApproveStatusEvent(Date timestamp, String createdBy, String quotationId, List<UserModel> userModels, Role lastUserRoleUpdate) {
         super(timestamp, createdBy);
-        this.id = id;
-        this.quotationStatus = quotationStatus;
+        this.quotationId = quotationId;
         this.userModels = userModels;
-        this.approvedBy = approvedBy;
-        this.approvedAt = approvedAt;
+        this.lastUserRoleUpdate = lastUserRoleUpdate;
     }
 }

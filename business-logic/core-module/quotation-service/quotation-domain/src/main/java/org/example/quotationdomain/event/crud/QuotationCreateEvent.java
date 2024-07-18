@@ -1,6 +1,9 @@
-package org.example.quotationdomain.event;
+package org.example.quotationdomain.event.crud;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.example.sharedlibrary.base_class.BaseEvent;
 import org.example.sharedlibrary.base_quo_poli.CustomerModel;
@@ -17,8 +20,8 @@ import java.util.Map;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
-@AllArgsConstructor
-public class QuotationUpdateEvent extends BaseEvent {
+public class QuotationCreateEvent extends BaseEvent {
+
     String id;
     String quotationCode;
     String policyCode;
@@ -41,10 +44,10 @@ public class QuotationUpdateEvent extends BaseEvent {
     List<Map<String, Object>> insuranceTypeModel;
     Double totalFeeAfterTax;
     UserCreatedModel userCreatedModel;
-    String approvedBy = null;
-    Date approvedAt = null;
+    String approvedBy;
+    Date approveAt;
 
-    public QuotationUpdateEvent(Date timestamp, String createdBy, String quotationId, String quotationCode,
+    public QuotationCreateEvent(Date timestamp, String createdBy, String quotationId, String quotationCode,
                                 String policyCode, ProductType productType, String productName, String productCode, List<Map<String, Object>> product,
                                 Boolean isCoinsurance, QuotationStatus quotationStatus,
                                 String quotationDistributionName, String quotationManagerName,
@@ -71,8 +74,8 @@ public class QuotationUpdateEvent extends BaseEvent {
         this.currency = currency;
         this.rate = rate;
         this.insuranceTypeModel = insuranceTypeModel;
+        this.totalFeeAfterTax = totalFeeAfterTax;
         this.userCreatedModel = userCreatedModel;
         this.quotationTypeStatus = quotationTypeStatus;
-        this.totalFeeAfterTax = totalFeeAfterTax;
     }
 }

@@ -1,4 +1,4 @@
-package org.example.quotationdomain.event;
+package org.example.quotationdomain.event.crud;
 
 import lombok.AccessLevel;
 import lombok.Getter;

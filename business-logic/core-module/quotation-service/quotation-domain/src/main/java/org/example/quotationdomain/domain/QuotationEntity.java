@@ -1,10 +1,7 @@
 package org.example.quotationdomain.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.example.quotationdomain.converter.UserCreatedModelConverter;
 import org.example.quotationdomain.converter.UserModelConverter;
@@ -28,6 +25,7 @@ import java.util.Map;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
+@AllArgsConstructor
 public class QuotationEntity {
 
     @Id

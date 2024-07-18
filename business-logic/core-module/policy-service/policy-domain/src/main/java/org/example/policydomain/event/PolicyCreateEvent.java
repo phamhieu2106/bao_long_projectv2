@@ -1,6 +1,9 @@
 package org.example.policydomain.event;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.example.sharedlibrary.base_class.BaseEvent;
 import org.example.sharedlibrary.base_quo_poli.CustomerModel;
@@ -19,7 +22,6 @@ import java.util.Map;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
-@AllArgsConstructor
 public class PolicyCreateEvent extends BaseEvent {
     String id;
     String quotationCode;

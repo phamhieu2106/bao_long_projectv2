@@ -69,7 +69,7 @@ public class QuotationEsServiceImpl implements QuotationEsService {
         }
         if (request.getProductType() != null) {
             boolQuery.must(QueryBuilders.term(t -> t.field("approvedAt").value(FieldValue.of(request.getApprovedAt()))));
-        }
+        } //--
         if (request.getKeyword() != null && !request.getKeyword().isBlank()) {
             boolQuery.should(QueryBuilders.term(t -> t.field("quotationCode").value(request.getKeyword())));
             boolQuery.should(QueryBuilders.term(t -> t.field("customerNameKeyword").value(request.getKeyword())));

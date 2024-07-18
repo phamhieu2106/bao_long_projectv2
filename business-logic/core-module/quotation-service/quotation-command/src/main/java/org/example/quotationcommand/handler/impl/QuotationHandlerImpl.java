@@ -9,11 +9,15 @@ import org.example.quotationcommand.handler.QuotationHandler;
 import org.example.quotationcommand.service.QuotationEventStoreService;
 import org.example.quotationcommand.service.QuotationProducerService;
 import org.example.quotationdomain.aggregate.QuotationAggregate;
-import org.example.quotationdomain.command.*;
+import org.example.quotationdomain.command.QuotationScheduleStatusCommand;
+import org.example.quotationdomain.command.cud.QuotationCopyCommand;
+import org.example.quotationdomain.command.cud.QuotationCreateCommand;
+import org.example.quotationdomain.command.cud.QuotationUpdateCommand;
+import org.example.quotationdomain.command.status.*;
 import org.example.quotationdomain.domain.model.InsuranceDate;
-import org.example.quotationdomain.event.QuotationChangeStatusEvent;
-import org.example.quotationdomain.event.QuotationCreateEvent;
-import org.example.quotationdomain.event.QuotationUpdateEvent;
+import org.example.quotationdomain.event.crud.QuotationCreateEvent;
+import org.example.quotationdomain.event.crud.QuotationUpdateEvent;
+import org.example.quotationdomain.event.status.*;
 import org.example.sharedlibrary.enumeration.QuotationStatus;
 import org.example.sharedlibrary.enumeration.ac.Permission;
 import org.example.sharedlibrary.model.UserModel;
@@ -84,72 +88,12 @@ public class QuotationHandlerImpl implements QuotationHandler {
     }
 
     @Override
-    public void handle(QuotationChangeStatusCommand command) {
-        QuotationAggregate aggregate = storeService.load(command.getId());
-
-        UserModel userModel = userQueryClient.getUserModelByUsername(command.getCreatedBy());
-        if (aggregate.getLastUserRoleUpdate() != null) {
-            if (userModel.getRole().getValue() < aggregate.getLastUserRoleUpdate().getValue()) {
-                throw new RuntimeException("Not have permission to change Quotation status!");
-            }
-        }
-
-        switch (command.getQuotationStatus()) {
-            case AWAIT_APPROVE -> {
-                isChangeStatusAble(aggregate);
-
-                if (aggregate.getUserModels() == null) {
-                    List<UserModel> list = new ArrayList<>();
-                    list.add(userModel);
-                    aggregate.setUserModels(list);
-                } else if (quotationQueryClient.exitsByUserModel(userModel, command.getId())) {
-                    throw new RuntimeException();
-                } else {
-                    aggregate.getUserModels().add(userModel);
-                }
-            }
-            case APPROVED -> {
-                validatePermission(userModel);
-                isChangeStatusAble(aggregate);
-                isApproveAble(aggregate, command);
-
-                aggregate.setApprovedAt(new Date());
-                aggregate.setApprovedBy(command.getCreatedBy());
-            }
-            case REQUIRE_INFORMATION -> {
-                validatePermission(userModel);
-                isChangeStatusAble(aggregate);
-                isRequestedAble(aggregate);
-
-                aggregate.setUserModels(null);
-            }
-            case REJECTED -> {
-                validatePermission(userModel);
-                isChangeStatusAble(aggregate);
-                isRejectedAble(aggregate);
-
-                aggregate.setQuotationStatus(QuotationStatus.REJECTED);
-            }
-            case DISABLED -> aggregate.setQuotationStatus(QuotationStatus.DISABLED);
-            default -> throw new RuntimeException("Unexpected quotation status: " + command.getQuotationStatus());
-        }
-
-
-        QuotationChangeStatusEvent event = aggregate.apply(command);
-        aggregate.setLastUserRoleUpdate(userModel.getRole());
-        event.setLastUserRoleUpdate(userModel.getRole());
-        storeService.save(aggregate, event);
-        producerService.publish("quotation_change_status", event);
-    }
-
-    @Override
     public void handle(QuotationScheduleStatusCommand command) {
         List<String> aggregates = quotationQueryClient.findAllIdsByQuotationStatus(command);
         aggregates.forEach(qa -> {
-            QuotationChangeStatusCommand cmd = new QuotationChangeStatusCommand();
-            cmd.setId(qa);
+            QuotationChangeToDisabledStatusCommand cmd = new QuotationChangeToDisabledStatusCommand();
+            cmd.setQuotationId(qa);
             cmd.setCreatedBy("system");
-            cmd.setQuotationStatus(QuotationStatus.DISABLED);
             handle(cmd);
         });
     }
@@ -158,10 +102,9 @@ public class QuotationHandlerImpl implements QuotationHandler {
     public void handle(String customerId) {
         List<String> aggregates = quotationQueryClient.findAllIdsByCustomerId(customerId);
         aggregates.forEach(qa -> {
-            QuotationChangeStatusCommand cmd = new QuotationChangeStatusCommand();
-            cmd.setId(qa);
+            QuotationChangeToDisabledStatusCommand cmd = new QuotationChangeToDisabledStatusCommand();
+            cmd.setQuotationId(qa);
             cmd.setCreatedBy("system");
-            cmd.setQuotationStatus(QuotationStatus.DISABLED);
             handle(cmd);
         });
     }
@@ -171,10 +114,9 @@ public class QuotationHandlerImpl implements QuotationHandler {
         customerIds.forEach(id -> {
             List<String> quotationIds = quotationQueryClient.findAllQuotationsNotApproveByCustomerId(id);
             quotationIds.forEach(qa -> {
-                QuotationChangeStatusCommand cmd = new QuotationChangeStatusCommand();
-                cmd.setId(qa);
+                QuotationChangeToDisabledStatusCommand cmd = new QuotationChangeToDisabledStatusCommand();
+                cmd.setQuotationId(qa);
                 cmd.setCreatedBy("system");
-                cmd.setQuotationStatus(QuotationStatus.DISABLED);
                 handle(cmd);
             });
         });
@@ -191,7 +133,123 @@ public class QuotationHandlerImpl implements QuotationHandler {
         producerService.publish("quotation_update", event);
     }
 
-    private void isApproveAble(QuotationAggregate aggregate, QuotationChangeStatusCommand command) {
+    @Override
+    public void handle(QuotationChangeToAwaitApproveStatusCommand quotationChangeToAwaitApproveStatusCommand) {
+        QuotationAggregate aggregate = storeService.load(quotationChangeToAwaitApproveStatusCommand.getQuotationId());
+        isChangeStatusAble(aggregate);
+        UserModel userModel = userQueryClient.getUserModelByUsername(quotationChangeToAwaitApproveStatusCommand.getCreatedBy());
+        if (aggregate.getLastUserRoleUpdate() != null) {
+            if (userModel.getRole().getValue() < aggregate.getLastUserRoleUpdate().getValue()) {
+                throw new RuntimeException("Not have permission to change Quotation status!");
+            }
+        }
+        if (aggregate.getUserModels() == null) {
+            List<UserModel> list = new ArrayList<>();
+            list.add(userModel);
+            aggregate.setUserModels(list);
+        } else if (quotationQueryClient.exitsByUserModel(userModel, quotationChangeToAwaitApproveStatusCommand.getQuotationId())) {
+            throw new RuntimeException();
+        } else {
+            aggregate.getUserModels().add(userModel);
+        }
+
+        aggregate.setQuotationStatus(QuotationStatus.AWAIT_APPROVE);
+        aggregate.setLastUserRoleUpdate(userModel.getRole());
+
+        QuotationChangeToAwaitApproveStatusEvent event = aggregate.apply(quotationChangeToAwaitApproveStatusCommand);
+        event.setLastUserRoleUpdate(userModel.getRole());
+        storeService.save(aggregate, event);
+        producerService.publish("quotation_change_status_to_await_approve", event);
+    }
+
+    @Override
+    public void handle(QuotationChangeToApprovedStatusCommand quotationChangeToApprovedStatusCommand) {
+        QuotationAggregate aggregate = storeService.load(quotationChangeToApprovedStatusCommand.getQuotationId());
+        isChangeStatusAble(aggregate);
+        isApproveAble(aggregate);
+
+        UserModel userModel = userQueryClient.getUserModelByUsername(quotationChangeToApprovedStatusCommand.getApprovedBy());
+        if (userModel == null) {
+            throw new RuntimeException();
+        }
+        validatePermission(userModel);
+
+        aggregate.setApprovedAt(new Date());
+        aggregate.setApprovedBy(quotationChangeToApprovedStatusCommand.getApprovedBy());
+
+        aggregate.setQuotationStatus(QuotationStatus.APPROVED);
+        aggregate.setLastUserRoleUpdate(userModel.getRole());
+
+        QuotationChangeToApprovedStatusEvent event = aggregate.apply(quotationChangeToApprovedStatusCommand);
+        event.setLastUserRoleUpdate(userModel.getRole());
+        storeService.save(aggregate, event);
+        producerService.publish("quotation_change_status_to_approved", event);
+    }
+
+    @Override
+    public void handle(QuotationChangeToDisabledStatusCommand quotationChangeToDisabledStatusCommand) {
+        QuotationAggregate aggregate = storeService.load(quotationChangeToDisabledStatusCommand.getQuotationId());
+        isChangeStatusAble(aggregate);
+
+        UserModel userModel = userQueryClient.getUserModelByUsername(quotationChangeToDisabledStatusCommand.getCreatedBy());
+        if (userModel == null) {
+            throw new RuntimeException();
+        }
+        validatePermission(userModel);
+
+        aggregate.setQuotationStatus(QuotationStatus.DISABLED);
+        aggregate.setLastUserRoleUpdate(userModel.getRole());
+
+        QuotationChangeToDisabledStatusEvent event = aggregate.apply(quotationChangeToDisabledStatusCommand);
+        event.setLastUserRoleUpdate(userModel.getRole());
+        storeService.save(aggregate, event);
+        producerService.publish("quotation_change_status_to_disabled", event);
+    }
+
+    @Override
+    public void handle(QuotationChangeToRejectedStatusCommand quotationChangeToRejectedStatusCommand) {
+        QuotationAggregate aggregate = storeService.load(quotationChangeToRejectedStatusCommand.getQuotationId());
+        isChangeStatusAble(aggregate);
+        isRejectedAble(aggregate);
+
+        UserModel userModel = userQueryClient.getUserModelByUsername(quotationChangeToRejectedStatusCommand.getCreatedBy());
+        if (userModel == null) {
+            throw new RuntimeException();
+        }
+        validatePermission(userModel);
+
+        aggregate.setQuotationStatus(QuotationStatus.REJECTED);
+        aggregate.setLastUserRoleUpdate(userModel.getRole());
+
+        QuotationChangeToRejectedStatusEvent event = aggregate.apply(quotationChangeToRejectedStatusCommand);
+        event.setLastUserRoleUpdate(userModel.getRole());
+        storeService.save(aggregate, event);
+        producerService.publish("quotation_change_status_to_rejected", event);
+    }
+
+    @Override
+    public void handle(QuotationChangeToRequireInformationStatusCommand quotationChangeToRequireInformationStatusCommand) {
+        QuotationAggregate aggregate = storeService.load(quotationChangeToRequireInformationStatusCommand.getQuotationId());
+        isChangeStatusAble(aggregate);
+        isRequestedAble(aggregate);
+
+        UserModel userModel = userQueryClient.getUserModelByUsername(quotationChangeToRequireInformationStatusCommand.getCreatedBy());
+        if (userModel == null) {
+            throw new RuntimeException();
+        }
+        validatePermission(userModel);
+
+        aggregate.setUserModels(null);
+        aggregate.setQuotationStatus(QuotationStatus.REQUIRE_INFORMATION);
+        aggregate.setLastUserRoleUpdate(userModel.getRole());
+
+        QuotationChangeToRequireInformationStatusEvent event = aggregate.apply(quotationChangeToRequireInformationStatusCommand);
+        event.setLastUserRoleUpdate(userModel.getRole());
+        storeService.save(aggregate, event);
+        producerService.publish("quotation_change_status_to_require_information", event);
+    }
+
+    private void isApproveAble(QuotationAggregate aggregate) {
         if (!QuotationStatus.AWAIT_APPROVE.equals(aggregate.getQuotationStatus())) {
             throw new RuntimeException("Invalid quotation status: " + aggregate.getQuotationStatus());
         }

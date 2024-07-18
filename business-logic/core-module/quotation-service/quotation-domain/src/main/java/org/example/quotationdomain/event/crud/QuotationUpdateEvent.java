@@ -1,9 +1,6 @@
-package org.example.quotationdomain.event;
+package org.example.quotationdomain.event.crud;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.example.sharedlibrary.base_class.BaseEvent;
 import org.example.sharedlibrary.base_quo_poli.CustomerModel;
@@ -11,6 +8,8 @@ import org.example.sharedlibrary.base_quo_poli.UserCreatedModel;
 import org.example.sharedlibrary.enumeration.ProductType;
 import org.example.sharedlibrary.enumeration.QuotationStatus;
 import org.example.sharedlibrary.enumeration.QuotationTypeStatus;
+import org.example.sharedlibrary.enumeration.ac.Role;
+import org.example.sharedlibrary.model.UserModel;
 
 import java.util.Date;
 import java.util.List;
@@ -20,8 +19,8 @@ import java.util.Map;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
-public class QuotationCreateEvent extends BaseEvent {
-
+@AllArgsConstructor
+public class QuotationUpdateEvent extends BaseEvent {
     String id;
     String quotationCode;
     String policyCode;
@@ -44,16 +43,19 @@ public class QuotationCreateEvent extends BaseEvent {
     List<Map<String, Object>> insuranceTypeModel;
     Double totalFeeAfterTax;
     UserCreatedModel userCreatedModel;
-    String approvedBy;
-    Date approveAt;
+    String approveBy;
+    Date approvedAt;
+    Role lastUserRoleUpdate;
+    List<UserModel> userModels;
 
-    public QuotationCreateEvent(Date timestamp, String createdBy, String quotationId, String quotationCode,
+    public QuotationUpdateEvent(Date timestamp, String createdBy, String quotationId, String quotationCode,
                                 String policyCode, ProductType productType, String productName, String productCode, List<Map<String, Object>> product,
                                 Boolean isCoinsurance, QuotationStatus quotationStatus,
                                 String quotationDistributionName, String quotationManagerName,
                                 String insuranceCompanyName, Date effectiveDate, Date maturityDate,
                                 CustomerModel customerId, CustomerModel beneficiaryId, String currency, Double rate, List<Map<String, Object>> insuranceTypeModel,
-                                Double totalFeeAfterTax, UserCreatedModel userCreatedModel, QuotationTypeStatus quotationTypeStatus) {
+                                Double totalFeeAfterTax, UserCreatedModel userCreatedModel, QuotationTypeStatus quotationTypeStatus,
+                                String approvedBy, Date approvedAt, Role lastUserRoleUpdate, List<UserModel> userModels) {
         super(timestamp, createdBy);
         this.id = quotationId;
         this.quotationCode = quotationCode;
@@ -74,8 +76,12 @@ public class QuotationCreateEvent extends BaseEvent {
         this.currency = currency;
         this.rate = rate;
         this.insuranceTypeModel = insuranceTypeModel;
-        this.totalFeeAfterTax = totalFeeAfterTax;
         this.userCreatedModel = userCreatedModel;
         this.quotationTypeStatus = quotationTypeStatus;
+        this.totalFeeAfterTax = totalFeeAfterTax;
+        this.approveBy = approvedBy;
+        this.approvedAt = approvedAt;
+        this.lastUserRoleUpdate = lastUserRoleUpdate;
+        this.userModels = userModels;
     }
 }

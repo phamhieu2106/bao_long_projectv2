@@ -6,12 +6,11 @@ import org.example.quotationdomain.domain.QuotationEntity;
 import org.example.quotationdomain.domain.model_view.HealthIdentityVIewModel;
 import org.example.quotationdomain.domain.model_view.MotorIdentityViewModel;
 import org.example.quotationdomain.domain.view.QuotationView;
-import org.example.quotationdomain.event.QuotationChangeStatusEvent;
-import org.example.quotationdomain.event.QuotationCreateEvent;
-import org.example.quotationdomain.event.QuotationUpdateEvent;
+import org.example.quotationdomain.event.crud.QuotationCreateEvent;
+import org.example.quotationdomain.event.crud.QuotationUpdateEvent;
+import org.example.quotationdomain.event.status.*;
 import org.example.quotationdomain.repository.QuotationESRepository;
 import org.example.quotationdomain.repository.QuotationEntityRepository;
-import org.example.sharedlibrary.enumeration.QuotationStatus;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,29 +66,36 @@ public class QuotationConsumerServiceImpl {
 
     @KafkaListener(topics = "quotation_update", groupId = "quotation_group")
     public void handleUpdateEvent(QuotationUpdateEvent event) {
-//        QuotationEntity quotationEntity = QuotationEntity.builder()
-//                .id(event.getQuotationId())
-//                .quotationCode(event.getQuotationCode())
-//                .policyCode(event.getPolicyCode())
-//                .productType(event.getProductType())
-//                .productCode(event.getProductCode())
-//                .product(event.getProduct())
-//                .isCoinsurance(event.getIsCoinsurance())
-//                .quotationStatus(event.getQuotationStatus())
-//                .quotationDistributionName(event.getQuotationDistributionName())
-//                .quotationManagerName(event.getQuotationManagerName())
-//                .insuranceCompanyName(event.getInsuranceCompanyName())
-//                .effectiveDate(event.getEffectiveDate())
-//                .maturityDate(event.getMaturityDate())
-//                .customerId(event.getCustomerId())
-//                .beneficiaryId(event.getBeneficiaryId())
-//                .currency(event.getCurrency())
-//                .rate(event.getRate())
-//                .insuranceTypeModel(event.getInsuranceTypeModel())
-//                .totalFeeAfterTax(event.getTotalFeeAfterTax())
-//                .createdAt(event.getTimestamp())
-//                .createdBy(event.getCreatedBy())
-//                .build();
+//        QuotationEntity quotationEntity = new QuotationEntity(
+//                event.getId(),
+//                event.getProductName(),
+//                event.getProductType(),
+//                event.getProductCode(),
+//                event.getQuotationDistributionName(),
+//                event.getQuotationManagerName(),
+//                event.getInsuranceCompanyName(),
+//                event.getEffectiveDate(),
+//                event.getMaturityDate(),
+//                event.getCustomerModel(),
+//                event.getBeneficiaryModel(),
+//                event.getQuotationCode(),
+//                event.getPolicyCode(),
+//                event.getProduct(),
+//                event.getIsCoinsurance(),
+//                event.getQuotationStatus(),
+//                event.getQuotationTypeStatus(),
+//                event.getCurrency(),
+//                event.getRate(),
+//                event.getTimestamp(),
+//                event.getUserCreatedModel(),
+//                event.getApprovedBy(),
+//                event.getApprovedAt(),
+//                event.getTotalFeeAfterTax(),
+//                event.getInsuranceTypeModel(),
+//                event.getLastUserRoleUpdate()
+//                event.getUserModels()
+//
+//        );
 //        repository.save(quotationEntity);
 //
 //        esRepository.save(new QuotationView(
@@ -107,25 +113,64 @@ public class QuotationConsumerServiceImpl {
 //        ));
     }
 
-    @KafkaListener(topics = "quotation_change_status", groupId = "quotation_group")
-    public void handleChangeStatusEvent(QuotationChangeStatusEvent event) {
-        Optional<QuotationEntity> optional = repository.findById(event.getId());
-        if (optional.isEmpty()) {
-            throw new NotFoundException();
-        }
-
-        QuotationEntity quotationEntity = optional.get();
+    @KafkaListener(topics = "quotation_change_status_to_await_approve", groupId = "quotation_group")
+    public void subscribe(QuotationChangeToAwaitApproveStatusEvent event) {
+        QuotationEntity quotationEntity = isQuotationExits(event.getQuotationId());
         quotationEntity.setQuotationStatus(event.getQuotationStatus());
         quotationEntity.setUserModels(event.getUserModels());
         quotationEntity.setLastUserRoleUpdate(event.getLastUserRoleUpdate());
-        if (QuotationStatus.APPROVED.equals(event.getQuotationStatus())) {
-            quotationEntity.setApproveBy(event.getApprovedBy());
-            quotationEntity.setApprovedAt(event.getApprovedAt());
-        }
-
 
         repository.save(quotationEntity);
         saveQuotationView(quotationEntity);
+    }
+
+    @KafkaListener(topics = "quotation_change_status_to_approved", groupId = "quotation_group")
+    public void subscribe(QuotationChangeToApprovedStatusEvent event) {
+        QuotationEntity quotationEntity = isQuotationExits(event.getQuotationId());
+        quotationEntity.setQuotationStatus(event.getQuotationStatus());
+        quotationEntity.setLastUserRoleUpdate(event.getLastUserRoleUpdate());
+
+        repository.save(quotationEntity);
+        saveQuotationView(quotationEntity);
+    }
+
+    @KafkaListener(topics = "quotation_change_status_to_disabled", groupId = "quotation_group")
+    public void subscribe(QuotationChangeToDisabledStatusEvent event) {
+        QuotationEntity quotationEntity = isQuotationExits(event.getQuotationId());
+        quotationEntity.setQuotationStatus(event.getQuotationStatus());
+        quotationEntity.setLastUserRoleUpdate(event.getLastUserRoleUpdate());
+
+        repository.save(quotationEntity);
+        saveQuotationView(quotationEntity);
+    }
+
+    @KafkaListener(topics = "quotation_change_status_to_rejected", groupId = "quotation_group")
+    public void subscribe(QuotationChangeToRejectedStatusEvent event) {
+        QuotationEntity quotationEntity = isQuotationExits(event.getQuotationId());
+        quotationEntity.setQuotationStatus(event.getQuotationStatus());
+        quotationEntity.setLastUserRoleUpdate(event.getLastUserRoleUpdate());
+
+        repository.save(quotationEntity);
+        saveQuotationView(quotationEntity);
+    }
+
+    @KafkaListener(topics = "quotation_change_status_to_require_information", groupId = "quotation_group")
+    public void subscribe(QuotationChangeToRequireInformationStatusEvent event) {
+
+        QuotationEntity quotationEntity = isQuotationExits(event.getQuotationId());
+        quotationEntity.setQuotationStatus(event.getQuotationStatus());
+        quotationEntity.setLastUserRoleUpdate(event.getLastUserRoleUpdate());
+
+        repository.save(quotationEntity);
+        saveQuotationView(quotationEntity);
+    }
+
+    private QuotationEntity isQuotationExits(String quotationId) {
+        Optional<QuotationEntity> optional = repository.findById(quotationId);
+        if (optional.isEmpty()) {
+            throw new NotFoundException();
+        }
+        return optional.get();
     }
 
     private void saveQuotationView(QuotationEntity quotationEntity) {
@@ -149,7 +194,6 @@ public class QuotationConsumerServiceImpl {
                 .healthIdentityVIewModel(getHealthIdentityModels(quotationEntity.getProduct()))
                 .build());
     }
-
 
     private List<MotorIdentityViewModel> getMotorIdentityModels(List<Map<String, Object>> maps) {
         List<MotorIdentityViewModel> motorIdentityModels = new ArrayList<>();

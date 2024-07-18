@@ -1,4 +1,4 @@
-package org.example.quotationdomain.command;
+package org.example.quotationdomain.command.cud;
 
 import lombok.AccessLevel;
 import lombok.Getter;
