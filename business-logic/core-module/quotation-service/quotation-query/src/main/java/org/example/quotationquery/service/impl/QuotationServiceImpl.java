@@ -37,6 +37,17 @@ public class QuotationServiceImpl implements QuotationService {
         return String.valueOf(code);
     }
 
+
+    @Override
+    public boolean isCreateNewVersionAble(String quotationId) {
+        QuotationEntity quotationEntity = quotationEntityRepository.findById(quotationId).orElse(null);
+        if (quotationEntity == null) {
+            return false;
+        } else if (quotationEntity.getPolicyCode() != null) {
+            return false;
+        } else return QuotationStatus.APPROVED.equals(quotationEntity.getQuotationStatus());
+    }
+
     @Override
     public QuotationEntity getQuotationByQuotationId(String quotationId) {
         return quotationEntityRepository.findById(quotationId).orElse(null);
@@ -83,6 +94,11 @@ public class QuotationServiceImpl implements QuotationService {
             return false;
         }
         return QuotationStatus.APPROVED.equals(quotationEntity.getQuotationStatus());
+    }
+
+    @Override
+    public int getQuotationVersion(String quotationCode) {
+        return (int) (quotationEntityRepository.count() + 1);
     }
 
     private String getYearSuffix() {

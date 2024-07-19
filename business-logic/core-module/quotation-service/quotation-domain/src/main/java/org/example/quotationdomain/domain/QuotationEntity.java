@@ -30,7 +30,6 @@ public class QuotationEntity {
 
     @Id
     String id;
-    @Column(unique = true)
     String quotationCode;
     String policyCode;
     @Enumerated(EnumType.STRING)
@@ -62,7 +61,6 @@ public class QuotationEntity {
     Date effectiveDate;
     Date maturityDate;
     @Convert(converter = CustomerModelConverter.class)
-//    @JdbcTypeCode(SqlTypes.JSON)
     CustomerModel customer;
     @Convert(converter = CustomerModelConverter.class)
     CustomerModel beneficiary;
@@ -75,11 +73,15 @@ public class QuotationEntity {
 
     Role lastUserRoleUpdate;
 
+    @Column(columnDefinition = "int default 1")
+    int quotationVersion = 1;
+
     public QuotationEntity(String id, String productName, ProductType productType, String productCode, String quotationDistributionName, String quotationManagerName, String insuranceCompanyName,
                            Date effectiveDate, Date maturityDate, CustomerModel customer, CustomerModel beneficiary, String quotationCode,
                            String policyCode, List<Map<String, Object>> product, Boolean isCoinsurance
             , QuotationStatus quotationStatus, QuotationTypeStatus quotationTypeStatus, String currency, Double rate, Date createdAt, UserCreatedModel userCreatedModel,
-                           String approveBy, Date approvedAt, Double totalFeeAfterTax, List<Map<String, Object>> insuranceTypeModel) {
+                           String approveBy, Date approvedAt, Double totalFeeAfterTax, List<Map<String, Object>> insuranceTypeModel,
+                           int quotationVersion) {
         this.id = id;
         this.quotationDistributionName = quotationDistributionName;
         this.quotationManagerName = quotationManagerName;
@@ -105,5 +107,6 @@ public class QuotationEntity {
         this.approvedAt = approvedAt;
         this.totalFeeAfterTax = totalFeeAfterTax;
         this.insuranceTypeModel = insuranceTypeModel;
+        this.quotationVersion = quotationVersion;
     }
 }

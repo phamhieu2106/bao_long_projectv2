@@ -12,9 +12,10 @@ public class ElasticsearchConstant {
             return null;
         }
 
-        String normalizedString = Normalizer.normalize(input, Normalizer.Form.NFD);
+        String normalizedString = Normalizer.normalize(input, Normalizer.Form.NFD).toLowerCase();
         Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
 
-        return pattern.matcher(normalizedString).replaceAll("");
+        return pattern.matcher(normalizedString).replaceAll("").replaceAll("đ", "d");
     }
+
 }

@@ -16,6 +16,12 @@ public class QuotationInternalQueryController {
 
     private final QuotationService quotationService;
 
+    @GetMapping("/isCreateNewVersionAble")
+    public boolean isCreateNewVersionAble(@RequestParam String quotationId) {
+        return quotationService.isCreateNewVersionAble(quotationId);
+
+    }
+
     @GetMapping("/getQuotationByQuotationId")
     public QuotationEntity getQuotationByQuotationId(@RequestParam String quotationId) {
         return quotationService.getQuotationByQuotationId(quotationId);
@@ -54,5 +60,10 @@ public class QuotationInternalQueryController {
     @GetMapping("/isApproved")
     public boolean isApproved(@RequestParam String quotationId) {
         return quotationService.isApproved(quotationId);
+    }
+
+    @GetMapping("/getQuotationVersion")
+    public int getQuotationVersion(@RequestParam String quotationId) {
+        return quotationService.getQuotationVersion(quotationId);
     }
 }

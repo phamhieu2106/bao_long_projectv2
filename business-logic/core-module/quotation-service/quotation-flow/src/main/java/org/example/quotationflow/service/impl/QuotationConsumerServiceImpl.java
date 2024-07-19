@@ -7,6 +7,7 @@ import org.example.quotationdomain.domain.model_view.HealthIdentityVIewModel;
 import org.example.quotationdomain.domain.model_view.MotorIdentityViewModel;
 import org.example.quotationdomain.domain.view.QuotationView;
 import org.example.quotationdomain.event.crud.QuotationCreateEvent;
+import org.example.quotationdomain.event.crud.QuotationCreateNewVersionEvent;
 import org.example.quotationdomain.event.crud.QuotationUpdateEvent;
 import org.example.quotationdomain.event.status.*;
 import org.example.quotationdomain.repository.QuotationESRepository;
@@ -55,7 +56,45 @@ public class QuotationConsumerServiceImpl {
                 null,
                 null,
                 event.getTotalFeeAfterTax(),
-                event.getInsuranceTypeModel()
+                event.getInsuranceTypeModel(),
+                1
+        );
+
+        saveQuotationView(quotationEntity);
+
+        repository.save(quotationEntity);
+
+    }
+
+    @KafkaListener(topics = "quotation_create_new_version", groupId = "quotation_group")
+    public void handleCreateNewVersionEvent(QuotationCreateNewVersionEvent event) {
+        QuotationEntity quotationEntity = new QuotationEntity(
+                event.getId(),
+                event.getProductName(),
+                event.getProductType(),
+                event.getProductCode(),
+                event.getQuotationDistributionName(),
+                event.getQuotationManagerName(),
+                event.getInsuranceCompanyName(),
+                event.getEffectiveDate(),
+                event.getMaturityDate(),
+                event.getCustomerModel(),
+                event.getBeneficiaryModel(),
+                event.getQuotationCode(),
+                event.getPolicyCode(),
+                event.getProduct(),
+                event.getIsCoinsurance(),
+                event.getQuotationStatus(),
+                event.getQuotationTypeStatus(),
+                event.getCurrency(),
+                event.getRate(),
+                event.getTimestamp(),
+                event.getUserCreatedModel(),
+                event.getApprovedBy(),
+                event.getApproveAt(),
+                event.getTotalFeeAfterTax(),
+                event.getInsuranceTypeModel(),
+                event.getQuotationVersion()
         );
 
         saveQuotationView(quotationEntity);
@@ -131,7 +170,7 @@ public class QuotationConsumerServiceImpl {
         quotationEntity.setLastUserRoleUpdate(event.getLastUserRoleUpdate());
         quotationEntity.setApprovedAt(event.getApprovedAt());
         quotationEntity.setApproveBy(event.getApprovedBy());
-        
+
         repository.save(quotationEntity);
         saveQuotationView(quotationEntity);
     }

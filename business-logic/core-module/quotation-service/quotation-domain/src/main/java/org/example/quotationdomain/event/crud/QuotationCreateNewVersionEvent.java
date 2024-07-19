@@ -20,8 +20,7 @@ import java.util.Map;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
-public class QuotationCreateEvent extends BaseEvent {
-
+public class QuotationCreateNewVersionEvent extends BaseEvent {
     String id;
     String quotationCode;
     String policyCode;
@@ -48,13 +47,13 @@ public class QuotationCreateEvent extends BaseEvent {
     Date approveAt;
     int quotationVersion = 1;
 
-    public QuotationCreateEvent(Date timestamp, String createdBy, String quotationId, String quotationCode,
-                                String policyCode, ProductType productType, String productName, String productCode, List<Map<String, Object>> product,
-                                Boolean isCoinsurance, QuotationStatus quotationStatus,
-                                String quotationDistributionName, String quotationManagerName,
-                                String insuranceCompanyName, Date effectiveDate, Date maturityDate,
-                                CustomerModel customerId, CustomerModel beneficiaryId, String currency, Double rate, List<Map<String, Object>> insuranceTypeModel,
-                                Double totalFeeAfterTax, UserCreatedModel userCreatedModel, QuotationTypeStatus quotationTypeStatus) {
+    public QuotationCreateNewVersionEvent(Date timestamp, String createdBy, String quotationId, String quotationCode,
+                                          String policyCode, ProductType productType, String productName, String productCode, List<Map<String, Object>> product,
+                                          Boolean isCoinsurance, QuotationStatus quotationStatus,
+                                          String quotationDistributionName, String quotationManagerName,
+                                          String insuranceCompanyName, Date effectiveDate, Date maturityDate,
+                                          CustomerModel customerId, CustomerModel beneficiaryId, String currency, Double rate, List<Map<String, Object>> insuranceTypeModel,
+                                          Double totalFeeAfterTax, UserCreatedModel userCreatedModel, QuotationTypeStatus quotationTypeStatus) {
         super(timestamp, createdBy);
         this.id = quotationId;
         this.quotationCode = quotationCode;

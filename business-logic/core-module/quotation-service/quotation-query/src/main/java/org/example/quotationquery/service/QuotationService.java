@@ -24,4 +24,8 @@ public interface QuotationService {
     QuotationEntity getQuotationByQuotationId(String quotationId);
 
     boolean isApproved(String quotationId);
+
+    boolean isCreateNewVersionAble(String quotationId);
+
+    int getQuotationVersion(String quotationCode);
 }

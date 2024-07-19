@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.quotationcommand.service.QuotationService;
 import org.example.quotationdomain.command.cud.QuotationCopyCommand;
 import org.example.quotationdomain.command.cud.QuotationCreateCommand;
+import org.example.quotationdomain.command.cud.QuotationCreateNewVersionCommand;
 import org.example.quotationdomain.command.cud.QuotationUpdateCommand;
 import org.example.quotationdomain.command.status.*;
 import org.example.sharedlibrary.base_constant.HeaderRequestConstant;
@@ -27,12 +28,23 @@ public class QuotationCommandController {
         return quotationService.create(command);
     }
 
+    @PostMapping("/createNewQuotationVersion")
+    public WrapperResponse copyNewQuotationVersion(@RequestParam String quotationId,
+                                                   @RequestBody QuotationCreateNewVersionCommand command,
+                                                   @RequestHeader(value = HeaderRequestConstant.REQUEST_HEADER
+                                                           , defaultValue = HeaderRequestConstant.ANONYMOUS) String username) {
+        command.setQuotationId(quotationId);
+        command.setCreatedBy(username);
+        return quotationService.copyNewQuotationVersion(command);
+    }
+
     @PostMapping("/copy")
     public WrapperResponse copy(@RequestParam String quotationId,
                                 @RequestHeader(value = HeaderRequestConstant.REQUEST_HEADER
                                         , defaultValue = HeaderRequestConstant.ANONYMOUS) String username) {
         return quotationService.copy(new QuotationCopyCommand(quotationId, username));
     }
+
 
     @PostMapping("/update/{quotationId}")
     public WrapperResponse update(@RequestBody QuotationUpdateCommand command,

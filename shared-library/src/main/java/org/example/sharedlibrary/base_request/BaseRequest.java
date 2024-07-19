@@ -17,6 +17,7 @@ public abstract class BaseRequest {
     String sortOrder = PageConstant.PAGE_SORT_TYPE;
     String keyword = PageConstant.PAGE_DEFAULT_VALUE;
     String[] sortBys = {PageConstant.PAGE_DEFAULT_SORT_BYS};
+    List<SortRequest> sortRequests = PageConstant.PAGE_DEFAULT_SORTS;
     List<FilterKeywordRequest> filterKeywords = null;
     List<FilterDateRequest> filterDateRequests = null;
 }

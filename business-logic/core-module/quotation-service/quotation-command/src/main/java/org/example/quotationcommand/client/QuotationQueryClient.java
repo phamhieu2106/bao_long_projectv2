@@ -30,4 +30,10 @@ public interface QuotationQueryClient {
 
     @GetMapping("/isApproved")
     boolean isApproved(@RequestParam String quotationId);
+
+    @GetMapping("/isCreateNewVersionAble")
+    boolean isCreateNewVersionAble(@RequestParam String quotationId);
+
+    @GetMapping("/getQuotationVersion")
+    int getQuotationVersion(@RequestParam String quotationId);
 }

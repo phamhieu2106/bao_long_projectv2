@@ -13,6 +13,8 @@ import java.util.List;
 public interface QuotationEntityRepository extends JpaRepository<QuotationEntity, String> {
     boolean existsByQuotationCode(String quotationCode);
 
+    long countByQuotationCode(String quotationCode);
+    
     @Query(value = """
             SELECT q.id
             FROM quotation_entity q

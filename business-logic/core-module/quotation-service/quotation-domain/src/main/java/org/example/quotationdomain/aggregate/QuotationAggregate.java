@@ -7,9 +7,11 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.example.quotationdomain.command.cud.QuotationCopyCommand;
 import org.example.quotationdomain.command.cud.QuotationCreateCommand;
+import org.example.quotationdomain.command.cud.QuotationCreateNewVersionCommand;
 import org.example.quotationdomain.command.cud.QuotationUpdateCommand;
 import org.example.quotationdomain.command.status.*;
 import org.example.quotationdomain.event.crud.QuotationCreateEvent;
+import org.example.quotationdomain.event.crud.QuotationCreateNewVersionEvent;
 import org.example.quotationdomain.event.crud.QuotationUpdateEvent;
 import org.example.quotationdomain.event.status.*;
 import org.example.sharedlibrary.base_class.BaseAggregate;
@@ -58,10 +60,10 @@ public class QuotationAggregate extends BaseAggregate {
     String approvedBy;
     Date approvedAt;
     Role lastUserRoleUpdate;
+    int quotationVersion;
 
     public QuotationCreateEvent apply(QuotationCreateCommand command) {
 
-        this.id = GenerateConstant.generateId();
         this.productType = command.getProductType();
         this.productCode = command.getProductCode();
         this.product = command.getProduct();
@@ -76,6 +78,7 @@ public class QuotationAggregate extends BaseAggregate {
         this.totalFeeAfterTax = command.getTotalFeeAfterTax();
         this.productName = command.getProductName();
         this.quotationTypeStatus = QuotationTypeStatus.NEW;
+        this.quotationVersion = 1;
 
         return new QuotationCreateEvent(
                 new Date(),
@@ -261,6 +264,37 @@ public class QuotationAggregate extends BaseAggregate {
                 this.userCreatedModel.getUsername(),
                 this.id,
                 this.lastUserRoleUpdate
+        );
+    }
+
+    public QuotationCreateNewVersionEvent apply(QuotationCreateNewVersionCommand command) {
+        this.id = GenerateConstant.generateId();
+
+        return new QuotationCreateNewVersionEvent(
+                new Date(),
+                this.userCreatedModel.getUsername(),
+                this.id,
+                this.quotationCode,
+                this.policyCode,
+                this.productType,
+                this.productName,
+                this.productCode,
+                this.product,
+                this.isCoinsurance,
+                this.quotationStatus,
+                this.quotationDistributionName,
+                this.quotationManagerName,
+                this.insuranceCompanyName,
+                this.effectiveDate,
+                this.maturityDate,
+                this.customerModel,
+                this.beneficiaryModel,
+                this.currency,
+                this.rate,
+                this.insuranceTypeModel,
+                this.totalFeeAfterTax,
+                this.userCreatedModel,
+                this.quotationTypeStatus
         );
     }
 }

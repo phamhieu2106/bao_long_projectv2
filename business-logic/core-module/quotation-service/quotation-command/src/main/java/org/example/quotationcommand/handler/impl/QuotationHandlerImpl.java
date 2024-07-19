@@ -12,10 +12,12 @@ import org.example.quotationdomain.aggregate.QuotationAggregate;
 import org.example.quotationdomain.command.QuotationScheduleStatusCommand;
 import org.example.quotationdomain.command.cud.QuotationCopyCommand;
 import org.example.quotationdomain.command.cud.QuotationCreateCommand;
+import org.example.quotationdomain.command.cud.QuotationCreateNewVersionCommand;
 import org.example.quotationdomain.command.cud.QuotationUpdateCommand;
 import org.example.quotationdomain.command.status.*;
 import org.example.quotationdomain.domain.model.InsuranceDate;
 import org.example.quotationdomain.event.crud.QuotationCreateEvent;
+import org.example.quotationdomain.event.crud.QuotationCreateNewVersionEvent;
 import org.example.quotationdomain.event.crud.QuotationUpdateEvent;
 import org.example.quotationdomain.event.status.*;
 import org.example.sharedlibrary.enumeration.QuotationStatus;
@@ -54,10 +56,31 @@ public class QuotationHandlerImpl implements QuotationHandler {
         aggregate.setBeneficiaryModel(customerQueryClient
                 .getCustomerModelById(command.getBeneficiaryId()));
         aggregate.setUserCreatedModel(userQueryClient.getUserModelById(command.getCreatedBy()));
+        aggregate.setId(UUID.randomUUID().toString());
         QuotationCreateEvent event = aggregate.apply(command);
 
         storeService.save(aggregate, event);
         producerService.publish("quotation_create", event);
+    }
+
+    @Override
+    public void handle(QuotationCreateNewVersionCommand command) {
+        QuotationAggregate aggregate = storeService.load(command.getQuotationId());
+
+        InsuranceDate date = getQuotationValidAndVoidDate(command.getProduct());
+        aggregate.setEffectiveDate(date.getValidInsuranceDate());
+        aggregate.setMaturityDate(date.getVoidInsuranceDate());
+        aggregate.setCustomerModel(customerQueryClient
+                .getCustomerModelById(command.getCustomerId()));
+        aggregate.setBeneficiaryModel(customerQueryClient
+                .getCustomerModelById(command.getBeneficiaryId()));
+        aggregate.setUserCreatedModel(userQueryClient.getUserModelById(command.getCreatedBy()));
+        aggregate.setQuotationVersion(quotationQueryClient.getQuotationVersion(aggregate.getId()));
+
+        QuotationCreateNewVersionEvent event = aggregate.apply(command);
+
+        storeService.save(aggregate, event);
+        producerService.publish("quotation_create_new_version", event);
     }
 
     @Override

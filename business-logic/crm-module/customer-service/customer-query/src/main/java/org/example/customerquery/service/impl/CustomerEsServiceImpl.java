@@ -39,10 +39,9 @@ public class CustomerEsServiceImpl implements CustomerEsService {
 
         Pageable pageable = PageRequest.of(
                 request.getPageNumber(), request.getPageSize(), PageConstant.getSortBys(
-                        request.getSortBys(), request.getSortOrder()
+                        request.getSortRequests()
                 )
         );
-
 
         Query query = Query.findAll().setPageable(pageable);
         SearchHits<CustomerView> hits = elasticsearchTemplate.search(query, CustomerView.class);
@@ -60,7 +59,7 @@ public class CustomerEsServiceImpl implements CustomerEsService {
 
         Pageable pageable = PageRequest.of(
                 request.getPageNumber(), request.getPageSize(), PageConstant.getSortBys(
-                        request.getSortBys(), request.getSortOrder()
+                        request.getSortRequests()
                 )
         );
 

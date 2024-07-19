@@ -6,10 +6,7 @@ import org.example.quotationcommand.client.QuotationQueryClient;
 import org.example.quotationcommand.client.UserQueryClient;
 import org.example.quotationcommand.handler.QuotationHandler;
 import org.example.quotationcommand.service.QuotationService;
-import org.example.quotationdomain.command.cud.QuotationCopyCommand;
-import org.example.quotationdomain.command.cud.QuotationCreateCommand;
-import org.example.quotationdomain.command.cud.QuotationDeleteCommand;
-import org.example.quotationdomain.command.cud.QuotationUpdateCommand;
+import org.example.quotationdomain.command.cud.*;
 import org.example.quotationdomain.command.status.*;
 import org.example.sharedlibrary.base_response.WrapperResponse;
 import org.springframework.http.HttpStatus;
@@ -42,6 +39,30 @@ public class QuotationServiceImpl implements QuotationService {
             if (!userQueryClient.isExitSByUsername(command.getCreatedBy())) {
                 return WrapperResponse.fail(
                         "Not Found User!", HttpStatus.NOT_FOUND
+                );
+            }
+            handler.handle(command);
+            return WrapperResponse.success(
+                    HttpStatus.OK, HttpStatus.OK
+            );
+        } catch (Exception e) {
+            return WrapperResponse.fail(
+                    HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
+    }
+
+    @Override
+    public WrapperResponse copyNewQuotationVersion(QuotationCreateNewVersionCommand command) {
+        try {
+            if (!userQueryClient.isExitSByUsername(command.getCreatedBy())) {
+                return WrapperResponse.fail(
+                        "Not Found User!", HttpStatus.NOT_FOUND
+                );
+            }
+            if (!quotationQueryClient.isCreateNewVersionAble(command.getQuotationId())) {
+                return WrapperResponse.fail(
+                        "Can't Create New Quotation Version!", HttpStatus.NOT_FOUND
                 );
             }
             handler.handle(command);

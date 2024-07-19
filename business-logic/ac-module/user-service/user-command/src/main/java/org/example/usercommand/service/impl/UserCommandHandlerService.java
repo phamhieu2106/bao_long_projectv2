@@ -36,6 +36,7 @@ public class UserCommandHandlerService implements UserCommandHandler {
         UserAggregate aggregate = new UserAggregate();
         aggregate.setUserCode(client.generateUserCode());
         UserCreateEvent event = aggregate.applyCreate(command);
+        event.setCreatedBy(aggregate.getCreatedBy());
         userEventStoreService.storeEvent(UserCreateEvent.class.getSimpleName(), aggregate);
         producer.publish(TOPIC, event);
     }

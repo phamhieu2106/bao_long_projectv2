@@ -62,7 +62,6 @@ public class PolicyEntity {
     Date effectiveDate;
     Date maturityDate;
     @Convert(converter = CustomerModelConverter.class)
-//    @Column(columnDefinition = "jsonb")
     CustomerModel customer;
     @Convert(converter = CustomerModelConverter.class)
     CustomerModel beneficiary;
