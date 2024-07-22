@@ -13,6 +13,7 @@ import org.example.quotationdomain.response.QuotationResponse;
 import org.example.quotationquery.request.QuotationPageRequest;
 import org.example.quotationquery.service.QuotationEsService;
 import org.example.sharedlibrary.base_constant.PageConstant;
+import org.example.sharedlibrary.base_constant.view.QuotationViewConstant;
 import org.example.sharedlibrary.base_response.WrapperResponse;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -54,41 +55,48 @@ public class QuotationEsServiceImpl implements QuotationEsService {
     public WrapperResponse getSearchQuotationPage(QuotationPageRequest request) {
         Pageable pageable = PageRequest.of(
                 request.getPageNumber(), request.getPageSize(),
-                PageConstant.getSortBys(request.getSortBys(), request.getSortOrder())
+                PageConstant.getSortBys(request.getSortRequests())
         );
 
         BoolQuery.Builder boolQuery = new BoolQuery.Builder();
         if (request.getUserOffice() != null && !request.getUserOffice().isBlank()) {
-            boolQuery.must(QueryBuilders.term(t -> t.field("userOffice").value(request.getUserOffice())));
+            boolQuery.must(QueryBuilders.term(t -> t.field(QuotationViewConstant.QUOTATION_USER_OFFICE).value(request.getUserOffice())));
         }
         if (request.getApartment() != null && !request.getApartment().isBlank()) {
-            boolQuery.must(QueryBuilders.term(t -> t.field("apartment").value(request.getApartment())));
+            boolQuery.must(QueryBuilders.term(t -> t.field(QuotationViewConstant.QUOTATION_APARTMENT).value(request.getApartment())));
         }
         if (request.getProductType() != null) {
-            boolQuery.must(QueryBuilders.term(t -> t.field("productType").value(request.getProductType().name())));
+            boolQuery.must(QueryBuilders.term(t -> t.field(QuotationViewConstant.QUOTATION_PRODUCT_TYPE).value(request.getProductType().name())));
         }
-        if (request.getProductType() != null) {
-            boolQuery.must(QueryBuilders.term(t -> t.field("approvedAt").value(FieldValue.of(request.getApprovedAt()))));
-        } //--
+        if (request.getApprovedAt() != null) {
+            boolQuery.must(QueryBuilders.term(t -> t.field(QuotationViewConstant.QUOTATION_APPROVED_AT).value(FieldValue.of(request.getApprovedAt()))));
+        }
+
         if (request.getKeyword() != null && !request.getKeyword().isBlank()) {
-            boolQuery.should(QueryBuilders.term(t -> t.field("quotationCode").value(request.getKeyword())));
-            boolQuery.should(QueryBuilders.term(t -> t.field("customerNameKeyword").value(request.getKeyword())));
-            boolQuery.should(QueryBuilders.match(t -> t.field("customerName").query(request.getKeyword())));
-            boolQuery.should(QueryBuilders.nested(nes -> nes.path("motorIdentityViewModel").query(q -> q
-                    .term(t -> t.field("motorIdentityViewModel.identityNumber").value(request.getKeyword())))
+            boolQuery.should(QueryBuilders.term(t -> t.field(QuotationViewConstant.QUOTATION_QUOTATION_CODE).value(request.getKeyword())));
+            boolQuery.should(QueryBuilders.term(t -> t.field(QuotationViewConstant.QUOTATION_CUSTOMER_NAME_KEYWORD).value(request.getKeyword())));
+            boolQuery.should(QueryBuilders.match(t -> t.field(QuotationViewConstant.QUOTATION_CUSTOMER_NAME).query(request.getKeyword())));
+            boolQuery.should(QueryBuilders.nested(nes -> nes.path(QuotationViewConstant.QUOTATION_MOTO_IDENTITY).query(q -> q
+                    .term(t -> t.field(QuotationViewConstant.QUOTATION_MOTO_IDENTITY_NUMBER).value(request.getKeyword())))
             ));
-            boolQuery.should(QueryBuilders.nested(nes -> nes.path("motorIdentityViewModel").query(q -> q
-                    .term(t -> t.field("motorIdentityViewModel.frameNumber").value(request.getKeyword())))
+            boolQuery.should(QueryBuilders.nested(nes -> nes.path(QuotationViewConstant.QUOTATION_MOTO_IDENTITY).query(q -> q
+                    .term(t -> t.field(QuotationViewConstant.QUOTATION_MOTO_FRAME_NUMBER).value(request.getKeyword())))
             ));
         }
         if (request.getCreatedFrom() != null && request.getCreatedTo() != null) {
-            boolQuery.must(QueryBuilders.range(r -> r.field("timeStamp")
-                    .gte(JsonData.of(request.getCreatedFrom().toInstant())).lte(JsonData.of(request.getCreatedTo().toInstant()))));
+            boolQuery.must(QueryBuilders.range(r -> r
+                    .field(QuotationViewConstant.QUOTATION_TIMESTAMP)
+                    .gte(JsonData.of(request.getCreatedFrom().toInstant()))
+                    .lte(JsonData.of(request.getCreatedTo().toInstant()))));
+
         } else if (request.getCreatedFrom() != null) {
-            boolQuery.must(QueryBuilders.range(r -> r.field("timeStamp")
+            boolQuery.must(QueryBuilders.range(r -> r
+                    .field(QuotationViewConstant.QUOTATION_TIMESTAMP)
                     .gte(JsonData.of(request.getCreatedFrom().toInstant()))));
+
         } else if (request.getCreatedTo() != null) {
-            boolQuery.must(QueryBuilders.range(r -> r.field("timeStamp")
+            boolQuery.must(QueryBuilders.range(r -> r
+                    .field(QuotationViewConstant.QUOTATION_TIMESTAMP)
                     .lte(JsonData.of(request.getCreatedTo().toInstant()))));
         }
 
@@ -117,10 +125,10 @@ public class QuotationEsServiceImpl implements QuotationEsService {
 
         co.elastic.clients.elasticsearch._types.query_dsl.Query nativeQuery =
                 co.elastic.clients.elasticsearch._types.query_dsl.Query.of(nq -> nq
-                        .term(t -> t.field("aggregateId").value(quotationEntity.getId())));
+                        .term(t -> t.field(QuotationViewConstant.QUOTATION_AGGREGATE_ID).value(quotationEntity.getId())));
 
         Query query = new StringQuery(nativeQuery.toString().substring(6)).addSort(
-                Sort.by(Sort.Direction.DESC, "version")
+                Sort.by(Sort.Direction.DESC, QuotationViewConstant.QUOTATION_VERSION)
         );
         SearchHits<QuotationHistoryResponse> hits = template.search(query, QuotationHistoryResponse.class);
         QuotationResponse response = new QuotationResponse(quotationEntity, hits.stream().map(SearchHit::getContent).toList());

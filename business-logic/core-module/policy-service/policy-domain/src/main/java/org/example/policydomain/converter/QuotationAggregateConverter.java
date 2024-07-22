@@ -1,10 +1,10 @@
 package org.example.policydomain.converter;
 
-import org.example.policydomain.response.QuotationResponse;
+import org.example.policydomain.response.PolicyResponse;
 import org.example.sharedlibrary.base_converter.BaseConverter;
 
-public class QuotationAggregateConverter extends BaseConverter<QuotationResponse> {
+public class QuotationAggregateConverter extends BaseConverter<PolicyResponse> {
     public QuotationAggregateConverter() {
-        super(QuotationResponse.class);
+        super(PolicyResponse.class);
     }
 }
