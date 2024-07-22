@@ -35,5 +35,8 @@ public interface QuotationQueryClient {
     boolean isCreateNewVersionAble(@RequestParam String quotationId);
 
     @GetMapping("/getQuotationVersion")
-    int getQuotationVersion(@RequestParam String quotationId);
+    int getQuotationVersion(@RequestParam String quotationCode);
+
+    @GetMapping("/getAllQuotationIdsOtherVersionNotApprovedAndIsNot")
+    List<String> getAllQuotationIdsOtherVersionNotApprovedAndIsNot(@RequestParam String quotationCode, @RequestParam String quotationId);
 }

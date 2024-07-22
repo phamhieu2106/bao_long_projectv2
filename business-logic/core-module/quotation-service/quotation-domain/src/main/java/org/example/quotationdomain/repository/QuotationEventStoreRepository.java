@@ -9,6 +9,6 @@ public interface QuotationEventStoreRepository extends JpaRepository<QuotationEv
 
     long countByAggregateId(String aggregateId);
 
-    Optional<QuotationEventEntity> findFirstByAggregateId(String aggregateId);
+    Optional<QuotationEventEntity> findFirstByAggregateIdOrderByVersionDesc(String aggregateId);
 
 }

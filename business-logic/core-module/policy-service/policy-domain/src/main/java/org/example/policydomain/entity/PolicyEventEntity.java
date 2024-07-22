@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.example.policydomain.aggregate.PolicyAggregate;
 import org.example.policydomain.converter.QuotationAggregateConverter;
+import org.hibernate.annotations.Immutable;
 
 import java.util.Date;
 
@@ -17,6 +18,7 @@ import java.util.Date;
 @Table
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Immutable
 public class PolicyEventEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

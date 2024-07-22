@@ -14,7 +14,7 @@ public interface QuotationEntityRepository extends JpaRepository<QuotationEntity
     boolean existsByQuotationCode(String quotationCode);
 
     long countByQuotationCode(String quotationCode);
-    
+
     @Query(value = """
             SELECT q.id
             FROM quotation_entity q
@@ -43,4 +43,9 @@ public interface QuotationEntityRepository extends JpaRepository<QuotationEntity
             OR q.quotation_status = 'REQUIRE_INFORMATION')
             """, nativeQuery = true)
     List<String> findAllQuotationIdsNotApproveByCustomerId(@Param("customerId") String customerId);
+
+    List<QuotationEntity> getAllByQuotationCodeAndIdNot(String quotationCode, String quotationId);
+
+    List<QuotationEntity> getAllByQuotationCode(String quotationCode);
+
 }

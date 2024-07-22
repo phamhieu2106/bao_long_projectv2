@@ -33,7 +33,6 @@ import java.util.Map;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
 public class QuotationAggregate extends BaseAggregate {
-
     String id;
     String quotationCode;
     String policyCode;
@@ -149,64 +148,70 @@ public class QuotationAggregate extends BaseAggregate {
         this.quotationDistributionName = command.getQuotationDistributionName();
         this.insuranceCompanyName = command.getInsuranceCompanyName();
 
-//        return new QuotationUpdateEvent(
-//                new Date(),
-//                this.userCreatedModel.getUsername(),
-//                this.id,
-//                this.quotationCode,
-//                this.policyCode,
-//                this.productType,
-//                this.productName,
-//                this.productCode,
-//                this.product,
-//                this.isCoinsurance,
-//                this.quotationStatus,
-//                this.quotationDistributionName,
-//                this.quotationManagerName,
-//                this.insuranceCompanyName,
-//                this.effectiveDate,
-//                this.maturityDate,
-//                this.customerModel,
-//                this.beneficiaryModel,
-//                this.currency,
-//                this.rate,
-//                this.insuranceTypeModel,
-//                this.totalFeeAfterTax,
-//                this.userCreatedModel,
-//                this.quotationTypeStatus
-//        );
-        return null;
+        return new QuotationUpdateEvent(
+                new Date(),
+                this.userCreatedModel.getUsername(),
+                this.id,
+                this.quotationCode,
+                this.policyCode,
+                this.productType,
+                this.productName,
+                this.productCode,
+                this.product,
+                this.isCoinsurance,
+                this.quotationStatus,
+                this.quotationDistributionName,
+                this.quotationManagerName,
+                this.insuranceCompanyName,
+                this.effectiveDate,
+                this.maturityDate,
+                this.customerModel,
+                this.beneficiaryModel,
+                this.currency,
+                this.rate,
+                this.insuranceTypeModel,
+                this.totalFeeAfterTax,
+                this.userCreatedModel,
+                this.quotationTypeStatus,
+                this.approvedBy,
+                this.approvedAt,
+                this.lastUserRoleUpdate,
+                this.userModels
+        );
     }
 
     public QuotationUpdateEvent apply() {
 
-//        return new QuotationUpdateEvent(
-//                new Date(),
-//                this.userCreatedModel.getUsername(),
-//                this.id,
-//                this.quotationCode,
-//                this.policyCode,
-//                this.productType,
-//                this.productName,
-//                this.productCode,
-//                this.product,
-//                this.isCoinsurance,
-//                this.quotationStatus,
-//                this.quotationDistributionName,
-//                this.quotationManagerName,
-//                this.insuranceCompanyName,
-//                this.effectiveDate,
-//                this.maturityDate,
-//                this.customerModel,
-//                this.beneficiaryModel,
-//                this.currency,
-//                this.rate,
-//                this.insuranceTypeModel,
-//                this.totalFeeAfterTax,
-//                this.userCreatedModel,
-//                this.quotationTypeStatus
-//        );
-        return null;
+        return new QuotationUpdateEvent(
+                new Date(),
+                this.userCreatedModel.getUsername(),
+                this.id,
+                this.quotationCode,
+                this.policyCode,
+                this.productType,
+                this.productName,
+                this.productCode,
+                this.product,
+                this.isCoinsurance,
+                this.quotationStatus,
+                this.quotationDistributionName,
+                this.quotationManagerName,
+                this.insuranceCompanyName,
+                this.effectiveDate,
+                this.maturityDate,
+                this.customerModel,
+                this.beneficiaryModel,
+                this.currency,
+                this.rate,
+                this.insuranceTypeModel,
+                this.totalFeeAfterTax,
+                this.userCreatedModel,
+                this.quotationTypeStatus,
+                this.approvedBy,
+                this.approvedAt,
+                this.lastUserRoleUpdate,
+                this.userModels
+        );
     }
 
     public QuotationChangeToAwaitApproveStatusEvent apply(QuotationChangeToAwaitApproveStatusCommand quotationChangeToAwaitApproveStatusCommand) {
@@ -294,7 +299,11 @@ public class QuotationAggregate extends BaseAggregate {
                 this.insuranceTypeModel,
                 this.totalFeeAfterTax,
                 this.userCreatedModel,
-                this.quotationTypeStatus
+                this.quotationTypeStatus,
+                this.approvedBy,
+                this.approvedAt,
+                this.quotationVersion,
+                this.userModels
         );
     }
 }

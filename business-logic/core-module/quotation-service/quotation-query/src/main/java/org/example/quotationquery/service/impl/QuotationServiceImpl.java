@@ -43,9 +43,23 @@ public class QuotationServiceImpl implements QuotationService {
         QuotationEntity quotationEntity = quotationEntityRepository.findById(quotationId).orElse(null);
         if (quotationEntity == null) {
             return false;
-        } else if (quotationEntity.getPolicyCode() != null) {
-            return false;
-        } else return QuotationStatus.APPROVED.equals(quotationEntity.getQuotationStatus());
+        }
+
+        List<QuotationEntity> quotationEntities = quotationEntityRepository.getAllByQuotationCode(quotationEntity.getQuotationCode());
+        if (!quotationEntities.isEmpty()) {
+            try {
+                quotationEntities.forEach(q -> {
+                            if (QuotationStatus.APPROVED.equals(quotationEntity.getQuotationStatus())
+                                    && quotationEntity.getPolicyCode() != null) {
+                                throw new RuntimeException();
+                            }
+                        }
+                );
+            } catch (Exception e) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
@@ -98,7 +112,12 @@ public class QuotationServiceImpl implements QuotationService {
 
     @Override
     public int getQuotationVersion(String quotationCode) {
-        return (int) (quotationEntityRepository.count() + 1);
+        return (int) (quotationEntityRepository.countByQuotationCode(quotationCode) + 1);
+    }
+
+    @Override
+    public List<String> getAllQuotationIdsOtherVersionNotApproved(String quotationCode, String quotationId) {
+        return quotationEntityRepository.getAllByQuotationCodeAndIdNot(quotationCode, quotationId).stream().map(QuotationEntity::getId).toList();
     }
 
     private String getYearSuffix() {

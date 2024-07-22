@@ -28,4 +28,6 @@ public interface QuotationService {
     boolean isCreateNewVersionAble(String quotationId);
 
     int getQuotationVersion(String quotationCode);
+
+    List<String> getAllQuotationIdsOtherVersionNotApproved(String quotationCode, String quotationId);
 }

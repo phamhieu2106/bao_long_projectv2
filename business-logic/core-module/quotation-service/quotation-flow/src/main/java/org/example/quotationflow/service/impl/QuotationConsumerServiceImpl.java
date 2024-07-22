@@ -96,7 +96,7 @@ public class QuotationConsumerServiceImpl {
                 event.getInsuranceTypeModel(),
                 event.getQuotationVersion()
         );
-
+        quotationEntity.setUserModels(event.getUserModels());
         saveQuotationView(quotationEntity);
 
         repository.save(quotationEntity);
@@ -105,51 +105,12 @@ public class QuotationConsumerServiceImpl {
 
     @KafkaListener(topics = "quotation_update", groupId = "quotation_group")
     public void handleUpdateEvent(QuotationUpdateEvent event) {
-//        QuotationEntity quotationEntity = new QuotationEntity(
-//                event.getId(),
-//                event.getProductName(),
-//                event.getProductType(),
-//                event.getProductCode(),
-//                event.getQuotationDistributionName(),
-//                event.getQuotationManagerName(),
-//                event.getInsuranceCompanyName(),
-//                event.getEffectiveDate(),
-//                event.getMaturityDate(),
-//                event.getCustomerModel(),
-//                event.getBeneficiaryModel(),
-//                event.getQuotationCode(),
-//                event.getPolicyCode(),
-//                event.getProduct(),
-//                event.getIsCoinsurance(),
-//                event.getQuotationStatus(),
-//                event.getQuotationTypeStatus(),
-//                event.getCurrency(),
-//                event.getRate(),
-//                event.getTimestamp(),
-//                event.getUserCreatedModel(),
-//                event.getApprovedBy(),
-//                event.getApprovedAt(),
-//                event.getTotalFeeAfterTax(),
-//                event.getInsuranceTypeModel(),
-//                event.getLastUserRoleUpdate()
-//                event.getUserModels()
-//
-//        );
-//        repository.save(quotationEntity);
-//
-//        esRepository.save(new QuotationView(
-//                quotationEntity.getId(),
-//                quotationEntity.getQuotationCode(),
-//                quotationEntity.getPolicyCode(),
-//                quotationEntity.getQuotationStatus(),
-//                quotationEntity.getQuotationTypeStatus(),
-//                quotationEntity.getProductCode(),
-//                quotationEntity.getProductName(),
-//                quotationEntity.getCustomerId(),
-//                quotationEntity.getTotalFeeAfterTax(),
-//                quotationEntity.getCreatedAt(),
-//                quotationEntity.getCreatedBy()
-//        ));
+        QuotationEntity quotationEntity = isQuotationExits(event.getId());
+        quotationEntity.setPolicyCode(event.getPolicyCode());
+
+        repository.save(quotationEntity);
+        saveQuotationView(quotationEntity);
+
     }
 
     @KafkaListener(topics = "quotation_change_status_to_await_approve", groupId = "quotation_group")

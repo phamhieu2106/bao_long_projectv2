@@ -60,6 +60,7 @@ public class QuotationEntity {
     String insuranceCompanyName;
     Date effectiveDate;
     Date maturityDate;
+
     @Convert(converter = CustomerModelConverter.class)
     CustomerModel customer;
     @Convert(converter = CustomerModelConverter.class)

@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.example.quotationdomain.aggregate.QuotationAggregate;
 import org.example.quotationdomain.converter.QuotationAggregateConverter;
+import org.hibernate.annotations.Immutable;
 
 import java.util.Date;
 
@@ -17,6 +18,7 @@ import java.util.Date;
 @Table
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Immutable
 public class QuotationEventEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

@@ -63,7 +63,12 @@ public class QuotationInternalQueryController {
     }
 
     @GetMapping("/getQuotationVersion")
-    public int getQuotationVersion(@RequestParam String quotationId) {
-        return quotationService.getQuotationVersion(quotationId);
+    public int getQuotationVersion(@RequestParam String quotationCode) {
+        return quotationService.getQuotationVersion(quotationCode);
+    }
+
+    @GetMapping("/getAllQuotationIdsOtherVersionNotApprovedAndIsNot")
+    public List<String> getAllQuotationIdsOtherVersionNotApprovedAndIsNot(@RequestParam String quotationCode, @RequestParam String quotationId) {
+        return quotationService.getAllQuotationIdsOtherVersionNotApproved(quotationCode, quotationId);
     }
 }

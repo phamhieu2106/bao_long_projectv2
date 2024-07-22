@@ -33,7 +33,7 @@ public class QuotationEventStoreServiceImpl implements QuotationEventStoreServic
 
     @Override
     public QuotationAggregate load(String id) {
-        QuotationEventEntity eventStoreEntity = repository.findFirstByAggregateId(id).orElse(null);
+        QuotationEventEntity eventStoreEntity = repository.findFirstByAggregateIdOrderByVersionDesc(id).orElse(null);
         if (eventStoreEntity == null) {
             throw new EntityNotFoundException("Not Found Quotation Aggregate");
         }

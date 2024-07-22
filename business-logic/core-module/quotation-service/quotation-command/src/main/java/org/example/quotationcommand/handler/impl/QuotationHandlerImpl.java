@@ -75,7 +75,9 @@ public class QuotationHandlerImpl implements QuotationHandler {
         aggregate.setBeneficiaryModel(customerQueryClient
                 .getCustomerModelById(command.getBeneficiaryId()));
         aggregate.setUserCreatedModel(userQueryClient.getUserModelById(command.getCreatedBy()));
-        aggregate.setQuotationVersion(quotationQueryClient.getQuotationVersion(aggregate.getId()));
+        aggregate.setQuotationVersion(quotationQueryClient.getQuotationVersion(aggregate.getQuotationCode()));
+        aggregate.setProduct(command.getProduct());
+        aggregate.setInsuranceTypeModel(command.getInsuranceTypeModel());
 
         QuotationCreateNewVersionEvent event = aggregate.apply(command);
 
@@ -116,7 +118,7 @@ public class QuotationHandlerImpl implements QuotationHandler {
         aggregates.forEach(qa -> {
             QuotationChangeToDisabledStatusCommand cmd = new QuotationChangeToDisabledStatusCommand();
             cmd.setQuotationId(qa);
-            cmd.setCreatedBy("system");
+            cmd.setCreatedBy("admin");
             handle(cmd);
         });
     }
@@ -127,7 +129,7 @@ public class QuotationHandlerImpl implements QuotationHandler {
         aggregates.forEach(qa -> {
             QuotationChangeToDisabledStatusCommand cmd = new QuotationChangeToDisabledStatusCommand();
             cmd.setQuotationId(qa);
-            cmd.setCreatedBy("system");
+            cmd.setCreatedBy("admin");
             handle(cmd);
         });
     }
@@ -139,7 +141,7 @@ public class QuotationHandlerImpl implements QuotationHandler {
             quotationIds.forEach(qa -> {
                 QuotationChangeToDisabledStatusCommand cmd = new QuotationChangeToDisabledStatusCommand();
                 cmd.setQuotationId(qa);
-                cmd.setCreatedBy("system");
+                cmd.setCreatedBy("admin");
                 handle(cmd);
             });
         });
@@ -154,6 +156,15 @@ public class QuotationHandlerImpl implements QuotationHandler {
         QuotationUpdateEvent event = aggregate.apply();
         storeService.save(aggregate, event);
         producerService.publish("quotation_update", event);
+
+        List<String> ids = quotationQueryClient.getAllQuotationIdsOtherVersionNotApprovedAndIsNot(
+                aggregate.getQuotationCode(), aggregate.getId());
+        ids.forEach(id -> {
+            QuotationChangeToDisabledStatusCommand cmd = new QuotationChangeToDisabledStatusCommand();
+            cmd.setQuotationId(id);
+            cmd.setCreatedBy("admin");
+            handle(cmd);
+        });
     }
 
     @Override
@@ -205,6 +216,7 @@ public class QuotationHandlerImpl implements QuotationHandler {
 
         QuotationChangeToApprovedStatusEvent event = aggregate.apply(quotationChangeToApprovedStatusCommand);
         event.setLastUserRoleUpdate(userModel.getRole());
+
         storeService.save(aggregate, event);
         producerService.publish("quotation_change_status_to_approved", event);
     }
@@ -212,7 +224,6 @@ public class QuotationHandlerImpl implements QuotationHandler {
     @Override
     public void handle(QuotationChangeToDisabledStatusCommand quotationChangeToDisabledStatusCommand) {
         QuotationAggregate aggregate = storeService.load(quotationChangeToDisabledStatusCommand.getQuotationId());
-        isChangeStatusAble(aggregate);
 
         UserModel userModel = userQueryClient.getUserModelByUsername(quotationChangeToDisabledStatusCommand.getCreatedBy());
         if (userModel == null) {
