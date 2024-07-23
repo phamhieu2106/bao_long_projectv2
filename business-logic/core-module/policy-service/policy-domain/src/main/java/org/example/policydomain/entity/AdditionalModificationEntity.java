@@ -34,7 +34,9 @@ public class AdditionalModificationEntity {
     @Id
     String id;
     String additionalModificationCode;
+    @Enumerated(EnumType.STRING)
     ModificationType modificationType;
+    @Enumerated(EnumType.STRING)
     ModificationTypeName modificationTypeName;
     Date effectiveDate;
     @Column(columnDefinition = ColumnConstant.JSONB_TYPE)
@@ -45,10 +47,8 @@ public class AdditionalModificationEntity {
     AdditionalModificationStatus additionalModificationStatus;
     Date createdAt;
     String createdBy;
-
     String modifiedBy;
     Date modifiedAt;
-
     String approvedBy;
     Date approvedAt;
 }

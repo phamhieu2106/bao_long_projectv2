@@ -19,4 +19,7 @@ public interface PolicyQueryClient {
 
     @PostMapping("/isValidEffectDate")
     boolean isValidEffectDate(@RequestParam String policyId, @RequestBody Date effectiveDate);
+
+    @GetMapping("/isCreateAble")
+    boolean isCreateAble(@RequestParam String policyId);
 }

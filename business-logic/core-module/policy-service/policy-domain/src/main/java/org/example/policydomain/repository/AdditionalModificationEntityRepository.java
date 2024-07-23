@@ -11,4 +11,6 @@ public interface AdditionalModificationEntityRepository extends JpaRepository<Ad
 
     List<AdditionalModificationEntity> findAllByPolicyIdAndAdditionalModificationStatusOrderByCreatedAtDesc(String policyId
             , AdditionalModificationStatus additionalModificationStatus);
+
+    List<AdditionalModificationEntity> findAllByPolicyIdOrderByCreatedAtDesc(String policyId);
 }

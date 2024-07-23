@@ -55,6 +55,7 @@ public class PolicyConsumerServiceImpl implements PolicyConsumerService {
     }
 
     @Override
+    @KafkaListener(topics = "additional_modification_create", groupId = "am-group")
     public void subscribe(AdditionalModificationCreateEvent event) {
         AdditionalModificationEntity modificationEntity = new AdditionalModificationEntity(
                 event.getAdditionalModificationId(),

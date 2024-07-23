@@ -32,6 +32,7 @@ public class PolicyEventStoreServiceImpl implements PolicyEventStoreService {
         ));
     }
 
+
     @Override
     public void storeAMEvent(AdditionalModificationAggregate aggregate, BaseEvent modificationEventEntity) {
         additionalModificationEventEntityRepository.save(new AdditionalModificationEventEntity(

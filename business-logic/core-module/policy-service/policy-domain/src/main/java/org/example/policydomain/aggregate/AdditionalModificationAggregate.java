@@ -41,6 +41,7 @@ public class AdditionalModificationAggregate extends BaseAggregate {
         this.effectiveDate = command.getEffectiveDate();
         this.additionalData = command.getAdditionalData();
         this.policyId = command.getPolicyId();
+        this.createdBy = command.getCreatedBy();
         this.createdAt = new Date();
 
         return new AdditionalModificationCreateEvent(

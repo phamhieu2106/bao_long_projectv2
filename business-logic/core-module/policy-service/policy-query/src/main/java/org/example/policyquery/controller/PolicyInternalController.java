@@ -31,4 +31,9 @@ public class PolicyInternalController {
     public boolean isValidEffectDate(@RequestParam String policyId, @RequestBody Date effectiveDate) {
         return policyInternalService.isValidEffectDate(policyId, effectiveDate);
     }
+
+    @GetMapping("/isCreateAble")
+    public boolean isCreateAble(@RequestParam String policyId) {
+        return policyInternalService.isCreateAble(policyId);
+    }
 }

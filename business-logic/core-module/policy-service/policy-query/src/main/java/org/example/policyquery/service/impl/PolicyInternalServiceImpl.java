@@ -44,6 +44,17 @@ public class PolicyInternalServiceImpl implements PolicyInternalService {
     }
 
     @Override
+    public boolean isCreateAble(String policyId) {
+        List<AdditionalModificationEntity> additionalModificationEntities = additionalModificationEntityRepository.findAllByPolicyIdOrderByCreatedAtDesc(policyId);
+        if (additionalModificationEntities.isEmpty()) {
+            return true;
+        } else
+            return AdditionalModificationStatus.APPROVED.equals(additionalModificationEntities.get(0).getAdditionalModificationStatus())
+                    || AdditionalModificationStatus.REJECTED.equals(additionalModificationEntities.get(0).getAdditionalModificationStatus())
+                    || AdditionalModificationStatus.UNDONE.equals(additionalModificationEntities.get(0).getAdditionalModificationStatus());
+    }
+
+    @Override
     public boolean isValidEffectDate(String policyId, Date effectiveDate) {
         PolicyEntity policyEntity = policyEntityRepository.findById(policyId).orElse(null);
         if (policyEntity == null) return false;
@@ -53,6 +64,7 @@ public class PolicyInternalServiceImpl implements PolicyInternalService {
         if (!additionalModificationEntities.isEmpty()) {
             return !effectiveDate.before(additionalModificationEntities.get(0).getEffectiveDate());
         }
+
         return true;
     }
 

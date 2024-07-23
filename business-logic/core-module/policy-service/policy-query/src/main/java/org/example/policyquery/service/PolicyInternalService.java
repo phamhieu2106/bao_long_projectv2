@@ -9,4 +9,6 @@ public interface PolicyInternalService {
     boolean isExitsById(String policyId);
 
     boolean isValidEffectDate(String policyId, Date effectiveDate);
+
+    boolean isCreateAble(String policyId);
 }

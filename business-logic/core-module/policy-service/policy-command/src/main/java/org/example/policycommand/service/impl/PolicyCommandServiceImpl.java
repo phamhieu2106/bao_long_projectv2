@@ -40,6 +40,10 @@ public class PolicyCommandServiceImpl implements PolicyCommandService {
             return WrapperResponse.fail("Not found User!", HttpStatus.NOT_FOUND);
         }
 
+        if (!policyQueryClient.isCreateAble(policyId)) {
+            return WrapperResponse.fail("Can't create Additional Modification!", HttpStatus.BAD_REQUEST);
+        }
+
         if (!policyQueryClient.isValidEffectDate(policyId, command.getEffectiveDate())) {
             return WrapperResponse.fail("Not valid Id Policy Or not valid effect date!", HttpStatus.BAD_REQUEST);
         }
@@ -51,6 +55,6 @@ public class PolicyCommandServiceImpl implements PolicyCommandService {
         } catch (Exception e) {
             return WrapperResponse.fail("Somethings wrong when trying create AM!", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return null;
+        return WrapperResponse.success(HttpStatus.OK, HttpStatus.OK);
     }
 }
