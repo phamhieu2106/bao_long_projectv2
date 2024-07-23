@@ -2,7 +2,7 @@ package org.example.policycommand.service;
 
 import org.example.sharedlibrary.base_class.BaseEvent;
 
-public interface PolicyEventService {
+public interface PolicyProducerService {
 
-    void publish(BaseEvent event);
+    void publish(String topic, BaseEvent event);
 }

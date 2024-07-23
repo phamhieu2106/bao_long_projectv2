@@ -18,8 +18,7 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
     networks:
       - kafka-zoo-net
-    depends_on:
-      - zookeeper
+
   elasticsearch:
     container_name: elasticsearch
     image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
@@ -42,75 +41,75 @@ services:
     ports:
       - "5601:5601"
 
-  logstash1:
-    container_name: logstash1
-    image: docker.elastic.co/logstash/logstash:8.13.4
-    volumes:
-      - ./utils/logstash-config/user_postgres.conf:/usr/share/logstash/pipeline/user-logstash.conf
-      - ./utils/index-template/user-template.json:/usr/share/user-template.json
-      - ./utils/driver/postgresql-42.7.3.jar:/usr/share/logstash/postgresql-jdbc.jar
-    environment:
-      - "xpack.monitoring.enabled=false"
-    ports:
-      - "5044:5044"
-    depends_on:
-      - elasticsearch
-    links:
-      - elasticsearch
-    networks:
-      - elastic-kib-log-net
-  logstash1-history:
-    container_name: logstash1-history
-    image: docker.elastic.co/logstash/logstash:8.13.4
-    volumes:
-      - ./utils/logstash-config/user_history_postgres.conf:/usr/share/logstash/pipeline/user-history-logstash.conf
-      - ./utils/index-template/user-history-template.json:/usr/share/user-history-template.json
-      - ./utils/driver/postgresql-42.7.3.jar:/usr/share/logstash/postgresql-jdbc.jar
-    environment:
-      - "xpack.monitoring.enabled=false"
-    ports:
-      - "5034:5034"
-    depends_on:
-      - elasticsearch
-    links:
-      - elasticsearch
-    networks:
-      - elastic-kib-log-net
-
-  logstash2:
-    container_name: logstash2
-    image: docker.elastic.co/logstash/logstash:8.13.4
-    volumes:
-      - ./utils/logstash-config/customer_postgres.conf:/usr/share/logstash/pipeline/customer_postgres.conf
-      - ./utils/index-template/customer-template.json:/usr/share/customer-template.json
-      - ./utils/driver/postgresql-42.7.3.jar:/usr/share/logstash/postgresql-jdbc.jar
-    environment:
-      - "xpack.monitoring.enabled=false"
-    ports:
-      - "5144:5144"
-    depends_on:
-      - elasticsearch
-    links:
-      - elasticsearch
-    networks:
-      - elastic-kib-log-net
-  logstash2-history:
-    container_name: logstash2-history
-    image: docker.elastic.co/logstash/logstash:8.13.4
-    volumes:
-      - ./utils/logstash-config/customer_history_postgres.conf:/usr/share/logstash/pipeline/customer_history_postgres.conf
-      - ./utils/index-template/customer-history-template.json:/usr/share/customer-history-template.json
-      - ./utils/driver/postgresql-42.7.3.jar:/usr/share/logstash/postgresql-jdbc.jar
-    environment:
-      - "xpack.monitoring.enabled=false"
-    ports:
-      - "5134:5134"
-    depends_on:
-      - elasticsearch
-    links:
-      - elasticsearch
-    networks:
-      - elastic-kib-log-net
+#  logstash1:
+#    container_name: logstash1
+#    image: docker.elastic.co/logstash/logstash:8.13.4
+#    volumes:
+#      - ./utils/logstash-config/user_postgres.conf:/usr/share/logstash/pipeline/user-logstash.conf
+#      - ./utils/index-template/user-template.json:/usr/share/user-template.json
+#      - ./utils/driver/postgresql-42.7.3.jar:/usr/share/logstash/postgresql-jdbc.jar
+#    environment:
+#      - "xpack.monitoring.enabled=false"
+#    ports:
+#      - "5044:5044"
+#    depends_on:
+#      - elasticsearch
+#    links:
+#      - elasticsearch
+#    networks:
+#      - elastic-kib-log-net
+#  logstash1-history:
+#    container_name: logstash1-history
+#    image: docker.elastic.co/logstash/logstash:8.13.4
+#    volumes:
+#      - ./utils/logstash-config/user_history_postgres.conf:/usr/share/logstash/pipeline/user-history-logstash.conf
+#      - ./utils/index-template/user-history-template.json:/usr/share/user-history-template.json
+#      - ./utils/driver/postgresql-42.7.3.jar:/usr/share/logstash/postgresql-jdbc.jar
+#    environment:
+#      - "xpack.monitoring.enabled=false"
+#    ports:
+#      - "5034:5034"
+#    depends_on:
+#      - elasticsearch
+#    links:
+#      - elasticsearch
+#    networks:
+#      - elastic-kib-log-net
+#
+#  logstash2:
+#    container_name: logstash2
+#    image: docker.elastic.co/logstash/logstash:8.13.4
+#    volumes:
+#      - ./utils/logstash-config/customer_postgres.conf:/usr/share/logstash/pipeline/customer_postgres.conf
+#      - ./utils/index-template/customer-template.json:/usr/share/customer-template.json
+#      - ./utils/driver/postgresql-42.7.3.jar:/usr/share/logstash/postgresql-jdbc.jar
+#    environment:
+#      - "xpack.monitoring.enabled=false"
+#    ports:
+#      - "5144:5144"
+#    depends_on:
+#      - elasticsearch
+#    links:
+#      - elasticsearch
+#    networks:
+#      - elastic-kib-log-net
+#  logstash2-history:
+#    container_name: logstash2-history
+#    image: docker.elastic.co/logstash/logstash:8.13.4
+#    volumes:
+#      - ./utils/logstash-config/customer_history_postgres.conf:/usr/share/logstash/pipeline/customer_history_postgres.conf
+#      - ./utils/index-template/customer-history-template.json:/usr/share/customer-history-template.json
+#      - ./utils/driver/postgresql-42.7.3.jar:/usr/share/logstash/postgresql-jdbc.jar
+#    environment:
+#      - "xpack.monitoring.enabled=false"
+#    ports:
+#      - "5134:5134"
+#    depends_on:
+#      - elasticsearch
+#    links:
+#      - elasticsearch
+#    networks:
+#      - elastic-kib-log-net
 
 networks:
   elastic-kib-log-net:

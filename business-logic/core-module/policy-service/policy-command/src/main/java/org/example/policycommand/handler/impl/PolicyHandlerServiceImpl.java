@@ -2,43 +2,37 @@ package org.example.policycommand.handler.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.example.policycommand.handler.PolicyHandlerService;
-import org.example.policycommand.service.PolicyEventService;
+import org.example.policycommand.service.PolicyEventStoreService;
+import org.example.policycommand.service.PolicyProducerService;
+import org.example.policydomain.aggregate.AdditionalModificationAggregate;
 import org.example.policydomain.aggregate.PolicyAggregate;
 import org.example.policydomain.command.PolicyCreateCommand;
-import org.example.policydomain.entity.PolicyEventEntity;
+import org.example.policydomain.command.additional_modification.AdditionalModificationCreateCommand;
 import org.example.policydomain.event.PolicyCreateEvent;
-import org.example.policydomain.repository.PolicyEventEntityRepository;
+import org.example.policydomain.event.additional_modification.AdditionalModificationCreateEvent;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
 public class PolicyHandlerServiceImpl implements PolicyHandlerService {
 
-    private final PolicyEventEntityRepository eventEntityRepository;
-    private final PolicyEventService policyEventService;
+    private final PolicyProducerService policyProducerService;
+    private final PolicyEventStoreService policyEventStoreService;
 
     @Override
     public String handle(PolicyCreateCommand command) {
         PolicyAggregate aggregate = new PolicyAggregate();
         PolicyCreateEvent event = aggregate.apply(command);
-        policyEventService.publish(event);
-        eventEntityRepository.save(new PolicyEventEntity(
-                new Date(),
-                aggregate.getId(),
-                event.getClass().getSimpleName(),
-                getEventVersion(aggregate.getId()),
-                aggregate,
-                aggregate.getUserCreatedModel().getUsername()
-        ));
+        policyEventStoreService.storePolicyEvent(aggregate, event);
+        policyProducerService.publish("policy_create", event);
         return aggregate.getPolicyCode();
     }
 
-    private long getEventVersion(String aggregateId) {
-        if (eventEntityRepository.countByAggregateId(aggregateId) == 0) {
-            return 1;
-        }
-        return eventEntityRepository.countByAggregateId(aggregateId) + 1;
+    @Override
+    public void handle(AdditionalModificationCreateCommand command) {
+        AdditionalModificationAggregate aggregate = new AdditionalModificationAggregate();
+        AdditionalModificationCreateEvent event = aggregate.apply(command);
+        policyEventStoreService.storeAMEvent(aggregate, event);
+        policyProducerService.publish("additional_modification_create", event);
     }
 }

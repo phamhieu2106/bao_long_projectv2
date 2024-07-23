@@ -1,19 +1,28 @@
 package org.example.policydomain.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import org.example.policydomain.converter.UserCreatedModelConverter;
-import org.example.policydomain.converter.UserModelConverter;
+import org.example.sharedlibrary.base_constant.ColumnConstant;
 import org.example.sharedlibrary.base_quo_poli.CustomerModel;
 import org.example.sharedlibrary.base_quo_poli.UserCreatedModel;
-import org.example.sharedlibrary.converter.CustomerModelConverter;
-import org.example.sharedlibrary.converter.ProductMapConverter;
 import org.example.sharedlibrary.enumeration.ProductType;
 import org.example.sharedlibrary.enumeration.QuotationStatus;
 import org.example.sharedlibrary.enumeration.QuotationTypeStatus;
 import org.example.sharedlibrary.enumeration.ac.Role;
 import org.example.sharedlibrary.model.UserModel;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.util.Date;
 import java.util.List;
@@ -37,8 +46,8 @@ public class PolicyEntity {
     ProductType productType;
     String productName;
     String productCode;
-    @Column(length = 10000)
-    @Convert(converter = ProductMapConverter.class)
+    @Column(columnDefinition = ColumnConstant.JSONB_TYPE)
+    @JdbcTypeCode(SqlTypes.JSON)
     List<Map<String, Object>> product;
     Boolean isCoinsurance;
     @Enumerated(EnumType.STRING)
@@ -47,8 +56,8 @@ public class PolicyEntity {
     QuotationTypeStatus quotationTypeStatus;
     String currency;
     Double rate;
-    @Convert(converter = ProductMapConverter.class)
-    @Column(length = 10000)
+    @Column(columnDefinition = ColumnConstant.JSONB_TYPE)
+    @JdbcTypeCode(SqlTypes.JSON)
     List<Map<String, Object>> insuranceTypeModel;
     Double totalFeeAfterTax;
     Date createdAt;
@@ -61,15 +70,18 @@ public class PolicyEntity {
     String insuranceCompanyName;
     Date effectiveDate;
     Date maturityDate;
-    @Convert(converter = CustomerModelConverter.class)
+    @Column(columnDefinition = ColumnConstant.JSONB_TYPE)
+    @JdbcTypeCode(SqlTypes.JSON)
     CustomerModel customer;
-    @Convert(converter = CustomerModelConverter.class)
+    @Column(columnDefinition = ColumnConstant.JSONB_TYPE)
+    @JdbcTypeCode(SqlTypes.JSON)
     CustomerModel beneficiary;
-    @Convert(converter = UserCreatedModelConverter.class)
+    @Column(columnDefinition = ColumnConstant.JSONB_TYPE)
+    @JdbcTypeCode(SqlTypes.JSON)
     UserCreatedModel userCreatedModel;
 
-    @Convert(converter = UserModelConverter.class)
-    @Column(length = 1000)
+    @Column(columnDefinition = ColumnConstant.JSONB_TYPE)
+    @JdbcTypeCode(SqlTypes.JSON)
     List<UserModel> userModels;
 
     Role lastUserRoleUpdate;

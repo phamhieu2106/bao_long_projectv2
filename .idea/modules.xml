@@ -5,6 +5,8 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/bao_long_projectv2.iml" filepath="$PROJECT_DIR$/.idea/bao_long_projectv2.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/customer-domain.main.iml" filepath="$PROJECT_DIR$/.idea/modules/customer-domain.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/policy-command.main.iml" filepath="$PROJECT_DIR$/.idea/modules/policy-command.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/policy-domain.main.iml" filepath="$PROJECT_DIR$/.idea/modules/policy-domain.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1252917051/policy-domain.shared-library.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-1252917051/policy-domain.shared-library.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/policy-flow.main.iml" filepath="$PROJECT_DIR$/.idea/modules/policy-flow.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/quotation-domain.main.iml" filepath="$PROJECT_DIR$/.idea/modules/quotation-domain.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/quotation-flow.main.iml" filepath="$PROJECT_DIR$/.idea/modules/quotation-flow.main.iml" />
