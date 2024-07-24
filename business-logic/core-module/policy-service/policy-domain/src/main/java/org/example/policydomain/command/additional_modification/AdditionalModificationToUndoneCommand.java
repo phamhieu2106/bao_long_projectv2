@@ -10,8 +10,8 @@ import org.example.sharedlibrary.enumeration.additional_modification.AdditionalM
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AdditionalModificationToRejectedCommand extends BaseCommand {
-    final AdditionalModificationStatus additionalModificationStatus = AdditionalModificationStatus.REJECTED;
+public class AdditionalModificationToUndoneCommand extends BaseCommand {
+    final AdditionalModificationStatus additionalModificationStatus = AdditionalModificationStatus.UNDONE;
     String additionalModificationId;
     String createdBy;
 }

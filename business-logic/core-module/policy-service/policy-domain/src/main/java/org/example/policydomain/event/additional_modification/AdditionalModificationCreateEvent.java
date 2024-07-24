@@ -32,4 +32,7 @@ public class AdditionalModificationCreateEvent extends BaseEvent {
 
     String createdBy;
     Date createdAt;
+
+    String modifiedBy;
+    Date modifiedAt;
 }

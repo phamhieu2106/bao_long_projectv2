@@ -1,10 +1,25 @@
 package org.example.policycommand.service;
 
 import org.example.policydomain.command.additional_modification.AdditionalModificationCreateCommand;
+import org.example.policydomain.command.additional_modification.AdditionalModificationToApprovedCommand;
+import org.example.policydomain.command.additional_modification.AdditionalModificationToAwaitApproveCommand;
+import org.example.policydomain.command.additional_modification.AdditionalModificationToRejectedCommand;
+import org.example.policydomain.command.additional_modification.AdditionalModificationToRequireInformationCommand;
+import org.example.policydomain.command.additional_modification.AdditionalModificationToUndoneCommand;
 import org.example.sharedlibrary.base_response.WrapperResponse;
 
 public interface PolicyCommandService {
     String releasePolicy(String quotationId);
 
     WrapperResponse additionalModificationCreate(String policyId, AdditionalModificationCreateCommand command, String username);
+
+    WrapperResponse additionalModificationToAwaitApprove(String additionalModificationId, AdditionalModificationToAwaitApproveCommand command, String username);
+
+    WrapperResponse additionalModificationToApproved(String additionalModificationId, AdditionalModificationToApprovedCommand additionalModificationToApprovedCommand, String username);
+
+    WrapperResponse additionalModificationToRejected(String additionalModificationId, AdditionalModificationToRejectedCommand additionalModificationToRejectedCommand, String username);
+
+    WrapperResponse additionalModificationToRequireInformation(String additionalModificationId, AdditionalModificationToRequireInformationCommand additionalModificationToRequireInformationCommand, String username);
+
+    WrapperResponse additionalModificationToUndone(String additionalModificationId, AdditionalModificationToUndoneCommand additionalModificationToUndoneCommand, String username);
 }

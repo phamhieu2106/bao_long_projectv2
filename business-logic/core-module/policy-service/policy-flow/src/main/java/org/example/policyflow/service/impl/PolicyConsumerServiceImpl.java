@@ -1,10 +1,16 @@
 package org.example.policyflow.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.example.policydomain.entity.AdditionalModificationEntity;
 import org.example.policydomain.entity.PolicyEntity;
 import org.example.policydomain.event.PolicyCreateEvent;
 import org.example.policydomain.event.additional_modification.AdditionalModificationCreateEvent;
+import org.example.policydomain.event.additional_modification.AdditionalModificationToApprovedEvent;
+import org.example.policydomain.event.additional_modification.AdditionalModificationToAwaitApproveEvent;
+import org.example.policydomain.event.additional_modification.AdditionalModificationToRejectedEvent;
+import org.example.policydomain.event.additional_modification.AdditionalModificationToRequireInformationEvent;
+import org.example.policydomain.event.additional_modification.AdditionalModificationToUndoneEvent;
 import org.example.policydomain.repository.AdditionalModificationEntityRepository;
 import org.example.policydomain.repository.PolicyEntityRepository;
 import org.example.policyflow.service.PolicyConsumerService;
@@ -73,6 +79,73 @@ public class PolicyConsumerServiceImpl implements PolicyConsumerService {
                 null,
                 null
         );
+        additionalModificationEntityRepository.save(modificationEntity);
+    }
+
+    @Override
+    @KafkaListener(topics = "additional_modification_to_await_approve", groupId = "am-group")
+    public void subscribe(AdditionalModificationToAwaitApproveEvent event) {
+        AdditionalModificationEntity modificationEntity = additionalModificationEntityRepository
+                .findById(event.getAdditionalModificationId()).orElse(null);
+        if (modificationEntity == null) throw new EntityNotFoundException();
+
+        modificationEntity.setAdditionalModificationStatus(event.getAdditionalModificationStatus());
+        modificationEntity.setModifiedBy(event.getCreatedBy());
+        modificationEntity.setModifiedAt(event.getTimestamp());
+        additionalModificationEntityRepository.save(modificationEntity);
+    }
+
+    @Override
+    @KafkaListener(topics = "additional_modification_to_approved", groupId = "am-group")
+    public void subscribe(AdditionalModificationToApprovedEvent event) {
+        AdditionalModificationEntity modificationEntity = additionalModificationEntityRepository
+                .findById(event.getAdditionalModificationId()).orElse(null);
+        if (modificationEntity == null) throw new EntityNotFoundException();
+        modificationEntity.setAdditionalModificationCode(event.getAdditionalModificationCode());
+        modificationEntity.setAdditionalModificationStatus(event.getAdditionalModificationStatus());
+        modificationEntity.setApprovedBy(event.getApprovedBy());
+        modificationEntity.setApprovedAt(event.getTimestamp());
+        modificationEntity.setModifiedBy(event.getApprovedBy());
+        modificationEntity.setModifiedAt(event.getTimestamp());
+        additionalModificationEntityRepository.save(modificationEntity);
+    }
+
+    @Override
+    @KafkaListener(topics = "additional_modification_to_rejected", groupId = "am-group")
+    public void subscribe(AdditionalModificationToRejectedEvent event) {
+        AdditionalModificationEntity modificationEntity = additionalModificationEntityRepository
+                .findById(event.getAdditionalModificationId()).orElse(null);
+        if (modificationEntity == null) throw new EntityNotFoundException();
+
+        modificationEntity.setAdditionalModificationStatus(event.getAdditionalModificationStatus());
+        modificationEntity.setModifiedBy(event.getCreatedBy());
+        modificationEntity.setModifiedAt(event.getTimestamp());
+        additionalModificationEntityRepository.save(modificationEntity);
+    }
+
+    @Override
+    @KafkaListener(topics = "additional_modification_to_require_information", groupId = "am-group")
+    public void subscribe(AdditionalModificationToRequireInformationEvent event) {
+        AdditionalModificationEntity modificationEntity = additionalModificationEntityRepository
+                .findById(event.getAdditionalModificationId()).orElse(null);
+        if (modificationEntity == null) throw new EntityNotFoundException();
+
+        modificationEntity.setAdditionalModificationStatus(event.getAdditionalModificationStatus());
+        modificationEntity.setModifiedBy(event.getCreatedBy());
+        modificationEntity.setModifiedAt(event.getTimestamp());
+        additionalModificationEntityRepository.save(modificationEntity);
+    }
+
+    @Override
+    @KafkaListener(topics = "additional_modification_to_undone", groupId = "am-group")
+    public void subscribe(AdditionalModificationToUndoneEvent event) {
+        AdditionalModificationEntity modificationEntity = additionalModificationEntityRepository
+                .findById(event.getAdditionalModificationId()).orElse(null);
+        if (modificationEntity == null) throw new EntityNotFoundException();
+
+        modificationEntity.setAdditionalModificationStatus(event.getAdditionalModificationStatus());
+        modificationEntity.setModifiedBy(event.getCreatedBy());
+        modificationEntity.setModifiedAt(event.getTimestamp());
         additionalModificationEntityRepository.save(modificationEntity);
     }
 }

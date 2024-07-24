@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PolicyEntityRepository extends JpaRepository<PolicyEntity, String> {
     boolean existsByQuotationCode(String s);
+    
 }

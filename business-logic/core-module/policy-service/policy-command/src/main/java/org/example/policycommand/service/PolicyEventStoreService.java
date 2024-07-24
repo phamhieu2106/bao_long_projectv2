@@ -8,4 +8,8 @@ public interface PolicyEventStoreService {
     void storePolicyEvent(PolicyAggregate policyAggregate, BaseEvent policyCreateEvent);
 
     void storeAMEvent(AdditionalModificationAggregate aggregate, BaseEvent modificationEventEntity);
+
+    AdditionalModificationAggregate loadAdditionalModificationAggregate(String additionalModificationAggregateId);
+
+    PolicyAggregate loadPolicyAggregate(String policyId);
 }

@@ -7,11 +7,13 @@ import org.example.policydomain.repository.AdditionalModificationEntityRepositor
 import org.example.policydomain.repository.PolicyEntityRepository;
 import org.example.policyquery.service.PolicyInternalService;
 import org.example.sharedlibrary.enumeration.additional_modification.AdditionalModificationStatus;
+import org.example.sharedlibrary.enumeration.additional_modification.ModificationType;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -66,6 +68,82 @@ public class PolicyInternalServiceImpl implements PolicyInternalService {
         }
 
         return true;
+    }
+
+    @Override
+    public boolean isToAwaitApproveAble(String additionalModificationId) {
+        AdditionalModificationEntity additionalModificationEntity = additionalModificationEntityRepository.findById(additionalModificationId).orElse(null);
+        if (additionalModificationEntity == null) return false;
+        else if (AdditionalModificationStatus.DRAFTING.equals(additionalModificationEntity.getAdditionalModificationStatus()))
+            return true;
+        else
+            return AdditionalModificationStatus.REQUIRE_INFORMATION.equals(additionalModificationEntity.getAdditionalModificationStatus());
+    }
+
+    @Override
+    public boolean isToRequireInformationAble(String additionalModificationId) {
+        AdditionalModificationEntity additionalModificationEntity = additionalModificationEntityRepository.findById(additionalModificationId).orElse(null);
+        if (additionalModificationEntity == null) return false;
+        else
+            return AdditionalModificationStatus.AWAIT_APPROVE.equals(additionalModificationEntity.getAdditionalModificationStatus());
+    }
+
+    @Override
+    public boolean isToApprovedAble(String additionalModificationId) {
+        AdditionalModificationEntity additionalModificationEntity = additionalModificationEntityRepository.findById(additionalModificationId).orElse(null);
+        if (additionalModificationEntity == null) return false;
+        else
+            return AdditionalModificationStatus.AWAIT_APPROVE.equals(additionalModificationEntity.getAdditionalModificationStatus());
+    }
+
+    @Override
+    public boolean isToRejectedAble(String additionalModificationId) {
+        AdditionalModificationEntity additionalModificationEntity = additionalModificationEntityRepository.findById(additionalModificationId).orElse(null);
+        if (additionalModificationEntity == null) return false;
+        else
+            return AdditionalModificationStatus.AWAIT_APPROVE.equals(additionalModificationEntity.getAdditionalModificationStatus());
+    }
+
+    @Override
+    public boolean isToUndoneAble(String additionalModificationId) {
+        AdditionalModificationEntity additionalModificationEntity = additionalModificationEntityRepository.findById(additionalModificationId).orElse(null);
+        if (additionalModificationEntity == null) return false;
+        else
+            return AdditionalModificationStatus.APPROVED.equals(additionalModificationEntity.getAdditionalModificationStatus());
+    }
+
+    @Override
+    public String generateAMCode(String policyId, String additionalModificationId, ModificationType modificationType) {
+        Optional<PolicyEntity> policyEntity = policyEntityRepository.findById(policyId);
+        if (policyEntity.isEmpty()) return null;
+        String policyCode = policyEntity.get().getPolicyCode();
+        long aMCount = additionalModificationEntityRepository
+                .countByPolicyIdAndModificationTypeIsAndAdditionalModificationStatusIs(policyId, modificationType, AdditionalModificationStatus.APPROVED);
+
+        StringBuilder aMCode = new StringBuilder(policyCode).append("-");
+        if (ModificationType.INTERNAL_MODIFICATION.equals(modificationType)) {
+            do {
+                aMCode.append(String.format("%03d", ++aMCount)).append("N");
+                if (additionalModificationEntityRepository.existsByAdditionalModificationCode(aMCode.toString())) {
+                    aMCode = new StringBuilder(policyCode)
+                            .append("-")
+                            .append(String.format("%03d", ++aMCount))
+                            .append("N");
+                }
+                ;
+            } while (additionalModificationEntityRepository.existsByAdditionalModificationCode(aMCode.toString()));
+        } else {
+            do {
+                aMCode.append(String.format("%03d", ++aMCount));
+                if (additionalModificationEntityRepository.existsByAdditionalModificationCode(aMCode.toString())) {
+                    aMCode = new StringBuilder(policyCode)
+                            .append("-")
+                            .append(String.format("%03d", ++aMCount));
+                }
+                ;
+            } while (additionalModificationEntityRepository.existsByAdditionalModificationCode(aMCode.toString()));
+        }
+        return aMCode.toString();
     }
 
     private String getYearSuffix() {

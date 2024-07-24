@@ -17,4 +17,8 @@ public abstract class BaseEvent {
         this.timestamp = timestamp;
         this.createdBy = createdBy;
     }
+
+    public BaseEvent(Date timestamp) {
+        this.timestamp = timestamp;
+    }
 }

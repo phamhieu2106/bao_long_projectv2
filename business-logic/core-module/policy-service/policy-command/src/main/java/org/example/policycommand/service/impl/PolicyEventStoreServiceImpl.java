@@ -12,6 +12,7 @@ import org.example.sharedlibrary.base_class.BaseEvent;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -41,8 +42,21 @@ public class PolicyEventStoreServiceImpl implements PolicyEventStoreService {
                 modificationEventEntity.getClass().getSimpleName(),
                 getAMEventVersion(aggregate.getAdditionalModificationId()),
                 aggregate,
-                aggregate.getCreatedBy()
+                modificationEventEntity.getCreatedBy()
         ));
+    }
+
+
+    @Override
+    public AdditionalModificationAggregate loadAdditionalModificationAggregate(String additionalModificationAggregateId) {
+        Optional<AdditionalModificationEventEntity> event = additionalModificationEventEntityRepository.findFirstByAggregateIdOrderByVersionDesc(additionalModificationAggregateId);
+        return event.map(AdditionalModificationEventEntity::getAggregateData).orElse(null);
+    }
+
+    @Override
+    public PolicyAggregate loadPolicyAggregate(String policyId) {
+        Optional<PolicyEventEntity> event = policyEventEntityRepository.findByAggregateId(policyId);
+        return event.map(PolicyEventEntity::getAggregateData).orElse(null);
     }
 
     private long getPolicyEventVersion(String aggregateId) {

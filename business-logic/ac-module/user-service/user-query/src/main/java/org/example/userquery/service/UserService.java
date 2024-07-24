@@ -24,4 +24,8 @@ public interface UserService {
     UserCreatedModel getUserModelById(String username);
 
     UserModel getUserModelByUsername(String username);
+
+    boolean isHaveEmployeePermission(String username);
+
+    boolean isHaveDirectorPermission(String username);
 }

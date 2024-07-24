@@ -8,4 +8,6 @@ public interface PolicyEsService {
     WrapperResponse getPolicyPage(PolicyPageRequest request);
 
     WrapperResponse getPolicyDetail(String policyId);
+
+    WrapperResponse getAdditionalModificationDetail(String additionalModificationId);
 }

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.sharedlibrary.base_constant.PageConstant;
 import org.example.sharedlibrary.base_quo_poli.UserCreatedModel;
 import org.example.sharedlibrary.base_request.BaseRequest;
+import org.example.sharedlibrary.enumeration.ac.Permission;
 import org.example.sharedlibrary.model.UserModel;
 import org.example.userdomain.domain.UserEntity;
 import org.example.userquery.repository.UserEntityRepository;
@@ -96,5 +97,17 @@ public class UserServiceImpl implements UserService {
     public UserEntity getByUsername(String username) {
         Optional<UserEntity> optional = userEntityRepository.findByUsername(username);
         return optional.orElse(null);
+    }
+
+    @Override
+    public boolean isHaveEmployeePermission(String username) {
+        Optional<UserEntity> optional = userEntityRepository.findByUsername(username);
+        return optional.map(userEntity -> userEntity.getPermissions().contains(Permission.SUBMIT)).orElse(false);
+    }
+
+    @Override
+    public boolean isHaveDirectorPermission(String username) {
+        Optional<UserEntity> optional = userEntityRepository.findByUsername(username);
+        return optional.map(userEntity -> userEntity.getPermissions().contains(Permission.APPROVE)).orElse(false);
     }
 }

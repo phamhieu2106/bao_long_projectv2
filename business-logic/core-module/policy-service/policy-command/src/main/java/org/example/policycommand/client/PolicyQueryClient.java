@@ -1,5 +1,6 @@
 package org.example.policycommand.client;
 
+import org.example.sharedlibrary.enumeration.additional_modification.ModificationType;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,4 +23,22 @@ public interface PolicyQueryClient {
 
     @GetMapping("/isCreateAble")
     boolean isCreateAble(@RequestParam String policyId);
+
+    @GetMapping("/isToAwaitApproveAble")
+    boolean isToAwaitApproveAble(@RequestParam String additionalModificationId);
+
+    @GetMapping("/isToRequireInformationAble")
+    boolean isToRequireInformationAble(@RequestParam String additionalModificationId);
+
+    @GetMapping("/isToApprovedAble")
+    boolean isToApprovedAble(@RequestParam String additionalModificationId);
+
+    @GetMapping("/isToRejectedAble")
+    boolean isToRejectedAble(@RequestParam String additionalModificationId);
+
+    @GetMapping("/isToUndoneAble")
+    boolean isToUndoneAble(@RequestParam String additionalModificationId);
+
+    @GetMapping("/generateAMCode")
+    String generateAMCode(@RequestParam String policyId, @RequestParam String additionalModificationId, @RequestParam ModificationType modificationType);
 }

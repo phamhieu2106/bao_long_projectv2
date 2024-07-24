@@ -6,7 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.example.policydomain.command.PolicyCreateCommand;
+import org.example.policydomain.command.policy.PolicyInternalModificationCommand;
 import org.example.policydomain.event.PolicyCreateEvent;
+import org.example.policydomain.event.policy.PolicyInternalModificationEvent;
 import org.example.sharedlibrary.base_class.BaseAggregate;
 import org.example.sharedlibrary.base_quo_poli.CustomerModel;
 import org.example.sharedlibrary.base_quo_poli.UserCreatedModel;
@@ -110,5 +112,9 @@ public class PolicyAggregate extends BaseAggregate {
                 this.approvedBy,
                 this.approvedAt
         );
+    }
+
+    public PolicyInternalModificationEvent apply(PolicyInternalModificationCommand command) {
+        return null;
     }
 }

@@ -6,7 +6,11 @@ import org.example.sharedlibrary.model.UserModel;
 import org.example.userdomain.domain.UserEntity;
 import org.example.userquery.service.UserService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/internal/api/users")
@@ -48,5 +52,15 @@ public class InternalUserController {
     @GetMapping("/getByUsername/{username}")
     public ResponseEntity<UserEntity> getByUsername(@PathVariable String username) {
         return ResponseEntity.ok(userService.getByUsername(username));
+    }
+
+    @GetMapping("/isHaveEmployeePermission")
+    public boolean isHaveEmployeePermission(@RequestParam String username) {
+        return userService.isHaveEmployeePermission(username);
+    }
+
+    @GetMapping("/isHaveDirectorPermission")
+    public boolean isHaveDirectorPermission(@RequestParam String username) {
+        return userService.isHaveDirectorPermission(username);
     }
 }

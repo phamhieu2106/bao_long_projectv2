@@ -5,12 +5,15 @@ import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.QueryBuilders;
 import co.elastic.clients.json.JsonData;
 import lombok.RequiredArgsConstructor;
+import org.example.policydomain.entity.AdditionalModificationEntity;
 import org.example.policydomain.entity.PolicyEntity;
+import org.example.policydomain.repository.AdditionalModificationEntityRepository;
 import org.example.policydomain.repository.PolicyEntityRepository;
 import org.example.policydomain.response.PolicyHistoryResponse;
 import org.example.policydomain.response.PolicyResponse;
 import org.example.policydomain.view.PolicyView;
 import org.example.policyquery.request.PolicyPageRequest;
+import org.example.policyquery.response.additonal_modification.AdditionalModificationResponse;
 import org.example.policyquery.service.PolicyEsService;
 import org.example.sharedlibrary.base_constant.PageConstant;
 import org.example.sharedlibrary.base_constant.view.PolicyViewConstant;
@@ -34,7 +37,12 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PolicyEsServiceImpl implements PolicyEsService {
 
+    private final String QUOTATION_DISTRIBUTION_NAME = "quotationDistributionName";
+    private final String INSURANCE_COMPANY_NAME = "insuranceCompanyName";
+    private final String PRODUCT = "product";
+
     private final PolicyEntityRepository entityRepository;
+    private final AdditionalModificationEntityRepository modificationEntityRepository;
     private final ElasticsearchTemplate elasticsearchTemplate;
 
     @Override
@@ -120,4 +128,41 @@ public class PolicyEsServiceImpl implements PolicyEsService {
         PolicyResponse response = new PolicyResponse(policyEntity, hits.stream().map(SearchHit::getContent).toList());
         return WrapperResponse.success(HttpStatus.OK, response);
     }
+
+
+    @Override
+    public WrapperResponse getAdditionalModificationDetail(String additionalModificationId) {
+        if (additionalModificationId == null || additionalModificationId.isBlank())
+            return WrapperResponse.fail("Invalid Id", HttpStatus.BAD_REQUEST);
+
+        Optional<AdditionalModificationEntity> modificationEntityOptional = modificationEntityRepository.findById(additionalModificationId);
+        if (modificationEntityOptional.isEmpty()) return WrapperResponse.fail("Not found AM!", HttpStatus.NOT_FOUND);
+        AdditionalModificationEntity additionalModificationEntity = modificationEntityOptional.get();
+
+        Optional<PolicyEntity> policyEntityOptional = entityRepository.findById(additionalModificationEntity.getPolicyId());
+        if (policyEntityOptional.isEmpty()) return WrapperResponse.fail("Not found Policy!", HttpStatus.NOT_FOUND);
+        PolicyEntity policyEntity = policyEntityOptional.get();
+
+        additionalModificationEntity.getAdditionalData().forEach(
+                am -> {
+                    if (am.containsKey(QUOTATION_DISTRIBUTION_NAME)) {
+                        policyEntity.setQuotationDistributionName(am.get(QUOTATION_DISTRIBUTION_NAME).toString());
+                        am.remove(QUOTATION_DISTRIBUTION_NAME);
+                    }
+                    if (am.containsKey(INSURANCE_COMPANY_NAME)) {
+                        policyEntity.setQuotationDistributionName(am.get(INSURANCE_COMPANY_NAME).toString());
+                        am.remove(INSURANCE_COMPANY_NAME);
+                    }
+                    if (am.containsKey(PRODUCT)) {
+                        policyEntity.setProduct(additionalModificationEntity.getAdditionalData());
+                    }
+                }
+        );
+
+        AdditionalModificationResponse response = new AdditionalModificationResponse();
+        response.setAdditionalModificationEntity(additionalModificationEntity);
+        response.setPolicyEntity(policyEntity);
+        return WrapperResponse.success(HttpStatus.OK, response);
+    }
+
 }
