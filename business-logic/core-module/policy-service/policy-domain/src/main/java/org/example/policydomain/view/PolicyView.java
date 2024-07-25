@@ -1,6 +1,12 @@
 package org.example.policydomain.view;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import org.example.policydomain.model_view.HealthIdentityVIewModel;
 import org.example.policydomain.model_view.MotorIdentityViewModel;
 import org.example.sharedlibrary.enumeration.ProductType;
@@ -13,6 +19,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 import java.util.Date;
 import java.util.List;
 
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @Getter
 @Setter

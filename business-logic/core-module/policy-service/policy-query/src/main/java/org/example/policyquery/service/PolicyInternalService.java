@@ -25,4 +25,6 @@ public interface PolicyInternalService {
     boolean isToUndoneAble(String additionalModificationId);
 
     String generateAMCode(String policyId, String additionalModificationId, ModificationType modificationType);
+
+    boolean isChangeAMStatusAble(String username, String additionalModificationId);
 }

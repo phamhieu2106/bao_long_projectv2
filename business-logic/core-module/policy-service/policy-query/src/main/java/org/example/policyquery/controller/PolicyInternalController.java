@@ -38,6 +38,11 @@ public class PolicyInternalController {
         return policyInternalService.isCreateAble(policyId);
     }
 
+    @GetMapping("/isChangeAMStatusAble")
+    public boolean isChangeAMStatusAble(@RequestParam String username, @RequestParam String additionalModificationId) {
+        return policyInternalService.isChangeAMStatusAble(username, additionalModificationId);
+    }
+
     @GetMapping("/isToAwaitApproveAble")
     public boolean isToAwaitApproveAble(@RequestParam String additionalModificationId) {
         return policyInternalService.isToAwaitApproveAble(additionalModificationId);

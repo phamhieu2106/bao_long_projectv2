@@ -5,6 +5,7 @@ import org.example.policydomain.entity.AdditionalModificationEntity;
 import org.example.policydomain.entity.PolicyEntity;
 import org.example.policydomain.repository.AdditionalModificationEntityRepository;
 import org.example.policydomain.repository.PolicyEntityRepository;
+import org.example.policyquery.client.UserQueryClient;
 import org.example.policyquery.service.PolicyInternalService;
 import org.example.sharedlibrary.enumeration.additional_modification.AdditionalModificationStatus;
 import org.example.sharedlibrary.enumeration.additional_modification.ModificationType;
@@ -21,6 +22,7 @@ public class PolicyInternalServiceImpl implements PolicyInternalService {
 
     private final PolicyEntityRepository policyEntityRepository;
     private final AdditionalModificationEntityRepository additionalModificationEntityRepository;
+    private final UserQueryClient userQueryClient;
 
     @Override
     public String getPolicyCode(String productCode) {
@@ -68,6 +70,15 @@ public class PolicyInternalServiceImpl implements PolicyInternalService {
         }
 
         return true;
+    }
+
+    @Override
+    public boolean isChangeAMStatusAble(String username, String additionalModificationId) {
+        AdditionalModificationEntity additionalModificationEntity = additionalModificationEntityRepository.findById(additionalModificationId).orElse(null);
+        if (additionalModificationEntity == null) return false;
+        else if (additionalModificationEntity.getModifiedBy() == null) return true;
+        else
+            return userQueryClient.isFirstUsernameHavePermissionEqualsOrGatherThanSecondUsername(username, additionalModificationEntity.getModifiedBy());
     }
 
     @Override
@@ -130,7 +141,6 @@ public class PolicyInternalServiceImpl implements PolicyInternalService {
                             .append(String.format("%03d", ++aMCount))
                             .append("N");
                 }
-                ;
             } while (additionalModificationEntityRepository.existsByAdditionalModificationCode(aMCode.toString()));
         } else {
             do {
@@ -140,7 +150,6 @@ public class PolicyInternalServiceImpl implements PolicyInternalService {
                             .append("-")
                             .append(String.format("%03d", ++aMCount));
                 }
-                ;
             } while (additionalModificationEntityRepository.existsByAdditionalModificationCode(aMCode.toString()));
         }
         return aMCode.toString();

@@ -13,10 +13,17 @@ import org.example.policydomain.event.additional_modification.AdditionalModifica
 import org.example.policydomain.event.additional_modification.AdditionalModificationToUndoneEvent;
 import org.example.policydomain.repository.AdditionalModificationEntityRepository;
 import org.example.policydomain.repository.PolicyEntityRepository;
+import org.example.policydomain.repository.view.AdditionalModificationHistoryViewRepository;
+import org.example.policydomain.repository.view.AdditionalModificationViewRepository;
+import org.example.policydomain.view.AdditionalModificationHistoryView;
+import org.example.policydomain.view.AdditionalModificationView;
 import org.example.policyflow.service.PolicyConsumerService;
+import org.example.sharedlibrary.base_constant.GenerateConstant;
 import org.example.sharedlibrary.enumeration.additional_modification.AdditionalModificationStatus;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +31,8 @@ public class PolicyConsumerServiceImpl implements PolicyConsumerService {
 
     private final PolicyEntityRepository policyEntityRepository;
     private final AdditionalModificationEntityRepository additionalModificationEntityRepository;
+    private final AdditionalModificationViewRepository viewRepository;
+    private final AdditionalModificationHistoryViewRepository historyViewRepository;
 
     @Override
     @KafkaListener(topics = "policy_create", groupId = "policy_group")
@@ -80,6 +89,8 @@ public class PolicyConsumerServiceImpl implements PolicyConsumerService {
                 null
         );
         additionalModificationEntityRepository.save(modificationEntity);
+        postAdditionalModificationIndex(modificationEntity);
+        postAdditionalModificationHistoryIndex(modificationEntity, "CREATED");
     }
 
     @Override
@@ -93,6 +104,8 @@ public class PolicyConsumerServiceImpl implements PolicyConsumerService {
         modificationEntity.setModifiedBy(event.getCreatedBy());
         modificationEntity.setModifiedAt(event.getTimestamp());
         additionalModificationEntityRepository.save(modificationEntity);
+        postAdditionalModificationIndex(modificationEntity);
+        postAdditionalModificationHistoryIndex(modificationEntity, "TO_AWAIT_APPROVE");
     }
 
     @Override
@@ -108,6 +121,8 @@ public class PolicyConsumerServiceImpl implements PolicyConsumerService {
         modificationEntity.setModifiedBy(event.getApprovedBy());
         modificationEntity.setModifiedAt(event.getTimestamp());
         additionalModificationEntityRepository.save(modificationEntity);
+        postAdditionalModificationIndex(modificationEntity);
+        postAdditionalModificationHistoryIndex(modificationEntity, "TO_APPROVED");
     }
 
     @Override
@@ -121,6 +136,8 @@ public class PolicyConsumerServiceImpl implements PolicyConsumerService {
         modificationEntity.setModifiedBy(event.getCreatedBy());
         modificationEntity.setModifiedAt(event.getTimestamp());
         additionalModificationEntityRepository.save(modificationEntity);
+        postAdditionalModificationIndex(modificationEntity);
+        postAdditionalModificationHistoryIndex(modificationEntity, "TO_REJECTED");
     }
 
     @Override
@@ -134,6 +151,8 @@ public class PolicyConsumerServiceImpl implements PolicyConsumerService {
         modificationEntity.setModifiedBy(event.getCreatedBy());
         modificationEntity.setModifiedAt(event.getTimestamp());
         additionalModificationEntityRepository.save(modificationEntity);
+        postAdditionalModificationIndex(modificationEntity);
+        postAdditionalModificationHistoryIndex(modificationEntity, "TO_REQUIRE_INFORMATION");
     }
 
     @Override
@@ -147,5 +166,35 @@ public class PolicyConsumerServiceImpl implements PolicyConsumerService {
         modificationEntity.setModifiedBy(event.getCreatedBy());
         modificationEntity.setModifiedAt(event.getTimestamp());
         additionalModificationEntityRepository.save(modificationEntity);
+        postAdditionalModificationIndex(modificationEntity);
+        postAdditionalModificationHistoryIndex(modificationEntity, "TO_UNDONE");
     }
+
+    private void postAdditionalModificationIndex(AdditionalModificationEntity additionalModificationEntity) {
+        viewRepository.save(
+                AdditionalModificationView.builder()
+                        .id(additionalModificationEntity.getId())
+                        .additionalModificationCode(additionalModificationEntity.getAdditionalModificationCode())
+                        .additionalModificationStatus(additionalModificationEntity.getAdditionalModificationStatus())
+                        .modificationType(additionalModificationEntity.getModificationType())
+                        .modificationTypeName(additionalModificationEntity.getModificationTypeName())
+                        .effectiveDate(additionalModificationEntity.getEffectiveDate())
+                        .createdAt(additionalModificationEntity.getCreatedAt())
+                        .approvedBy(additionalModificationEntity.getApprovedBy())
+                        .build());
+    }
+
+    private void postAdditionalModificationHistoryIndex(AdditionalModificationEntity additionalModificationEntity, String eventType) {
+        historyViewRepository.save(
+                AdditionalModificationHistoryView.builder()
+                        .id(GenerateConstant.generateId())
+                        .aggregateId(additionalModificationEntity.getId())
+                        .aggregateType(eventType)
+                        .createdBy(additionalModificationEntity.getCreatedBy())
+                        .createdAt(additionalModificationEntity.getCreatedAt())
+                        .timeStamp(new Date())
+                        .build()
+        );
+    }
+
 }

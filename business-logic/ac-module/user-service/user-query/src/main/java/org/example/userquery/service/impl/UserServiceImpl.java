@@ -105,9 +105,18 @@ public class UserServiceImpl implements UserService {
         return optional.map(userEntity -> userEntity.getPermissions().contains(Permission.SUBMIT)).orElse(false);
     }
 
+
     @Override
     public boolean isHaveDirectorPermission(String username) {
         Optional<UserEntity> optional = userEntityRepository.findByUsername(username);
         return optional.map(userEntity -> userEntity.getPermissions().contains(Permission.APPROVE)).orElse(false);
+    }
+
+    @Override
+    public boolean isFirstUsernameHavePermissionEqualsOrGatherThanSecondUsername(String username, String modifiedBy) {
+        Optional<UserEntity> optionalUser = userEntityRepository.findByUsername(username);
+        if (optionalUser.isEmpty()) return false;
+        Optional<UserEntity> optionalModified = userEntityRepository.findByUsername(modifiedBy);
+        return optionalModified.filter(userEntity -> optionalUser.get().getRole().getValue() >= userEntity.getRole().getValue()).isPresent();
     }
 }

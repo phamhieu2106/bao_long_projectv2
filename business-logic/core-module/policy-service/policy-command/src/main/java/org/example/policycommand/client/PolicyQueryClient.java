@@ -41,4 +41,7 @@ public interface PolicyQueryClient {
 
     @GetMapping("/generateAMCode")
     String generateAMCode(@RequestParam String policyId, @RequestParam String additionalModificationId, @RequestParam ModificationType modificationType);
+
+    @GetMapping("/isChangeAMStatusAble")
+    boolean isChangeAMStatusAble(@RequestParam String username, @RequestParam String additionalModificationId);
 }

@@ -28,4 +28,6 @@ public interface UserService {
     boolean isHaveEmployeePermission(String username);
 
     boolean isHaveDirectorPermission(String username);
+
+    boolean isFirstUsernameHavePermissionEqualsOrGatherThanSecondUsername(String username, String modifiedBy);
 }

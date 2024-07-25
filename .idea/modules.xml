@@ -8,6 +8,11 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/policy-domain.main.iml" filepath="$PROJECT_DIR$/.idea/modules/policy-domain.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1252917051/policy-domain.shared-library.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-1252917051/policy-domain.shared-library.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/policy-flow.main.iml" filepath="$PROJECT_DIR$/.idea/modules/policy-flow.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1738091733/policy-flow.policy-domain.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-1738091733/policy-flow.policy-domain.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1252917051/policy-flow.shared-library.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-1252917051/policy-flow.shared-library.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/policy-query.main.iml" filepath="$PROJECT_DIR$/.idea/modules/policy-query.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1738091733/policy-query.policy-domain.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-1738091733/policy-query.policy-domain.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1252917051/policy-query.shared-library.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-1252917051/policy-query.shared-library.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/quotation-domain.main.iml" filepath="$PROJECT_DIR$/.idea/modules/quotation-domain.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/quotation-flow.main.iml" filepath="$PROJECT_DIR$/.idea/modules/quotation-flow.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/quotation-query.main.iml" filepath="$PROJECT_DIR$/.idea/modules/quotation-query.main.iml" />

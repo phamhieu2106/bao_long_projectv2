@@ -63,4 +63,9 @@ public class InternalUserController {
     public boolean isHaveDirectorPermission(@RequestParam String username) {
         return userService.isHaveDirectorPermission(username);
     }
+
+    @GetMapping("/isFirstUsernameHavePermissionEqualsOrGatherThanSecondUsername")
+    public boolean isFirstUsernameHavePermissionEqualsOrGatherThanSecondUsername(@RequestParam String username, @RequestParam String modifiedBy) {
+        return userService.isFirstUsernameHavePermissionEqualsOrGatherThanSecondUsername(username, modifiedBy);
+    }
 }

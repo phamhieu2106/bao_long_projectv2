@@ -15,4 +15,5 @@ public interface UserQueryClient {
 
     @GetMapping("/isHaveDirectorPermission")
     boolean isHaveDirectorPermission(@RequestParam String username);
+
 }

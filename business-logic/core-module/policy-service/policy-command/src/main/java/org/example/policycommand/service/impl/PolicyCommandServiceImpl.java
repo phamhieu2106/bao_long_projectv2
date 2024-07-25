@@ -69,8 +69,12 @@ public class PolicyCommandServiceImpl implements PolicyCommandService {
             return WrapperResponse.fail("Not found User!", HttpStatus.NOT_FOUND);
         }
 
+        if (!policyQueryClient.isChangeAMStatusAble(username, additionalModificationId)) {
+            return WrapperResponse.fail("You don't have permission to change Status this AM!", HttpStatus.BAD_REQUEST);
+        }
+
         if (!userQueryClient.isHaveEmployeePermission(username)) {
-            return WrapperResponse.fail(username + ": don't have permission!", HttpStatus.BAD_REQUEST);
+            return WrapperResponse.fail("You don't have permission to change Status this AM!", HttpStatus.BAD_REQUEST);
         }
 
         if (!policyQueryClient.isToAwaitApproveAble(additionalModificationId)) {
@@ -90,6 +94,10 @@ public class PolicyCommandServiceImpl implements PolicyCommandService {
     public WrapperResponse additionalModificationToApproved(String additionalModificationId, AdditionalModificationToApprovedCommand additionalModificationToApprovedCommand, String username) {
         if (!userQueryClient.isExitSByUsername(username)) {
             return WrapperResponse.fail("Not found User!", HttpStatus.NOT_FOUND);
+        }
+
+        if (!policyQueryClient.isChangeAMStatusAble(username, additionalModificationId)) {
+            return WrapperResponse.fail("You don't have permission to change Status this AM!", HttpStatus.BAD_REQUEST);
         }
 
         if (!userQueryClient.isHaveDirectorPermission(username)) {
@@ -117,6 +125,10 @@ public class PolicyCommandServiceImpl implements PolicyCommandService {
             return WrapperResponse.fail("Not found User!", HttpStatus.NOT_FOUND);
         }
 
+        if (!policyQueryClient.isChangeAMStatusAble(username, additionalModificationId)) {
+            return WrapperResponse.fail("You don't have permission to change Status this AM!", HttpStatus.BAD_REQUEST);
+        }
+
         if (!userQueryClient.isHaveDirectorPermission(username)) {
             return WrapperResponse.fail(username + ": don't have permission!", HttpStatus.BAD_REQUEST);
         }
@@ -140,6 +152,10 @@ public class PolicyCommandServiceImpl implements PolicyCommandService {
             return WrapperResponse.fail("Not found User!", HttpStatus.NOT_FOUND);
         }
 
+        if (!policyQueryClient.isChangeAMStatusAble(username, additionalModificationId)) {
+            return WrapperResponse.fail("You don't have permission to change Status this AM!", HttpStatus.BAD_REQUEST);
+        }
+
         if (!userQueryClient.isHaveDirectorPermission(username)) {
             return WrapperResponse.fail(username + ": don't have permission!", HttpStatus.BAD_REQUEST);
         }
@@ -161,6 +177,10 @@ public class PolicyCommandServiceImpl implements PolicyCommandService {
     public WrapperResponse additionalModificationToUndone(String additionalModificationId, AdditionalModificationToUndoneCommand additionalModificationToUndoneCommand, String username) {
         if (!userQueryClient.isExitSByUsername(username)) {
             return WrapperResponse.fail("Not found User!", HttpStatus.NOT_FOUND);
+        }
+
+        if (!policyQueryClient.isChangeAMStatusAble(username, additionalModificationId)) {
+            return WrapperResponse.fail("You don't have permission to change Status this AM!", HttpStatus.BAD_REQUEST);
         }
 
         if (!userQueryClient.isHaveDirectorPermission(username)) {
