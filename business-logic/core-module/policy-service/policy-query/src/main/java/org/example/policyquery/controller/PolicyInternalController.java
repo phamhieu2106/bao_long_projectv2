@@ -1,6 +1,7 @@
 package org.example.policyquery.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.policydomain.entity.AdditionalModificationEntity;
 import org.example.policyquery.service.PolicyInternalService;
 import org.example.sharedlibrary.enumeration.additional_modification.ModificationType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -71,5 +73,10 @@ public class PolicyInternalController {
     @GetMapping("/generateAMCode")
     public String generateAMCode(@RequestParam String policyId, @RequestParam String additionalModificationId, @RequestParam ModificationType modificationType) {
         return policyInternalService.generateAMCode(policyId, additionalModificationId, modificationType);
+    }
+
+    @GetMapping("/isChangeAMStatusAble")
+    public List<AdditionalModificationEntity> findAllAMEffected() {
+        return policyInternalService.findAllAMEffected();
     }
 }

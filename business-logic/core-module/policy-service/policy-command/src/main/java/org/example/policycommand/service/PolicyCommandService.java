@@ -22,4 +22,6 @@ public interface PolicyCommandService {
     WrapperResponse additionalModificationToRequireInformation(String additionalModificationId, AdditionalModificationToRequireInformationCommand additionalModificationToRequireInformationCommand, String username);
 
     WrapperResponse additionalModificationToUndone(String additionalModificationId, AdditionalModificationToUndoneCommand additionalModificationToUndoneCommand, String username);
+
+    void policyUpdateScheduled();
 }

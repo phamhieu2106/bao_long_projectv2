@@ -155,6 +155,11 @@ public class PolicyInternalServiceImpl implements PolicyInternalService {
         return aMCode.toString();
     }
 
+    @Override
+    public List<AdditionalModificationEntity> findAllAMEffected() {
+        return additionalModificationEntityRepository.findAllAMEffected();
+    }
+
     private String getYearSuffix() {
         return Integer.toString(LocalDate.now().getYear() % 100);
     }

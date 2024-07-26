@@ -14,6 +14,7 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.example.sharedlibrary.base_constant.ColumnConstant;
 import org.example.sharedlibrary.enumeration.additional_modification.AdditionalModificationStatus;
+import org.example.sharedlibrary.enumeration.additional_modification.ModificationTerminalTypeName;
 import org.example.sharedlibrary.enumeration.additional_modification.ModificationType;
 import org.example.sharedlibrary.enumeration.additional_modification.ModificationTypeName;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -38,6 +39,8 @@ public class AdditionalModificationEntity {
     ModificationType modificationType;
     @Enumerated(EnumType.STRING)
     ModificationTypeName modificationTypeName;
+    @Enumerated(EnumType.STRING)
+    ModificationTerminalTypeName modificationTerminalTypeName;
     Date effectiveDate;
     @Column(columnDefinition = ColumnConstant.JSONB_TYPE)
     @JdbcTypeCode(SqlTypes.JSON)

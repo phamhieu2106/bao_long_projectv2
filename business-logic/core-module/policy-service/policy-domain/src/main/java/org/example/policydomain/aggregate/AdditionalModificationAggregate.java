@@ -21,6 +21,7 @@ import org.example.policydomain.event.additional_modification.AdditionalModifica
 import org.example.sharedlibrary.base_class.BaseAggregate;
 import org.example.sharedlibrary.base_constant.GenerateConstant;
 import org.example.sharedlibrary.enumeration.additional_modification.AdditionalModificationStatus;
+import org.example.sharedlibrary.enumeration.additional_modification.ModificationTerminalTypeName;
 import org.example.sharedlibrary.enumeration.additional_modification.ModificationType;
 import org.example.sharedlibrary.enumeration.additional_modification.ModificationTypeName;
 
@@ -38,6 +39,7 @@ public class AdditionalModificationAggregate extends BaseAggregate {
     String additionalModificationCode;
     ModificationType modificationType;
     ModificationTypeName modificationTypeName;
+    ModificationTerminalTypeName modificationTerminalTypeName;
     AdditionalModificationStatus additionalModificationStatus;
     Date effectiveDate;
     List<Map<String, Object>> additionalData;
@@ -59,6 +61,7 @@ public class AdditionalModificationAggregate extends BaseAggregate {
         this.createdBy = command.getCreatedBy();
         this.createdAt = new Date();
         this.additionalModificationStatus = AdditionalModificationStatus.DRAFTING;
+        this.modificationTerminalTypeName = command.getModificationTerminalTypeName();
 
         return new AdditionalModificationCreateEvent(
                 this.additionalModificationId,
@@ -66,6 +69,7 @@ public class AdditionalModificationAggregate extends BaseAggregate {
                 this.policyId,
                 this.modificationType,
                 this.modificationTypeName,
+                this.modificationTerminalTypeName,
                 this.additionalData,
                 this.effectiveDate,
                 this.createdBy,

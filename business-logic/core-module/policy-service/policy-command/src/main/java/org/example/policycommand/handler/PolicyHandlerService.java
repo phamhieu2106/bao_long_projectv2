@@ -7,13 +7,11 @@ import org.example.policydomain.command.additional_modification.AdditionalModifi
 import org.example.policydomain.command.additional_modification.AdditionalModificationToRejectedCommand;
 import org.example.policydomain.command.additional_modification.AdditionalModificationToRequireInformationCommand;
 import org.example.policydomain.command.additional_modification.AdditionalModificationToUndoneCommand;
-import org.example.policydomain.command.policy.PolicyInternalModificationCommand;
+import org.example.policydomain.command.policy.PolicyUpdateInternalAMCommand;
 
 public interface PolicyHandlerService {
 
     String handle(PolicyCreateCommand command);
-    
-    void handle(PolicyInternalModificationCommand command);
 
     void handle(AdditionalModificationCreateCommand command);
 
@@ -26,4 +24,6 @@ public interface PolicyHandlerService {
     void handle(AdditionalModificationToRequireInformationCommand additionalModificationToRequireInformationCommand);
 
     void handle(AdditionalModificationToUndoneCommand additionalModificationToUndoneCommand);
+
+    void handle(PolicyUpdateInternalAMCommand command);
 }

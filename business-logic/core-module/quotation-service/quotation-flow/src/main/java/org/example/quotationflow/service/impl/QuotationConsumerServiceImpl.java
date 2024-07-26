@@ -9,7 +9,11 @@ import org.example.quotationdomain.domain.view.QuotationView;
 import org.example.quotationdomain.event.crud.QuotationCreateEvent;
 import org.example.quotationdomain.event.crud.QuotationCreateNewVersionEvent;
 import org.example.quotationdomain.event.crud.QuotationUpdateEvent;
-import org.example.quotationdomain.event.status.*;
+import org.example.quotationdomain.event.status.QuotationChangeToApprovedStatusEvent;
+import org.example.quotationdomain.event.status.QuotationChangeToAwaitApproveStatusEvent;
+import org.example.quotationdomain.event.status.QuotationChangeToDisabledStatusEvent;
+import org.example.quotationdomain.event.status.QuotationChangeToRejectedStatusEvent;
+import org.example.quotationdomain.event.status.QuotationChangeToRequireInformationStatusEvent;
 import org.example.quotationdomain.repository.QuotationESRepository;
 import org.example.quotationdomain.repository.QuotationEntityRepository;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -17,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -26,6 +31,12 @@ import java.util.Optional;
 @Transactional
 public class QuotationConsumerServiceImpl {
 
+    private static final String NAME = "name";
+    private static final String LIST_INSURANCE_MODEL = "listInsuranceModel";
+    private static final String MOTOR_IDENTITY_MODEL = "motorIdentityModel";
+    private static final String HEAL_IDENTITY_MODEL = "healthIdentityModel";
+    private static final String IDENTITY_NUMBER = "identityNumber";
+    private static final String FRAME_NUMBER = "frameNumber";
     private final QuotationEntityRepository repository;
     private final QuotationESRepository esRepository;
 
@@ -61,7 +72,6 @@ public class QuotationConsumerServiceImpl {
         );
 
         saveQuotationView(quotationEntity);
-
         repository.save(quotationEntity);
 
     }
@@ -98,7 +108,6 @@ public class QuotationConsumerServiceImpl {
         );
         quotationEntity.setUserModels(event.getUserModels());
         saveQuotationView(quotationEntity);
-
         repository.save(quotationEntity);
 
     }
@@ -200,63 +209,65 @@ public class QuotationConsumerServiceImpl {
     private List<MotorIdentityViewModel> getMotorIdentityModels(List<Map<String, Object>> maps) {
         List<MotorIdentityViewModel> motorIdentityModels = new ArrayList<>();
         try {
-
             for (Map<String, Object> productMap : maps) {
-                if (productMap.containsKey("listInsuranceModel")) {
-                    @SuppressWarnings("unchecked")
-                    List<Map<String, Object>> listInsuranceModels = (List<Map<String, Object>>) productMap.get("listInsuranceModel");
-
-                    for (Map<String, Object> insuranceModel : listInsuranceModels) {
-                        if (insuranceModel.containsKey("motorIdentityModel")) {
-                            @SuppressWarnings("unchecked")
-                            Map<String, Object> motorIdentityModelMap = (Map<String, Object>) insuranceModel.get("motorIdentityModel");
-                            if (motorIdentityModelMap.containsKey("identityNumber") && motorIdentityModelMap.containsKey("frameNumber")) {
-                                motorIdentityModels.add(new MotorIdentityViewModel(
-                                        motorIdentityModelMap.get("identityNumber").toString(), motorIdentityModelMap.get("frameNumber").toString()
-                                ));
-                            }
-                        } else {
-                            return null;
-                        }
-                    }
+                if (productMap.containsKey(LIST_INSURANCE_MODEL)) {
+                    handleMotorData(motorIdentityModels, productMap);
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            return Collections.emptyList();
         }
 
         return motorIdentityModels;
     }
 
+    private void handleMotorData(List<MotorIdentityViewModel> motorIdentityModels, Map<String, Object> productMap) {
+        @SuppressWarnings("unchecked")
+        List<Map<String, Object>> listInsuranceModels = (List<Map<String, Object>>) productMap.get(LIST_INSURANCE_MODEL);
+        for (Map<String, Object> insuranceModel : listInsuranceModels) {
+            if (insuranceModel.containsKey(MOTOR_IDENTITY_MODEL)) {
+                @SuppressWarnings("unchecked")
+                Map<String, Object> motorIdentityModelMap = (Map<String, Object>) insuranceModel.get(MOTOR_IDENTITY_MODEL);
+                if (motorIdentityModelMap.containsKey(IDENTITY_NUMBER) && motorIdentityModelMap.containsKey(FRAME_NUMBER)) {
+                    motorIdentityModels.add(new MotorIdentityViewModel(
+                            motorIdentityModelMap.get(IDENTITY_NUMBER).toString(), motorIdentityModelMap.get(FRAME_NUMBER).toString()
+                    ));
+                }
+            }
+        }
+    }
+
     private List<HealthIdentityVIewModel> getHealthIdentityModels(List<Map<String, Object>> maps) {
         List<HealthIdentityVIewModel> healthIdentityVIewModels = new ArrayList<>();
         try {
-
             for (Map<String, Object> productMap : maps) {
-                if (productMap.containsKey("listInsuranceModel")) {
-                    @SuppressWarnings("unchecked")
-                    List<Map<String, Object>> listInsuranceModels = (List<Map<String, Object>>) productMap.get("listInsuranceModel");
-
-                    for (Map<String, Object> insuranceModel : listInsuranceModels) {
-                        if (insuranceModel.containsKey("healthIdentityModel")) {
-                            @SuppressWarnings("unchecked")
-                            Map<String, Object> healthIdentityModelMap = (Map<String, Object>) insuranceModel.get("healthIdentityModel");
-                            if (healthIdentityModelMap.containsKey("identityNumber")) {
-                                healthIdentityVIewModels.add(new HealthIdentityVIewModel(
-                                                insuranceModel.get("name").toString(), healthIdentityModelMap.get("identityNumber").toString()
-                                        )
-                                );
-                            }
-                        } else {
-                            return null;
-                        }
-                    }
+                if (productMap.containsKey(LIST_INSURANCE_MODEL)) {
+                    handleHealthData(healthIdentityVIewModels, productMap);
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            return Collections.emptyList();
         }
 
         return healthIdentityVIewModels;
     }
+
+    private void handleHealthData(List<HealthIdentityVIewModel> healthIdentityVIewModels, Map<String, Object> productMap) {
+        @SuppressWarnings("unchecked")
+        List<Map<String, Object>> listInsuranceModels = (List<Map<String, Object>>) productMap.get(LIST_INSURANCE_MODEL);
+
+        for (Map<String, Object> insuranceModel : listInsuranceModels) {
+            if (insuranceModel.containsKey(HEAL_IDENTITY_MODEL)) {
+                @SuppressWarnings("unchecked")
+                Map<String, Object> healthIdentityModelMap = (Map<String, Object>) insuranceModel.get(HEAL_IDENTITY_MODEL);
+                if (healthIdentityModelMap.containsKey(IDENTITY_NUMBER)) {
+                    healthIdentityVIewModels.add(new HealthIdentityVIewModel(
+                                    insuranceModel.get(NAME).toString(), healthIdentityModelMap.get(IDENTITY_NUMBER).toString()
+                            )
+                    );
+                }
+            }
+        }
+    }
+
 }

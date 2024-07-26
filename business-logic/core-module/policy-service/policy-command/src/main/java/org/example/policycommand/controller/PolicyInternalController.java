@@ -18,4 +18,9 @@ public class PolicyInternalController {
     public String releasePolicy(@RequestParam String quotationId) {
         return commandService.releasePolicy(quotationId);
     }
+
+    @PostMapping("/policyUpdateScheduled")
+    public void policyUpdateScheduled() {
+        commandService.policyUpdateScheduled();
+    }
 }

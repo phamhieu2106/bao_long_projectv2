@@ -15,7 +15,7 @@ import org.example.policydomain.command.additional_modification.AdditionalModifi
 import org.example.policydomain.command.additional_modification.AdditionalModificationToRejectedCommand;
 import org.example.policydomain.command.additional_modification.AdditionalModificationToRequireInformationCommand;
 import org.example.policydomain.command.additional_modification.AdditionalModificationToUndoneCommand;
-import org.example.policydomain.command.policy.PolicyInternalModificationCommand;
+import org.example.policydomain.command.policy.PolicyUpdateInternalAMCommand;
 import org.example.policydomain.event.PolicyCreateEvent;
 import org.example.policydomain.event.additional_modification.AdditionalModificationCreateEvent;
 import org.example.policydomain.event.additional_modification.AdditionalModificationToApprovedEvent;
@@ -23,9 +23,7 @@ import org.example.policydomain.event.additional_modification.AdditionalModifica
 import org.example.policydomain.event.additional_modification.AdditionalModificationToRejectedEvent;
 import org.example.policydomain.event.additional_modification.AdditionalModificationToRequireInformationEvent;
 import org.example.policydomain.event.additional_modification.AdditionalModificationToUndoneEvent;
-import org.example.policydomain.event.policy.PolicyInternalModificationEvent;
-import org.example.sharedlibrary.enumeration.additional_modification.ModificationType;
-import org.example.sharedlibrary.enumeration.additional_modification.ModificationTypeName;
+import org.example.policydomain.event.policy.PolicyUpdateInternalAMEvent;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -46,11 +44,6 @@ public class PolicyHandlerServiceImpl implements PolicyHandlerService {
         return aggregate.getPolicyCode();
     }
 
-    @Override
-    public void handle(PolicyInternalModificationCommand command) {
-        PolicyAggregate aggregate = policyEventStoreService.loadPolicyAggregate(command.getPolicyId());
-        PolicyInternalModificationEvent event = aggregate.apply(command);
-    }
 
     //AM
     @Override
@@ -108,17 +101,12 @@ public class PolicyHandlerServiceImpl implements PolicyHandlerService {
         policyProducerService.publish("additional_modification_to_undone", event);
     }
 
-
-    private void policyInternalModification(AdditionalModificationAggregate aggregate) {
-        if (aggregate.getAdditionalModificationId() == null
-                || !ModificationType.INTERNAL_MODIFICATION.equals(aggregate.getModificationType())
-                || !ModificationTypeName.SPECIAL_ADDITIONAL_MODIFICATION.equals(aggregate.getModificationTypeName()))
-            throw new RuntimeException();
-        handle(new PolicyInternalModificationCommand(
-                aggregate.getPolicyId(),
-                aggregate.getAdditionalData(),
-                aggregate.getModifiedBy()
-        ));
+    @Override
+    public void handle(PolicyUpdateInternalAMCommand command) {
+        PolicyAggregate aggregate = policyEventStoreService.loadPolicyAggregate(command.getPolicyId());
+        if (aggregate == null) throw new EntityNotFoundException();
+        PolicyUpdateInternalAMEvent event = aggregate.apply(command);
+        policyEventStoreService.storePolicyEvent(aggregate, event);
+        policyProducerService.publish("policy_internal_update", event);
     }
-
 }

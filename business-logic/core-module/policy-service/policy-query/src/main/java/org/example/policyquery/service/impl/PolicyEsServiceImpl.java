@@ -5,6 +5,7 @@ import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.QueryBuilders;
 import co.elastic.clients.json.JsonData;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.policydomain.entity.AdditionalModificationEntity;
 import org.example.policydomain.entity.PolicyEntity;
 import org.example.policydomain.repository.AdditionalModificationEntityRepository;
@@ -13,6 +14,7 @@ import org.example.policydomain.response.PolicyHistoryResponse;
 import org.example.policydomain.response.PolicyResponse;
 import org.example.policydomain.view.AdditionalModificationView;
 import org.example.policydomain.view.PolicyView;
+import org.example.policyquery.client.CustomerQueryClient;
 import org.example.policyquery.request.AdditionalModificationPageRequest;
 import org.example.policyquery.request.PolicyPageRequest;
 import org.example.policyquery.response.additonal_modification.AdditionalModificationResponse;
@@ -23,6 +25,8 @@ import org.example.sharedlibrary.base_constant.view.PolicyViewConstant;
 import org.example.sharedlibrary.base_response.WrapperResponse;
 import org.example.sharedlibrary.enumeration.additional_modification.AdditionalModificationStatus;
 import org.example.sharedlibrary.enumeration.additional_modification.ModificationType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -36,7 +40,11 @@ import org.springframework.data.elasticsearch.core.query.StringQuery;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,14 +53,22 @@ import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PolicyEsServiceImpl implements PolicyEsService {
+    private static final Logger logger = LoggerFactory.getLogger(PolicyEsServiceImpl.class);
 
     private static final String QUOTATION_DISTRIBUTION_NAME = "quotationDistributionName";
     private static final String INSURANCE_COMPANY_NAME = "insuranceCompanyName";
+    private static final String CUSTOMER_ID = "customerId";
+    private static final String CUSTOMER = "customer";
+    private static final String BENEFICIARY_ID = "beneficiaryId";
+    private static final String BENEFICIARY = "beneficiary";
     private static final String PRODUCT = "product";
+    private static final String INSURANCE_TYPE_MODEL = "insuranceTypeModel";
     private static final String ADDITIONAL_MODIFICATION_INTERNAL_TEMP_CODE = "AM %03dN";
     private static final String ADDITIONAL_MODIFICATION_CUSTOMER_TEMP_CODE = "AM %03d";
-
+    private static final String MATURITY_DATE = "maturityDate";
+    private final CustomerQueryClient customerQueryClient;
     private final PolicyEntityRepository entityRepository;
     private final AdditionalModificationEntityRepository modificationEntityRepository;
     private final ElasticsearchTemplate elasticsearchTemplate;
@@ -209,17 +225,107 @@ public class PolicyEsServiceImpl implements PolicyEsService {
                     if (aMMap.containsKey(INSURANCE_COMPANY_NAME)) {
                         handleKeyInsuranceCompanyName(aMMap, lastModificationEntityOptional, lastModificationMap, mapChanged, policyEntity, additionalModificationEntity);
                     }
+                    if (am.containsKey(CUSTOMER_ID)) {
+                        handleKeyCustomerId(aMMap, lastModificationEntityOptional, lastModificationMap, mapChanged, policyEntity, additionalModificationEntity);
+                    }
+                    if (am.containsKey(BENEFICIARY_ID)) {
+                        handleKeyBeneficiaryId(aMMap, lastModificationEntityOptional, lastModificationMap, mapChanged, policyEntity, additionalModificationEntity);
+                    }
                     if (aMMap.containsKey(PRODUCT)) {
                         handleKeyProduct(aMMap, lastModificationEntityOptional, lastModificationMap, mapChanged, policyEntity, additionalModificationEntity);
+                    }
+                    if (aMMap.containsKey(INSURANCE_TYPE_MODEL)) {
+                        handleKeyInsuranceType(aMMap, lastModificationEntityOptional, lastModificationMap, mapChanged, policyEntity, additionalModificationEntity);
+                    }
+                    if (aMMap.containsKey(MATURITY_DATE)) {
+                        handleKeyMaturityDate(aMMap, lastModificationEntityOptional, lastModificationMap, mapChanged, policyEntity, additionalModificationEntity);
                     }
                 }
         );
     }
 
+    private void handleKeyMaturityDate(Map<String, Object> aMMap, Optional<AdditionalModificationEntity> lastModificationEntityOptional, Map<String, Object> lastModificationMap, Map<String, Object> mapChanged, PolicyEntity policyEntity, AdditionalModificationEntity additionalModificationEntity) {
+        List<Map<String, Object>> list = new ArrayList<>();
+        Map<String, Object> map = new HashMap<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+
+        if (lastModificationEntityOptional.isPresent() && lastModificationMap.containsKey(MATURITY_DATE)) {
+            try {
+                LocalDate localDate = LocalDate.parse(lastModificationMap.get(MATURITY_DATE).toString(), formatter);
+                Date date = java.sql.Date.valueOf(localDate); // Convert LocalDate to Date
+                policyEntity.setMaturityDate(date);
+                policyEntity.setPolicyCode(lastModificationEntityOptional.get().getAdditionalModificationCode());
+            } catch (Exception e) {
+                logger.error("Error parsing maturity date from lastModificationMap", e);
+            }
+        }
+
+        map.put(policyEntity.getPolicyCode(), policyEntity.getMaturityDate());
+        putTempVariableCode(aMMap, mapChanged, policyEntity, additionalModificationEntity, list, map, MATURITY_DATE);
+
+        try {
+            Date date = Date.from(Instant.parse(aMMap.get(MATURITY_DATE).toString() + "Z"));
+            policyEntity.setMaturityDate(date);
+        } catch (Exception e) {
+            logger.error("Error parsing maturity date from aMMap", e);
+        }
+        aMMap.remove(MATURITY_DATE);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void handleKeyInsuranceType(Map<String, Object> aMMap, Optional<AdditionalModificationEntity> lastModificationEntityOptional, Map<String, Object> lastModificationMap, Map<String, Object> mapChanged, PolicyEntity policyEntity, AdditionalModificationEntity additionalModificationEntity) {
+        List<Map<String, Object>> list = new ArrayList<>();
+        Map<String, Object> map = new HashMap<>();
+        if (lastModificationEntityOptional.isPresent() && lastModificationMap.containsKey(INSURANCE_TYPE_MODEL)) {
+
+            policyEntity.setInsuranceTypeModel((List<Map<String, Object>>) lastModificationMap.get(INSURANCE_TYPE_MODEL));
+            policyEntity.setPolicyCode(lastModificationEntityOptional.get().getAdditionalModificationCode());
+        }
+        map.put(policyEntity.getPolicyCode(), policyEntity.getProduct());
+
+        putTempVariableCode(aMMap, mapChanged, policyEntity, additionalModificationEntity, list, map, INSURANCE_TYPE_MODEL);
+        policyEntity.setInsuranceTypeModel((List<Map<String, Object>>) aMMap.get(INSURANCE_TYPE_MODEL));
+        aMMap.remove(INSURANCE_TYPE_MODEL);
+    }
+
+    private void handleKeyBeneficiaryId(Map<String, Object> aMMap, Optional<AdditionalModificationEntity> lastModificationEntityOptional, Map<String, Object> lastModificationMap, Map<String, Object> mapChanged, PolicyEntity policyEntity, AdditionalModificationEntity additionalModificationEntity) {
+        List<Map<String, Object>> list = new ArrayList<>();
+        Map<String, Object> map = new HashMap<>();
+        String code = policyEntity.getPolicyCode();
+
+        if (lastModificationEntityOptional.isPresent() && lastModificationMap.containsKey(BENEFICIARY_ID)) {
+            policyEntity.setBeneficiary(customerQueryClient.getCustomerModelById(lastModificationMap.get(BENEFICIARY_ID).toString()));
+            code = lastModificationEntityOptional.get().getAdditionalModificationCode();
+        }
+        map.put(code, policyEntity.getBeneficiary());
+        aMMap.put(BENEFICIARY, customerQueryClient.getCustomerModelById(additionalModificationEntity.getAdditionalData().get(0).get(BENEFICIARY_ID).toString()));
+        putTempVariableCode(aMMap, mapChanged, policyEntity, additionalModificationEntity, list, map, BENEFICIARY);
+        policyEntity.setBeneficiary(customerQueryClient.getCustomerModelById(aMMap.get(BENEFICIARY_ID).toString()));
+        aMMap.remove(BENEFICIARY_ID);
+        aMMap.remove(BENEFICIARY);
+    }
+
+    private void handleKeyCustomerId(Map<String, Object> aMMap, Optional<AdditionalModificationEntity> lastModificationEntityOptional, Map<String, Object> lastModificationMap, Map<String, Object> mapChanged, PolicyEntity policyEntity, AdditionalModificationEntity additionalModificationEntity) {
+        List<Map<String, Object>> list = new ArrayList<>();
+        Map<String, Object> map = new HashMap<>();
+        String code = policyEntity.getPolicyCode();
+
+        if (lastModificationEntityOptional.isPresent() && lastModificationMap.containsKey(CUSTOMER_ID)) {
+            policyEntity.setCustomer(customerQueryClient.getCustomerModelById(lastModificationMap.get(CUSTOMER_ID).toString()));
+            code = lastModificationEntityOptional.get().getAdditionalModificationCode();
+        }
+        map.put(code, policyEntity.getCustomer());
+        aMMap.put(CUSTOMER, customerQueryClient.getCustomerModelById(additionalModificationEntity.getAdditionalData().get(0).get(CUSTOMER_ID).toString()));
+        putTempVariableCode(aMMap, mapChanged, policyEntity, additionalModificationEntity, list, map, CUSTOMER);
+        policyEntity.setCustomer(customerQueryClient.getCustomerModelById(aMMap.get(CUSTOMER_ID).toString()));
+        aMMap.remove(CUSTOMER_ID);
+        aMMap.remove(CUSTOMER);
+    }
+
     private void handleKeyInsuranceCompanyName(Map<String, Object> aMMap, Optional<AdditionalModificationEntity> lastModificationEntityOptional, Map<String, Object> lastModificationMap,
                                                Map<String, Object> mapChanged, PolicyEntity policyEntity, AdditionalModificationEntity additionalModificationEntity) {
-        List<Map<String, String>> list = new ArrayList<>();
-        Map<String, String> map = new HashMap<>();
+        List<Map<String, Object>> list = new ArrayList<>();
+        Map<String, Object> map = new HashMap<>();
         String code = policyEntity.getPolicyCode();
 
         if (lastModificationEntityOptional.isPresent() && lastModificationMap.containsKey(INSURANCE_COMPANY_NAME)) {
@@ -234,8 +340,8 @@ public class PolicyEsServiceImpl implements PolicyEsService {
 
     private void handleKeyQuotationDistributeName(Map<String, Object> aMMap, Optional<AdditionalModificationEntity> lastModificationEntityOptional, Map<String, Object> lastModificationMap,
                                                   Map<String, Object> mapChanged, PolicyEntity policyEntity, AdditionalModificationEntity additionalModificationEntity) {
-        List<Map<String, String>> list = new ArrayList<>();
-        Map<String, String> map = new HashMap<>();
+        List<Map<String, Object>> list = new ArrayList<>();
+        Map<String, Object> map = new HashMap<>();
         String code = policyEntity.getPolicyCode();
 
         if (lastModificationEntityOptional.isPresent() && lastModificationMap.containsKey(QUOTATION_DISTRIBUTION_NAME)) {
@@ -258,23 +364,8 @@ public class PolicyEsServiceImpl implements PolicyEsService {
         }
         map.put(policyEntity.getPolicyCode(), policyEntity.getProduct());
 
-        long count = count(policyEntity.getId());
-        if (ModificationType.INTERNAL_MODIFICATION.equals(additionalModificationEntity.getModificationType())) {
-            if (additionalModificationEntity.getAdditionalModificationCode() == null) {
-                map.put(String.format(ADDITIONAL_MODIFICATION_INTERNAL_TEMP_CODE, count), aMMap.get(PRODUCT));
-            } else {
-                map.put(additionalModificationEntity.getAdditionalModificationCode(), aMMap.get(PRODUCT));
-            }
-        } else {
-            if (additionalModificationEntity.getAdditionalModificationCode() == null) {
-                map.put(String.format(ADDITIONAL_MODIFICATION_CUSTOMER_TEMP_CODE, count), aMMap.get(PRODUCT));
-            } else {
-                map.put(additionalModificationEntity.getAdditionalModificationCode(), aMMap.get(PRODUCT));
-            }
-        }
-        list.add(map);
-        mapChanged.put(PRODUCT, list);
-        policyEntity.setProduct(additionalModificationEntity.getAdditionalData());
+        putTempVariableCode(aMMap, mapChanged, policyEntity, additionalModificationEntity, list, map, PRODUCT);
+        policyEntity.setProduct(List.of(aMMap));
     }
 
     private Optional<AdditionalModificationEntity> returnAdditionalModificationOptional(String additionalModificationId) {
@@ -288,28 +379,28 @@ public class PolicyEsServiceImpl implements PolicyEsService {
         return lastModificationMapFind.get();
     }
 
-    private void putTempVariableCode(Map<String, Object> aMMap, Map<String, Object> mapChanged, PolicyEntity policyEntity, AdditionalModificationEntity additionalModificationEntity, List<Map<String, String>> list, Map<String, String> map, String insuranceCompanyName) {
-        long count = count(policyEntity.getId());
+    private void putTempVariableCode(Map<String, Object> aMMap, Map<String, Object> mapChanged, PolicyEntity policyEntity, AdditionalModificationEntity additionalModificationEntity, List<Map<String, Object>> list, Map<String, Object> map, String mapCode) {
+        long count = count(policyEntity.getId(), additionalModificationEntity.getModificationType()) + 1;
         if (ModificationType.INTERNAL_MODIFICATION.equals(additionalModificationEntity.getModificationType())) {
             if (additionalModificationEntity.getAdditionalModificationCode() == null) {
-                map.put(String.format(ADDITIONAL_MODIFICATION_INTERNAL_TEMP_CODE, count), aMMap.get(insuranceCompanyName).toString());
+                map.put(String.format(ADDITIONAL_MODIFICATION_INTERNAL_TEMP_CODE, count), aMMap.get(mapCode));
             } else {
-                map.put(additionalModificationEntity.getAdditionalModificationCode(), aMMap.get(insuranceCompanyName).toString());
+                map.put(additionalModificationEntity.getAdditionalModificationCode(), aMMap.get(mapCode));
             }
         } else {
             if (additionalModificationEntity.getAdditionalModificationCode() == null) {
-                map.put(String.format(ADDITIONAL_MODIFICATION_CUSTOMER_TEMP_CODE, count), aMMap.get(insuranceCompanyName).toString());
+                map.put(String.format(ADDITIONAL_MODIFICATION_CUSTOMER_TEMP_CODE, count), aMMap.get(mapCode));
             } else {
-                map.put(additionalModificationEntity.getAdditionalModificationCode(), aMMap.get(insuranceCompanyName).toString());
+                map.put(additionalModificationEntity.getAdditionalModificationCode(), aMMap.get(mapCode));
             }
         }
         list.add(map);
-        mapChanged.put(insuranceCompanyName, list);
+        mapChanged.put(mapCode, list);
     }
 
-    private long count(String policyId) {
+    private long count(String policyId, ModificationType modificationType) {
         return modificationEntityRepository.countByPolicyIdAndModificationTypeIsAndAdditionalModificationStatusIs(
-                policyId, ModificationType.INTERNAL_MODIFICATION, AdditionalModificationStatus.APPROVED);
+                policyId, modificationType, AdditionalModificationStatus.APPROVED);
     }
 
 }

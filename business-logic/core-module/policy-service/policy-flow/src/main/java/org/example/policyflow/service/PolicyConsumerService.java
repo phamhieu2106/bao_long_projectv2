@@ -7,10 +7,13 @@ import org.example.policydomain.event.additional_modification.AdditionalModifica
 import org.example.policydomain.event.additional_modification.AdditionalModificationToRejectedEvent;
 import org.example.policydomain.event.additional_modification.AdditionalModificationToRequireInformationEvent;
 import org.example.policydomain.event.additional_modification.AdditionalModificationToUndoneEvent;
+import org.example.policydomain.event.policy.PolicyUpdateInternalAMEvent;
 
 public interface PolicyConsumerService {
 
     void subscribe(PolicyCreateEvent event);
+
+    void subscribe(PolicyUpdateInternalAMEvent event);
 
     void subscribe(AdditionalModificationCreateEvent event);
 

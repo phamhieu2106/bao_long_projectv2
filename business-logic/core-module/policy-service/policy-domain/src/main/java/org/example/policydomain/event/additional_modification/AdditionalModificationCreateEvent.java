@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.example.sharedlibrary.base_class.BaseEvent;
 import org.example.sharedlibrary.enumeration.additional_modification.AdditionalModificationStatus;
+import org.example.sharedlibrary.enumeration.additional_modification.ModificationTerminalTypeName;
 import org.example.sharedlibrary.enumeration.additional_modification.ModificationType;
 import org.example.sharedlibrary.enumeration.additional_modification.ModificationTypeName;
 
@@ -21,12 +22,13 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AdditionalModificationCreateEvent extends BaseEvent {
-    final AdditionalModificationStatus modificationStatus = AdditionalModificationStatus.DRAFTING;
+    static final AdditionalModificationStatus modificationStatus = AdditionalModificationStatus.DRAFTING;
     String additionalModificationId;
     String additionalModificationCode;
     String policyId;
     ModificationType modificationType;
     ModificationTypeName modificationTypeName;
+    ModificationTerminalTypeName modificationTerminalTypeName;
     List<Map<String, Object>> additionalData;
     Date effectiveDate;
 

@@ -6,9 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.example.policydomain.command.PolicyCreateCommand;
-import org.example.policydomain.command.policy.PolicyInternalModificationCommand;
+import org.example.policydomain.command.policy.PolicyUpdateInternalAMCommand;
 import org.example.policydomain.event.PolicyCreateEvent;
-import org.example.policydomain.event.policy.PolicyInternalModificationEvent;
+import org.example.policydomain.event.policy.PolicyUpdateInternalAMEvent;
 import org.example.sharedlibrary.base_class.BaseAggregate;
 import org.example.sharedlibrary.base_quo_poli.CustomerModel;
 import org.example.sharedlibrary.base_quo_poli.UserCreatedModel;
@@ -114,7 +114,24 @@ public class PolicyAggregate extends BaseAggregate {
         );
     }
 
-    public PolicyInternalModificationEvent apply(PolicyInternalModificationCommand command) {
-        return null;
+    public PolicyUpdateInternalAMEvent apply(PolicyUpdateInternalAMCommand command) {
+        if (command.getProduct() != null) {
+            this.product = command.getProduct();
+        }
+        if (command.getInsuranceCompanyName() != null) {
+            this.insuranceCompanyName = command.getInsuranceCompanyName();
+        }
+        if (command.getQuotationDistributionName() != null) {
+            this.quotationDistributionName = command.getQuotationDistributionName();
+        }
+
+        return new PolicyUpdateInternalAMEvent(
+                new Date(),
+                command.getCreatedBy(),
+                this.id,
+                this.product,
+                this.insuranceCompanyName,
+                this.quotationDistributionName
+        );
     }
 }

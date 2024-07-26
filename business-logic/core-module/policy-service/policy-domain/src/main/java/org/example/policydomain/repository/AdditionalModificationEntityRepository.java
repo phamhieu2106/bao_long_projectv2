@@ -35,4 +35,12 @@ public interface AdditionalModificationEntityRepository extends JpaRepository<Ad
                     LIMIT 1;
             """, nativeQuery = true)
     Optional<AdditionalModificationEntity> findLastAMApprovedByAmId(@Param("id") String id);
+
+    @Query(value = """
+            SELECT * FROM additional_modification_entity am
+            WHERE am.effective_date >= now()
+            	AND am.additional_modification_status = 'APPROVED'
+            ORDER BY am.created_at ASC
+            """, nativeQuery = true)
+    List<AdditionalModificationEntity> findAllAMEffected();
 }
